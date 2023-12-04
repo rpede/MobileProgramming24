@@ -1,13 +1,3 @@
-/*
-Write an acronym generator.
-You give it some text and it will abbreviate it to an acronym.
- */
-import '../mock_result.dart';
-import 'solution.dart';
-
-const _result = result;
-
-// #docregion
 class TestCase {
   String text;
   String abbr;
@@ -34,4 +24,3 @@ void main() {
     _result(true, ["Hurray, you did it 🥳"]);
   }
 }
-// #enddocregion

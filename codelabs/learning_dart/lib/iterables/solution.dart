@@ -28,7 +28,7 @@ String? mostSpokenLanguage(List<Person> people) {
   return maxBy(group.entries, (p0) => p0.value)?.key;
 }
 
-top3MostSpokenLanguages(List<Person> people) {
+List<String> top3MostSpokenLanguages(List<Person> people) {
   return people
       .groupFoldBy(
         (element) => element.language,
@@ -38,5 +38,6 @@ top3MostSpokenLanguages(List<Person> people) {
       .sortedBy((element) => element.value)
       .reversed
       .take(3)
-      .map((e) => e.key);
+      .map((e) => e.key)
+      .toList();
 }

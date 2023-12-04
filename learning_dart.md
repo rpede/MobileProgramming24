@@ -20,54 +20,59 @@ You give it some text and it will abbreviate it to an acronym.
 
 ## Code
 
-```run-dartpad:mode-dart:run-true
-{$ begin main.dart $}
-class Acronym {
-  static String abbreviate({required String text}) {
-    // TODO your implementation here
-  }
-}
-{$ end main.dart $}
-{$ begin solution.dart $}
-class Acronym {
-  static String abbreviate({required String text}) {
-    return toTitleCase(text).replaceAll(RegExp(r"[^A-Z]"), '');
-  }
+```run-dartpad:mode-dart
+{% include exercise path="codelabs/learning_dart/lib/acronym/" %}
+```
 
-  static String toTitleCase(String text) {
-    return text
-        .split(' ')
-        .map((e) => e[0].toUpperCase() + e.substring(1))
-        .toString();
-  }
-}
-{$ end solution.dart $}
-{$ begin test.dart $}
-class TestCase {
-  String text;
-  String abbr;
-  String msg;
-  TestCase(this.text, {required this.abbr, required this.msg});
-}
+# FizzBuzz
 
-void main() {
-  final testCases = [
-    TestCase("Joint Photographic Experts Group",
-        abbr: "JPEG", msg: "Abbreviates text with title case"),
-    TestCase("Secure by Design",
-        abbr: "SBD", msg: "Abbreviates text with lower case"),
-    TestCase("HyperText Transfer Protocol Secure",
-        abbr: "HTTPS", msg: "Abbreviates text with mixed case"),
-    TestCase("Last in. First out", abbr: "LIFO", msg: "Ignores punctuation"),
-    TestCase("You only live once 👶💣🪦", abbr: "YOLO", msg: "Ignores emojis")
-  ];
-  final failures = testCases.where(
-      (testCase) => Acronym.abbreviate(text: testCase.text) != testCase.abbr);
-  if (failures.isNotEmpty) {
-    _result(false, [...failures.map((e) => e.msg)]);
-  } else {
-    _result(true, ["Hurray, you did it 🥳"]);
-  }
-}
-{$ end test.dart $}
+> Fizz buzz is a group word game for children to teach them about division.
+Players take turns to count incrementally, replacing any number divisible by
+three with the word "Fizz", and any number divisible by five with the word
+"Buzz", and any number divisible by both 3 and 5 with the word "Fizz Buzz".
+
+- [Wikipedia](https://en.wikipedia.org/wiki/Fizz_buzz)
+
+## Example
+
+`1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, Fizz Buzz, 16, 17, Fizz, 19, Buzz, Fizz, 22, 23, Fizz, Buzz, 26, Fizz, 28, 29, Fizz Buzz`
+
+# Code
+
+Implement a fizzbuzz generator using
+[streams](https://dart.dev/articles/libraries/creating-streams).
+
+```run-dartpad:mode-dart
+{% include exercise path="codelabs/learning_dart/lib/fizzbuzz/" %}
+```
+
+# Iterables
+
+Challenges crafted to help you familiarize yourself with iterables Dart.
+Can you solve them without writing any loops?
+
+## Age definition
+
+| Age | Category |
+|-|-|
+| < 18 | adults |
+| < 18 | minors |
+| < 13 | kids |
+| > 13, < 18 | youngsters |
+
+Hint:
+  - [Iterables](https://dart.dev/codelabs/iterables)
+  - [Collection library](https://pub.dev/documentation/collection/latest/collection/collection-library.html)
+
+You can declare a record type for a person by adding following line to
+/lib/people.dart:
+
+```dart
+typedef Person = ({int id, String name, String language, int age});
+```
+
+## Code
+
+```run-dartpad:mode-dart
+{% include exercise path="codelabs/learning_dart/lib/iterables/" %}
 ```
