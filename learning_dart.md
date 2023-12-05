@@ -3,6 +3,37 @@ title: Learning Dart
 ---
 <script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
 
+# Iterables
+
+Challenges crafted to help you familiarize yourself with iterables Dart.
+Can you solve them without writing any loops?
+
+## Age definition
+
+| Age | Category |
+|-|-|
+| < 18 | adults |
+| < 18 | minors |
+| < 13 | kids |
+| > 13, < 18 | youngsters |
+
+Hint:
+  - [Iterables](https://dart.dev/codelabs/iterables)
+  - [Collection library](https://pub.dev/documentation/collection/latest/collection/collection-library.html)
+
+You can declare a record type for a person by adding following line to
+/lib/people.dart:
+
+```dart
+typedef Person = ({int id, String name, String language, int age});
+```
+
+## Code
+
+```run-dartpad:mode-dart
+{% include exercise path="codelabs/learning_dart/lib/iterables/" %}
+```
+
 # Acronym generator
 
 Write an acronym generator.
@@ -44,35 +75,4 @@ Implement a fizzbuzz generator using
 
 ```run-dartpad:mode-dart
 {% include exercise path="codelabs/learning_dart/lib/fizzbuzz/" %}
-```
-
-# Iterables
-
-Challenges crafted to help you familiarize yourself with iterables Dart.
-Can you solve them without writing any loops?
-
-## Age definition
-
-| Age | Category |
-|-|-|
-| < 18 | adults |
-| < 18 | minors |
-| < 13 | kids |
-| > 13, < 18 | youngsters |
-
-Hint:
-  - [Iterables](https://dart.dev/codelabs/iterables)
-  - [Collection library](https://pub.dev/documentation/collection/latest/collection/collection-library.html)
-
-You can declare a record type for a person by adding following line to
-/lib/people.dart:
-
-```dart
-typedef Person = ({int id, String name, String language, int age});
-```
-
-## Code
-
-```run-dartpad:mode-dart
-{% include exercise path="codelabs/learning_dart/lib/iterables/" %}
 ```
