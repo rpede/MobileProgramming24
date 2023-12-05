@@ -34,11 +34,6 @@ class TestCase<T> {
     this.equality,
     this.expected,
   );
-
-  bool test(List<Person> people) {
-    final actual = func(people);
-    return equality.equals(actual, expected);
-  }
 }
 
 final List<TestCase> testCases = [
@@ -60,14 +55,18 @@ final List<TestCase> testCases = [
 ];
 
 void main() {
-  final results = testCases.map((e) => (e, success: e.test(people)));
+  final results = testCases.map((e) {
+    final actual = e.func(people);
+    final success = e.equality.equals(actual, e.expected);
+    return (e, success: success, actual: actual);
+  });
   results.forEach((e) {
     if (e.success) {
       print("\x1B[32m✅ ${e.$1.name}\x1B[0m");
     } else {
       print("\x1B[31m❌ ${e.$1.name}\x1B[0m");
       print("Expected: ${e.$1.expected}");
-      print("Actual: ${e.$1.func(people)}");
+      print("Actual: ${e.actual}");
     }
   });
   if (results.every((element) => element.success)) {
