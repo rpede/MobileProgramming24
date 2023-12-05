@@ -12,8 +12,6 @@ gem "jekyll", "~> 3.9.3"
 # This is the default theme for new Jekyll sites. You may change this to anything you like.
 #gem "minima", "~> 2.5"
 
-gem "github-pages", "~> 228", group: :jekyll_plugins
-
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
 # and associated library.
 platforms :mingw, :x64_mingw, :mswin, :jruby do
@@ -26,3 +24,7 @@ end
 gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 
 gem "webrick"
+
+gem "github-pages", "~> 228", group: :jekyll_plugins
+
+gem 'jekyll-relative-links'

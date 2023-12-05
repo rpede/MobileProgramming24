@@ -6,9 +6,10 @@ incremental: false
 
 # GitHub pages theme
 remote_theme: pages-themes/cayman@v0.2.0
+theme: jekyll-theme-cayman
 plugins:
   - jekyll-remote-theme
-theme: jekyll-theme-cayman
+  - jekyll-relative-links
 
 # Disable source link in header
 github:
