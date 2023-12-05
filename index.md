@@ -6,5 +6,5 @@ description: >-
 
 # Introduction
 
-- [Hello World]({% link helloworld.md %})
-- [Learning Dart]({% link learning_dart.md %})
+- [Hello World](helloworld.html)
+- [Learning Dart](learning_dart.html)
