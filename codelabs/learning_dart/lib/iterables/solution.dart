@@ -10,8 +10,12 @@ bool anyYoungsters(List<Person> people) {
   return people.any((person) => person.age > 13 && person.age < 18);
 }
 
-Person firstYoungster(List<Person> people) {
-  return people.firstWhere((person) => person.age > 13 && person.age < 18);
+Person? firstYoungster(List<Person> people) {
+  try {
+    return people.firstWhere((person) => person.age > 13 && person.age < 18);
+  } on StateError {
+    return null;
+  }
 }
 
 List<int> mapToIds(List<Person> people) {
