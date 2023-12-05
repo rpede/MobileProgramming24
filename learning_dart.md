@@ -8,7 +8,11 @@ title: Learning Dart
 Challenges crafted to help you familiarize yourself with iterables Dart.
 Can you solve them without writing any loops?
 
-## Age definition
+Hint:
+  - [Iterables](https://dart.dev/codelabs/iterables)
+  - [Collection library](https://pub.dev/documentation/collection/latest/collection/collection-library.html)
+
+## Age group definition
 
 | Age | Category |
 |-|-|
@@ -17,15 +21,26 @@ Can you solve them without writing any loops?
 | < 13 | kids |
 | > 13, < 18 | youngsters |
 
-Hint:
-  - [Iterables](https://dart.dev/codelabs/iterables)
-  - [Collection library](https://pub.dev/documentation/collection/latest/collection/collection-library.html)
-
-You can declare a record type for a person by adding following line to
-/lib/people.dart:
+## Data
 
 ```dart
-typedef Person = ({int id, String name, String language, int age});
+const List<Person> people = [
+  (id: 1, name: "Guillaume Strasse", language: "Danish", age: 41),
+  (id: 2, name: "Anestassia Echallie", language: "English", age: 47),
+  (id: 3, name: "Laura Ringsell", language: "Swedish", age: 14),
+  (id: 4, name: "Huey Ragsdall", language: "Latvian", age: 78),
+  (id: 5, name: "Winny Pouton", language: "Danish", age: 72),
+  (id: 6, name: "Franzen Fahy", language: "Swedish", age: 86),
+  (id: 7, name: "Killie Spatoni", language: "English", age: 16),
+  (id: 8, name: "Damaris Grebner", language: "Swedish", age: 39),
+  (id: 9, name: "Haleigh Rheubottom", language: "Georgian", age: 99),
+  (id: 10, name: "Anabel Bariball", language: "English", age: 13),
+  (id: 11, name: "Lettie Toon", language: "Danish", age: 55),
+  (id: 12, name: "Ginger Alsopp", language: "Danish", age: 75),
+  (id: 13, name: "Lee Gazey", language: "English", age: 30),
+  (id: 14, name: "Timotheus Gosnall", language: "English", age: 82),
+  (id: 15, name: "Elsworth Huntly", language: "Korean", age: 9)
+];
 ```
 
 ## Code
