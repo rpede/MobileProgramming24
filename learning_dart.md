@@ -5,23 +5,66 @@ title: Learning Dart
 
 # Iterables
 
-Challenges crafted to help you familiarize yourself with iterables Dart.
+## Introduction
+
+Iterable collections are important building blocks for many applications.
+Almost all applications deals with collections of things in some way.
+It is therefore a huge payoff in being able to work efficiently with collections.
+
+The [Iterable](https://api.dart.dev/stable/dart-core/Iterable-class.html) class
+(base class for collections) has many convince methods, that once you learn
+them, allow you to write code much faster than when using loops.
+
+### Example usage
+
+Run the code an observe the result.
+You can play around with it if you want.
+
+```run-dartpad:mode-dart
+import "package:collection/collection.dart";
+
+const movies = [
+  (title: "Alien", year: 1979),
+  (title: "Let the Right One In", year: 2008),
+  (title: "Aliens", year: 1986),
+  (title: "Jaws", year: 1975),
+  (title: "The Silence of the Lambs", year: 1991),
+];
+
+void main() {
+  print("\n[Newer than 1990]");
+  print(movies.where((m) => m.year > 1990));
+  
+  print("\n[Decades movies where released in]");
+  print(movies.map((m) => "${m.year - (m.year % 10)}s"));
+  
+  print('\n[Group by first letter of title]');
+  print(groupBy(movies, (m) => m.title[0]));
+}
+```
+
+### Language comparison  
+
+These kinds of operations exists in many programming languages, though naming might be different.
+
+| Description | C# | JavaScript | Dart |
+|-|-|-|-|
+| Filter (keep) elements that match the predicate | [Where](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.where) | [filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) | [where](https://api.dart.dev/stable/dart-core/Iterable/where.html) |
+| Map (convert) each element to another type | [Select](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.select) | [map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) | [map](https://api.dart.dev/stable/dart-core/Iterable/map.html) |
+| Flatten nested collections | [SelectMany](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.selectmany) | [flatMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap) | [expand](https://api.dart.dev/stable/dart-core/Iterable/expand.html) |
+| Group elements by a common value | [GroupBy](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.groupby) | [Object.groupBy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy) | [groupBy](https://pub.dev/documentation/collection/latest/collection/groupBy.html) |
+
+## Exercise
+
+Implement each function so that the test pass.
+
 Can you solve them without writing any loops?
 
-Hint:
+Help:
   - [Iterables](https://dart.dev/codelabs/iterables)
   - [Collection library](https://pub.dev/documentation/collection/latest/collection/collection-library.html)
 
-## Age group definition
-
-| Age | Category |
-|-|-|
-| < 18 | adults |
-| < 18 | minors |
-| < 13 | kids |
-| > 13, < 18 | youngsters |
-
-## Data
+### Data
 
 ```dart
 const List<Person> people = [
@@ -43,7 +86,16 @@ const List<Person> people = [
 ];
 ```
 
-## Code
+### Age groups
+
+| Age | Category |
+|-|-|
+| < 18 | adults |
+| < 18 | minors |
+| < 13 | kids |
+| > 13, < 18 | youngsters |
+
+### Code
 
 ```run-dartpad:mode-dart
 {% include exercise path="codelabs/learning_dart/lib/iterables/" %}
