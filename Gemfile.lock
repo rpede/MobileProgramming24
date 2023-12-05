@@ -268,7 +268,6 @@ DEPENDENCIES
   github-pages (~> 228)
   http_parser.rb (~> 0.6.0)
   jekyll (~> 3.9.3)
-  jekyll-relative-links
   tzinfo (~> 1.2)
   tzinfo-data
   webrick
