@@ -13,3 +13,8 @@ plugins:
 # Disable source link in header
 github:
   is_project_page: false
+
+collections:
+  learning_dart:
+    output: true
+    permalink: /learning-dart/:name
