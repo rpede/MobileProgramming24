@@ -6,6 +6,7 @@ description: >-
 
 # Learning Dart
 
+- [Shapes](learning-dart/shapes)
 - [Iterables](learning-dart/iterables)
 - [Acronym generator](learning-dart/acronym)
 - [Fizz buzz](learning-dart/fizzbuzz)

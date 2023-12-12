@@ -3,9 +3,7 @@ import 'dart:math' as math;
 class Point {
   final num x;
   final num y;
-  const Point(num x, num y)
-      : this.x = x,
-        this.y = y;
+  const Point(this.x, this.y);
 
   @override
   String toString() {
@@ -18,11 +16,9 @@ const Point origin = Point(0, 0);
 class Line {
   Point a;
   Point b;
-  Line({required a, required b})
-      : this.a = a,
-        this.b = b;
+  Line({required this.a, required this.b});
 
-  calculateLength() {
+  double calculateLength() {
     return math.sqrt(math.pow(b.x - a.x, 2) + math.pow(b.y - a.y, 2));
   }
 }
