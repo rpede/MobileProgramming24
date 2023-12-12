@@ -1,7 +1,7 @@
-import "./solution.dart";
-import "../mock_result.dart";
+// import "./solution.dart";
+// import "../mock_result.dart";
 
-const _result = result;
+// const _result = result;
 
 void main() {
   final circle0 = Circle(center: Point(0, 0), radius: 5);
