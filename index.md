@@ -7,3 +7,4 @@ description: >-
 # Table of content
 
 - [Learning Dart](learning-dart)
+- [Working with collections](working-with-collections)

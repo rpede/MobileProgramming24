@@ -18,3 +18,6 @@ collections:
   learning_dart:
     output: true
     permalink: /learning-dart/:name
+  working_with_collections:
+    output: true
+    permalink: /working-with-collections/:name

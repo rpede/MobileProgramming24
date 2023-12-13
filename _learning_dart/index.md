@@ -10,6 +10,3 @@ layout: default
 
 - [Shapes](shapes)
 - [Object trees](object-trees)
-- [Iterables](iterables)
-- [Acronym generator](acronym)
-- [Fizz buzz](fizzbuzz)
