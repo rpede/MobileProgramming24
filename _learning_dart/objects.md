@@ -215,9 +215,7 @@ The same is true for methods.
 
 ```dart
 class Nonsense {
-  String _secretGreeting(String name) {
-    return "Pssst, hello " + name;
-  }
+  String _secretGreeting(String name) => "Pssst, hello " + name;
 }
 ```
 
@@ -226,13 +224,38 @@ expected.
 
 ```dart
 class Greeter {
-  static String greeting(String name) {
-    return "Hello " + name;
-  }
+  static String greeting(String name) => "Hello " + name;
 }
 
 Greeter.greeting("bob");
 ```
+
+You could also written:
+
+```dart
+class Greeter {
+  static String greeting(String name) => "Hello $name!";
+}
+```
+
+Here `$name` is substituted with the value of the variable `name`.
+This is called string interpolation.
+
+For comparison, this is what it looks like in:
+
+**C#**
+
+```csharp
+$"Hello {name}!"
+```
+
+**JavaScript/TypeScript**
+
+```typescript
+`Hello ${name}!`
+```
+
+# Extension methods
 
 Maybe you have heard of extension methods?
 They can be used to extend an existing class from somewhere else.
