@@ -8,5 +8,6 @@ layout: default
 
 # Learning Dart
 
-- [Objects](objects)
-- [Object trees](object-trees)
+- [The basics](basics)
+- [Objects in Dart](objects)
+- [Building object trees](object-trees)
