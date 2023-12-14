@@ -3,6 +3,7 @@ title: Learning Dart
 layout: default
 ---
 <script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
+<style>iframe { width: 100%; height: 800px; }</style>
 
 # Acronym generator
 

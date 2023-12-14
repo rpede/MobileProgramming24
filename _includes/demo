@@ -1,0 +1,9 @@
+{$ begin main.dart $}
+{% include_relative {{ include.path | append: "main.dart" }} %}
+{$ end main.dart $}
+{$ begin test.dart $}
+{% include_relative {{ include.path | append: "test.dart" }} %}
+{$ end test.dart $}
+{$ begin test_import.dart $}
+part 'test.dart';
+{$ end test_import.dart $}

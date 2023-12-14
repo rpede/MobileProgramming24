@@ -8,5 +8,5 @@ layout: default
 
 # Learning Dart
 
-- [Shapes](shapes)
+- [Objects](objects)
 - [Object trees](object-trees)
