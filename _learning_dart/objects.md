@@ -29,7 +29,7 @@ class Point {
 }
 ```
 
-Notice the the question mark after num?
+Notice the question mark after num?
 It means the field is nullable.
 
 If we remove the assignment `this.x = x` then after the class has been
@@ -37,13 +37,13 @@ instantiated, the value of `x` would be null.
 
 Dart forces us to check for null each time we try to do something with the value
 of a nullable variable.
-This is called [sound null safety](https://dart.dev/null-safety), and it is there
-to protects us from null reference exceptions.
+This is called [sound null safety](https://dart.dev/null-safety), and it's there
+to protect us from null reference exceptions.
 
 The Point class doesn't accurately represent point, unless it has a value for
 both a *x* and *y*.
 
-Lets fix it by rewriting the class, such that the instance fields are no longer
+Let's fix it by rewriting the class, such that the instance fields are no longer
 nullable.
 
 ```dart
@@ -57,13 +57,11 @@ class Point {
 }
 ```
 
-What happened? The constructor looks all weird now!
-
-Notice the curly brackets are gone. Instead we have a comma separated list of
+Notice the curly brackets are gone. Instead, we have a comma separated list of
 assignments.
 This is called an [initializer list](https://dart.dev/language/constructors#initializer-list).
 
-If we want the variables to be non-nullable then we can no longer make the
+If we want the variables to be non-nullable, then we can no longer make the
 assignments in a code block (within curly brackets).
 That is because within a block you have the ability to make conditional
 assignments.
@@ -84,8 +82,8 @@ class Point {
 }
 ```
 
-With an initializer list you are always going to assign a value.
-Therefore in order to make the instance-variables non-nullable, we have to use
+With an initializer list, you are always going to assign a value.
+Therefore, in order to make the instance-variables non-nullable, we have to use
 an initializer list for the assignments.
 
 ## Immutability
@@ -105,7 +103,7 @@ class Point {
 ```
 
 Assigning parameters directly to instance fields is very common.
-So the Dart designers made a nice shorthand for us.
+Luckily the Dart designers made a nice shorthand for us.
 
 ```dart
 class Point {
@@ -122,7 +120,7 @@ A object that can't change is said to be immutable.
 So `const` before constructor tells the compiler that the object will be immutable.
 Which allows the compiler to do some optimizations.
 
-An immutable class can be instantiated it as a compile-time constant.
+An immutable class can be instantiated as a compile-time constant.
 Thereby saving some CPU cycles at runtime.
 
 ```dart
@@ -138,8 +136,8 @@ Previously we used positional parameters.
 It means that, we have to pass values for parameters in the same order as they
 are defined in the method signature.
 
-Named parameters can specified in any order.
-The also make the meaning of the parameter more explicit.
+Named parameters can be specified in any order.
+They also make the meaning of the parameter more explicit.
 This style is preferred when there is no logical order for the parameters.
 
 Named parameters are wrapped in curly brackets.
@@ -196,7 +194,7 @@ class Line {
 
 # Modifiers
 
-Maybe you have noticed that there is no public or private keyword anywhere.
+Maybe you have noticed that there are no public or private keywords anywhere.
 That is because everything in Dart is public by default.
 To make something private you just prefix it with a `_` underscore.
 
@@ -272,13 +270,14 @@ final Line normal = origin.to(Point(0, 1));
 ```
 
 You likely won't be writing that many extension methods yourself.
-However they are super useful for people writing libraries, as it allows them to
+However, they are super useful for people writing libraries, as it allows them to
 extend existing types.
 You will be calling extension methods a lot.
 
 # Inheritance
 
-Like other object-oriented programming languages, Dart (of cause) support inheritance.
+Like other object-oriented programming languages, Dart (of course) supports
+inheritance. 
 You can declare a class that extends another.
 
 ```dart
@@ -314,7 +313,7 @@ Notice that we don't need to specify a return type for `area` in the subclass.
 That is because the compile can tell from base class.
 
 The `@override` isn't strictly required.
-It just an indicator to whoever reads the code that the methods overrides a
+It just an indicator to whoever reads the code that the methods override a
 method in a base class.
 
 It is also possible to have a class only implement the interface of another,
