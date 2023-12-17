@@ -125,7 +125,7 @@ Can you write an algorithm to determine when someone are allowed to by alcohol i
 Current rules are:
 
 - Beverages with 1.2 percent alcohol or more may not be sold to persons under the age of 16
-- When selling beverages with 1.2 to 16.5 percent alcohol, the retailer must verify that the customer are 16 years of age before the sale can be completed
+- When selling beverages with 1.2 to 16.5 percent alcohol, the retailer must verify that the customer are 16 years of age
 - Beverages with 16.5 percent alcohol or more may not be sold to persons under the age of 18
 
 ```run-dartpad:mode-dart

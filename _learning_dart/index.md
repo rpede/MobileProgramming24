@@ -11,3 +11,7 @@ layout: default
 - [The basics](basics)
 - [Objects in Dart](objects)
 - [Building object trees](object-trees)
+
+## Advanced
+
+- [Patterns](patterns)
