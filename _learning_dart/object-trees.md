@@ -7,7 +7,7 @@ layout: default
 
 Constructing object trees is very important in Flutter (framework).
 
-Dart (language) got a couple of tricks you can use to write constructors for
+Dart (language) has a couple of tricks you can use to write constructors for
 classes, so that they are both clear and concise.
 
 ## Constructors

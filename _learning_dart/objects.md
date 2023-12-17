@@ -11,7 +11,7 @@ This tutorial is aimed at teaching you the basics of OOP in Dart.
 We will look at how to specify constructors, methods and inheritance.
 You will also learn a bit about how Dart deals with nullability.
 
-Lets jump right into it.
+Let's jump right into it.
 
 ## Nullability
 
@@ -40,7 +40,7 @@ of a nullable variable.
 This is called [sound null safety](https://dart.dev/null-safety), and it's there
 to protect us from null reference exceptions.
 
-The Point class doesn't accurately represent point, unless it has a value for
+The Point class doesn't accurately represent a point, unless it has a value for
 both a *x* and *y*.
 
 Let's fix it by rewriting the class, such that the instance fields are no longer
@@ -116,7 +116,7 @@ class Point {
 
 Notice I've also added the `const` keyword in-front of the constructor.
 I'm allowed to do that because all of the instance variables are `final`.
-A object that can't change is said to be immutable.
+An object that can't change is said to be immutable.
 So `const` before constructor tells the compiler that the object will be immutable.
 Which allows the compiler to do some optimizations.
 
@@ -133,7 +133,7 @@ It simplifies how *x* and *y* are accessed, thereby making it more efficient.
 ## Named parameters
 
 Previously we used positional parameters.
-It means that, we have to pass values for parameters in the same order as they
+It means that we have to pass values for parameters in the same order as they
 are defined in the method signature.
 
 Named parameters can be specified in any order.
@@ -218,7 +218,7 @@ class Nonsense {
 ```
 
 Putting the keyword `static` in front of method behaves just as you would
-expected.
+expect.
 
 ```dart
 class Greeter {
@@ -313,7 +313,7 @@ Notice that we don't need to specify a return type for `area` in the subclass.
 That is because the compile can tell from base class.
 
 The `@override` isn't strictly required.
-It just an indicator to whoever reads the code that the methods override a
+It is just an indicator to whoever reads the code that the methods override a
 method in a base class.
 
 It is also possible to have a class only implement the interface of another,
@@ -347,8 +347,8 @@ of its methods and fields.
 
 **In Dart, a class can be used as an interface!**
 
-Why is that, you might be wondering.
-Lets see how it can be useful.
+Why is that you might be wondering.
+Let's see how it can be useful.
 
 In C# you might have something like:
 
@@ -368,7 +368,7 @@ You need the interface, just in case you want to make an alternative
 implementation of UserService.
 Like a mock for testing.
 
-However in Dart you could just do:
+However, in Dart you could just do:
 
 ```dart
 class UserService {}

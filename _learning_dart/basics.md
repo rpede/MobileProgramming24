@@ -120,7 +120,7 @@ void main() {
 
 **if** statements are also works as you might expect.
 
-Can you write an algorithm to determine when someone are allowed to by alcohol in Denmark.
+Can you write an algorithm to determine when someone is allowed to by alcohol in Denmark.
 
 Current rules are:
 
@@ -149,7 +149,7 @@ switch (answer) {
 }
 ```
 
-Dart also support **switch expressions**.
+Dart also supports **switch expressions**.
 
 ```dart
 String message = switch (answer) {
