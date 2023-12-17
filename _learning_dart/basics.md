@@ -118,4 +118,46 @@ void main() {
 
 ### Branching
 
-TODO
+**if** statements are also works as you might expect.
+
+Can you write an algorithm to determine when someone are allowed to by alcohol in Denmark.
+
+Current rules are:
+
+- Beverages with 1.2 percent alcohol or more may not be sold to persons under the age of 16
+- When selling beverages with 1.2 to 16.5 percent alcohol, the retailer must verify that the customer are 16 years of age before the sale can be completed
+- Beverages with 16.5 percent alcohol or more may not be sold to persons under the age of 18
+
+```run-dartpad:mode-dart
+{% include demo path="codelab/lib/if_statement/" %}
+```
+
+**switch** can be used in similar ways as in C# or TypeScript.
+But with the exception that each-empty `case` clause jumps to the end of the
+`switch` statement.
+Meaning there is no need for `break` statement in `case`-clauses.
+You could say that it auto-breaks.
+
+```dart
+switch (answer) {
+    case true:
+        print("Correct");
+    case false:
+        print("Wrong");
+    default:
+        print("No valid answer was given");
+}
+```
+
+Dart also support **switch expressions**.
+
+```dart
+String message = switch (answer) {
+  true => "Correct",
+  false => "Wrong",
+  _ => "No valid answer was given",
+};
+print(message)
+```
+
+Note that `_` functions as a default.
