@@ -21,3 +21,6 @@ collections:
   working_with_collections:
     output: true
     permalink: /working-with-collections/:name
+  flutter_basics:
+    output: true
+    permalink: /flutter-basics/:name

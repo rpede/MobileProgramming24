@@ -11,4 +11,7 @@ layout: default
 
 - [Iterables](iterables)
 - [Acronym generator](acronym)
+
+## Advanced
+
 - [Fizz buzz](fizzbuzz)
