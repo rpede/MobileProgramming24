@@ -33,13 +33,15 @@ It takes a tree widgets and puts them on the screen.
 
 This what the widget tree from the example above looks like:
 
-![simple widget tree](./simple_app.drawio.svg)
+{% include_relative simple_app.drawio.svg %}
 
 The [Center widget](https://api.flutter.dev/flutter/widgets/Center-class.html)
 simply places its content in the center of the available space.
 The [Text widget](https://api.flutter.dev/flutter/widgets/Text-class.html) renders some text.
 
 `TextDirection.ltr` tells the `Text` widget to layout its text from left-to-right (ltr).
+
+## Android & iOS
 
 The root for most apps Flutter apps is either going to be [MaterialApp](https://api.flutter.dev/flutter/material/MaterialApp-class.html) or [CupertinoApp](https://api.flutter.dev/flutter/cupertino/CupertinoApp-class.html).
 They both set up defaults for theming, text direction, navigation among other things.
@@ -119,3 +121,26 @@ See [here](https://docs.flutter.dev/platform-integration/platform-adaptations#wi
 The rest of the exercises will mostly focus on Android style widgets, since it
 would be a lot of extra work to provide an example for both.
 However, you are welcome to experiment with both styles.
+
+## Widget trees
+
+Back to widget trees.
+Here is the widget tree for the Material demo above.
+
+{% include_relative material_demo.drawio.svg %}
+
+A couple of things to note.
+[Scaffold](https://api.flutter.dev/flutter/material/Scaffold-class.html) is
+used to create the basic layout for a page (or screen) in your app.
+`Scaffold` can have a multiple child widgets for different commonly used layout elements.
+They include:
+
+- [AppBar](https://api.flutter.dev/flutter/material/AppBar-class.html)
+- [BottomAppBar](https://api.flutter.dev/flutter/material/BottomAppBar-class.html)
+- [FloatingActionButton](https://api.flutter.dev/flutter/material/FloatingActionButton-class.html)
+
+Open the links to see examples of what they look like.
+
+Some widgets have multiple child widgets.
+In the case of `Scaffold` can have distinct child widgets serving different purposes.
+Other widgets like `Column` have a list (array) of children that are all treated the same.
