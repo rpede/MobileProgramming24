@@ -21,7 +21,9 @@ child widget, and those that have multiple.
 This exercise will show some of the layout widgets that are most commonly used.
 You can find a full list of layout widgets [here](https://docs.flutter.dev/ui/widgets/layout).
 
-## Center
+## Single child layout widgets
+
+### Center
 
 You have already seen the
 [Center](https://api.flutter.dev/flutter/widgets/Center-class.html) widget.
@@ -43,7 +45,7 @@ void main() {
 }
 ```
 
-## Container
+### Container
 
 The [Container](https://api.flutter.dev/flutter/widgets/Container-class.html)
 widget wraps just a single child.
@@ -109,7 +111,13 @@ Container(
 
 But then height and width will be ignored.
 
-## SizedBox
+That was a lot of stuff.
+But don't worry, you don't have to memorize it all.
+Your IDE will be able to guide you.
+You just need to remember that if you need something that you can style, like a
+`<div></div>` in HTML, then a `Container` is likely what you are looking for.
+
+### SizedBox
 
 Often you need to just be able to set the size of something.
 For that a [SizedBox](https://api.flutter.dev/flutter/widgets/SizedBox-class.html)
@@ -140,7 +148,7 @@ void main() {
 }
 ```
 
-## ConstrainedBox
+### ConstrainedBox
 
 Maybe you want to set a minimum or maximum size instead.
 For that there is [ConstrainedBox](https://api.flutter.dev/flutter/widgets/ConstrainedBox-class.html).
@@ -176,4 +184,10 @@ void main() {
 
 Note: Drag the border between code and rendered app to change its size.
 
-## Rows and columns
+## Multi child layout widgets
+
+The following widgets takes a list of children.
+
+### Row and Column
+
+[Row]() and [Column]() you will be using a lot as building blocks for your layouts.
