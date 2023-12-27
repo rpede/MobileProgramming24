@@ -28,7 +28,7 @@ void main() {
 }
 ```
 
-The entry point for Flutter is a call to the [funApp function](https://api.flutter.dev/flutter/widgets/runApp.html).
+The entry point for Flutter is a call to the [runApp function](https://api.flutter.dev/flutter/widgets/runApp.html).
 It takes a tree widgets and puts them on the screen.
 
 This what the widget tree from the example above looks like:
@@ -43,7 +43,7 @@ The [Text widget](https://api.flutter.dev/flutter/widgets/Text-class.html) rende
 
 ## Android & iOS
 
-The root for most apps Flutter apps is either going to be [MaterialApp](https://api.flutter.dev/flutter/material/MaterialApp-class.html) or [CupertinoApp](https://api.flutter.dev/flutter/cupertino/CupertinoApp-class.html).
+The root for most Flutter apps is either going to be [MaterialApp](https://api.flutter.dev/flutter/material/MaterialApp-class.html) or [CupertinoApp](https://api.flutter.dev/flutter/cupertino/CupertinoApp-class.html).
 They both set up defaults for theming, text direction, navigation among other things.
 You will learn about navigation at a later point in time.
 The difference between the two apps is that`MaterialApp` is for the [Material design](https://m3.material.io/) language which is the standard on Android.
@@ -114,12 +114,12 @@ void main() {
 }
 ```
 
-For some of the widgets that have a direct equivalent on both iOS and Android,
-you can use a version that automatically adapts.
+Some of the widgets that have a direct equivalent on both iOS and Android.
+For those you can use a variant that automatically adapts.
 See [here](https://docs.flutter.dev/platform-integration/platform-adaptations#widgets-with-adaptive-constructors) for more.
 
 The rest of the exercises will mostly focus on Android style widgets, since it
-would be a lot of extra work to provide an example for both.
+would be a lot of extra work to provide all examples twice.
 However, you are welcome to experiment with both styles.
 
 ## Widget trees
