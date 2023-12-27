@@ -190,4 +190,350 @@ The following widgets takes a list of children.
 
 ### Row and Column
 
-[Row]() and [Column]() you will be using a lot as building blocks for your layouts.
+[Row](https://api.flutter.dev/flutter/widgets/Row-class.html) and
+[Column](https://api.flutter.dev/flutter/widgets/Column-class.html) you will be
+using a lot as building blocks for your layouts.
+The difference between them is what axis it uses to layout its children.
+
+{% include_relative row_column.drawio.svg %}
+
+`Row` will layout its children horizontally.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Row(
+          children: [
+            Container(width: 50, height: 50, color: Colors.amber),
+            Container(width: 50, height: 50, color: Colors.blue),
+            Container(width: 50, height: 50, color: Colors.brown),
+            Container(width: 50, height: 50, color: Colors.cyan),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+And `Column` will layout vertically.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Column(
+          children: [
+            Container(width: 50, height: 50, color: Colors.amber),
+            Container(width: 50, height: 50, color: Colors.blue),
+            Container(width: 50, height: 50, color: Colors.brown),
+            Container(width: 50, height: 50, color: Colors.cyan),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+`Row` and `Column` are often combined to create more intricate layouts.
+They also both have a `mainAxisAlignment` parameter to control the spacing of its children.
+The different possibilities are shown below:
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-800px:split-40
+import 'package:flutter/material.dart';
+
+void main() {
+  final boxes = [
+    Container(width: 50, height: 50, color: Colors.amber),
+    Container(width: 50, height: 50, color: Colors.blue),
+    Container(width: 50, height: 50, color: Colors.brown),
+    Container(width: 50, height: 50, color: Colors.cyan),
+  ];
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Column(
+          children: [
+            const Text("MainAxisAlignment.start"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: boxes,
+            ),
+            const SizedBox(height: 50),
+            const Text("MainAxisAlignment.end"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: boxes,
+            ),
+            const SizedBox(height: 50),
+            const Text("MainAxisAlignment.center"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: boxes,
+            ),
+            const SizedBox(height: 50),
+            const Text("MainAxisAlignment.spaceAround"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: boxes,
+            ),
+            const SizedBox(height: 50),
+            const Text("MainAxisAlignment.spaceBetween"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: boxes,
+            ),
+            const SizedBox(height: 50),
+            const Text("MainAxisAlignment.spaceEvenly"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: boxes,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+### Wrap
+
+Sometimes you might want more children in a `Row` or `Column` than what fits on the screen.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Row(
+          children: [
+            Container(width: 50, height: 50, color: Colors.amber),
+            Container(width: 50, height: 50, color: Colors.blue),
+            Container(width: 50, height: 50, color: Colors.brown),
+            Container(width: 50, height: 50, color: Colors.cyan),
+            Container(width: 50, height: 50, color: Colors.green),
+            Container(width: 50, height: 50, color: Colors.indigo),
+            Container(width: 50, height: 50, color: Colors.lime),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+It which case you will see diagonal stripes alternating between yellow and black.
+Like this:
+
+![Overflow warning](../overflow.png)
+
+That is something you should try to avoid.
+
+One solution is to use the
+[Wrap](https://api.flutter.dev/flutter/widgets/Wrap-class.html) widget.
+It will arrange its children like `Row` or `Column`, but when it runs out of
+space it will wrap to a new line.
+
+<iframe width="560" height="315"
+    src="https://www.youtube-nocookie.com/embed/z5iw2SeFx2M?si=eUm_GPY42Xf2FY6k"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen></iframe>
+
+Lets try the example above again, but with a `Wrap` instead of a `Row`.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Wrap(
+          children: [
+            Container(width: 50, height: 50, color: Colors.amber),
+            Container(width: 50, height: 50, color: Colors.blue),
+            Container(width: 50, height: 50, color: Colors.brown),
+            Container(width: 50, height: 50, color: Colors.cyan),
+            Container(width: 50, height: 50, color: Colors.green),
+            Container(width: 50, height: 50, color: Colors.indigo),
+            Container(width: 50, height: 50, color: Colors.lime),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+Drag the border between code and layout and observe how the arrangement changes.
+
+### Table
+
+The [Table](https://api.flutter.dev/flutter/widgets/Table-class.html) widget is
+sometimes a better option than combining multiple Row and Column widgets.
+
+<iframe width="560" height="315"
+    src="https://www.youtube-nocookie.com/embed/_lbE0wsVZSw?si=B_qrqJOWOOticMUi"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen></iframe>
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Table(
+          border: TableBorder.all(),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: [
+            TableRow(
+              decoration: const BoxDecoration(color: Colors.grey),
+              children: [
+                const SizedBox(height: 64),
+                Container(height: 64, color: Colors.green),
+                Container(height: 32, color: Colors.yellow),
+              ],
+            ),
+            TableRow(
+              decoration: const BoxDecoration(color: Colors.grey),
+              children: [
+                const SizedBox(height: 64),
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.top,
+                  child: Container(height: 32, width: 32, color: Colors.red),
+                ),
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.bottom,
+                  child: Container(height: 32, color: Colors.purple),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+A `Table` can have a default alignment for its children, which can be overridden
+by wrapping the child in a
+[TableCell](https://api.flutter.dev/flutter/widgets/TableCell-class.html).
+
+
+### ListView
+
+The [ListView](https://api.flutter.dev/flutter/widgets/ListView-class.html)
+widget is used to create scrollable lists.
+
+<iframe width="560" height="315"
+    src="https://www.youtube-nocookie.com/embed/KJpkjHGiI5A?si=BWFtG76KgyEP7M3_"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen></iframe>
+
+A [ListTile](https://api.flutter.dev/flutter/material/ListTile-class.html) is
+often for the children `ListView`, since it provides an easy way to layout the 
+content.
+However the children can be any widget as long as their size is constrained in
+the scroll direction.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: ListView(
+          children: const [
+            ListTile(
+              leading: CircleAvatar(child: Text('A')),
+              title: Text('Headline'),
+              subtitle: Text('Supporting text'),
+              trailing: Icon(Icons.favorite_rounded),
+            ),
+            Divider(height: 0),
+            ListTile(
+              leading: CircleAvatar(child: Text('B')),
+              title: Text('Headline'),
+              subtitle: Text(
+                  'Longer supporting text to demonstrate how the text wraps and how the leading and trailing widgets are centered vertically with the text.'),
+              trailing: Icon(Icons.favorite_rounded),
+            ),
+            Divider(height: 0),
+            ListTile(
+              leading: CircleAvatar(child: Text('C')),
+              title: Text('Headline'),
+              subtitle: Text(
+                  "Longer supporting text to demonstrate how the text wraps and how setting 'ListTile.isThreeLine = true' aligns leading and trailing widgets to the top vertically with the text."),
+              trailing: Icon(Icons.favorite_rounded),
+              isThreeLine: true,
+            ),
+            Divider(height: 0),
+            ListTile(
+              leading: CircleAvatar(child: Text('D')),
+              title: Text('Headline'),
+              subtitle: Text('Another tile to demonstrate scrolling.'),
+              trailing: Icon(Icons.favorite_rounded),
+            ),
+            Divider(height: 0),
+            ListTile(
+              leading: CircleAvatar(child: Text('E')),
+              title: Text('Headline'),
+              subtitle: Text('Yet another tile to demonstrate scrolling.'),
+              trailing: Icon(Icons.favorite_rounded),
+            ),
+            Divider(height: 0),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+Sometimes the items you want to display in a ListView needs to be generated or
+fetches from a server.
+In such situations you would use an `itemBuilder` function to build the items.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+final List<int> colorCodes = [800, 600, 300, 100];
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: ListView.builder(
+          itemCount: 100,
+          itemBuilder: (BuildContext context, int index) => Container(
+            height: 50,
+            color: Colors.blue[colorCodes[index % colorCodes.length]],
+            child: Center(child: Text('Entry $index')),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+```
