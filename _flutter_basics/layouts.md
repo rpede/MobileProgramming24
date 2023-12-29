@@ -504,6 +504,87 @@ A `Table` can have a default alignment for its children, which can be overridden
 by wrapping the child in a
 [TableCell](https://api.flutter.dev/flutter/widgets/TableCell-class.html).
 
+### Stack
+
+The [Stack](https://api.flutter.dev/flutter/widgets/Stack-class.html) widget is
+used to layer its children on top of each other.
+Think of it as a stack of paper on your desk view from the top.
+
+<iframe width="560" height="315"
+  src="https://www.youtube-nocookie.com/embed/liEGSeD3Zt8?si=CuB2x5J2hhgoYawp"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen></iframe>
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-600px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Stack(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.red,
+            ),
+            Container(
+              width: 90,
+              height: 90,
+              color: Colors.green,
+            ),
+            Container(
+              width: 80,
+              height: 80,
+              color: Colors.blue,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+The `alignment` property can be used to change the default position for
+children.
+It can be overridden on a per child basis by wrapping it in the 
+[Positioned](https://api.flutter.dev/flutter/widgets/Positioned-class.html)
+widget.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-600px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              CircleAvatar(radius: 100, child: Text("HBO")),
+              Positioned(
+                bottom: 15,
+                child: Row(
+                  children: [
+                    Icon(Icons.add_a_photo),
+                    Icon(Icons.favorite),
+                    Icon(Icons.add_comment)
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+```
 
 ### ListView
 
@@ -518,7 +599,7 @@ widget is used to create scrollable lists.
     allowfullscreen></iframe>
 
 A [ListTile](https://api.flutter.dev/flutter/material/ListTile-class.html) is
-often for the children `ListView`, since it provides an easy way to layout the 
+often for the children `ListView`, since it provides an easy way to layout the
 content.
 However, the children can be any widget as long as their size is constrained in
 the scroll direction.
