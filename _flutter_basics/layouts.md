@@ -537,3 +537,114 @@ void main() {
   );
 }
 ```
+
+### GridView
+
+If a scrollable grid then
+[GridView](https://api.flutter.dev/flutter/widgets/GridView-class.html) is the
+widget to use.
+
+Among other things, it is perfect fit for creating a gallery or product catalog.
+
+<iframe width="560" height="315"
+  src="https://www.youtube-nocookie.com/embed/bLOtZDTm4H8?si=ZAjBlTsh7kNH5kvt"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen></iframe>
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: GridView.count(
+          padding: const EdgeInsets.all(20),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 2,
+          children: List.generate(20, (i) =>
+            Container(
+              padding: const EdgeInsets.all(8),
+              color: Colors.lightBlue[100],
+              child: FlutterLogo(style: FlutterLogoStyle .values[i % FlutterLogoStyle.values.length]),
+            ),
+          )
+        ),
+      ),
+    ),
+  );
+}
+```
+
+The spacing between tiles can be controlled with `mainAxisSpacing` and
+`crossAxisSpacing`.
+The number of tiles displayed across is controlled with `crossAxisCount`.
+
+You can use the
+[GridTile](https://api.flutter.dev/flutter/material/GridTile-class.html) widget
+in children list to quickly add some flair.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+import 'package:flutter/material.dart';
+
+final List<int> colorCodes = [800, 600, 300, 100];
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: GridView.count(
+          padding: const EdgeInsets.all(20),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 1,
+          children: [
+            GridTile(
+              header: const GridTileBar(
+                title: Text("T-Shirt"),
+                subtitle: Text("Basic shirt made of cotton"),
+              ),
+              footer: const GridTileBar(
+                leading: Text("19.99\$"),
+              ),
+              child: Container(
+                color: Colors.lightBlue,
+                child: const Placeholder(),
+              ),
+            ),
+            GridTile(
+              header: const GridTileBar(
+                title: Text("Premium t-Shirt"),
+                subtitle: Text("Luxury shirt made of silk"),
+              ),
+              footer: const GridTileBar(
+                leading: Text("300.00\$"),
+              ),
+              child: Container(
+                color: Colors.lightBlue,
+                child: const Placeholder(),
+              ),
+            ),
+            GridTile(
+              header: const GridTileBar(
+                title: Text("Jeans"),
+                subtitle: Text("Quality slim fit jeans"),
+              ),
+              footer: const GridTileBar(
+                leading: Text("39.99\$"),
+              ),
+              child: Container(
+                color: Colors.lightBlue,
+                child: const Placeholder(),
+              ),
+            ),
+          ]
+        ),
+      ),
+    ),
+  );
+}
+```
