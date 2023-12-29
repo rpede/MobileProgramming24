@@ -13,7 +13,7 @@ Some widgets in Flutter don't show anything on the screen on their own.
 They are there to control the layout of other widgets.
 
 You have seen a couple of these already like `Center` and `Column`.
-However there are many more.
+However, there are many more.
 
 Layout widgets can be divided into two categories, those that have just a single
 child widget, and those that have multiple.
@@ -333,7 +333,7 @@ void main() {
 }
 ```
 
-It which case you will see diagonal stripes alternating between yellow and black.
+In which case you will see diagonal stripes alternating between yellow and black.
 Like this:
 
 ![Overflow warning](../overflow.png)
@@ -352,7 +352,7 @@ space it will wrap to a new line.
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen></iframe>
 
-Lets try the example above again, but with a `Wrap` instead of a `Row`.
+Let's try the example above again, but with a `Wrap` instead of a `Row`.
 
 ```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
 import 'package:flutter/material.dart';
@@ -453,7 +453,7 @@ widget is used to create scrollable lists.
 A [ListTile](https://api.flutter.dev/flutter/material/ListTile-class.html) is
 often for the children `ListView`, since it provides an easy way to layout the 
 content.
-However the children can be any widget as long as their size is constrained in
+However, the children can be any widget as long as their size is constrained in
 the scroll direction.
 
 ```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
@@ -511,8 +511,8 @@ void main() {
 }
 ```
 
-Sometimes the items you want to display in a ListView needs to be generated or
-fetches from a server.
+Sometimes the items you want to display in a ListView need to be generated or
+fetched.
 In such situations you would use an `itemBuilder` function to build the items.
 
 ```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
@@ -540,11 +540,11 @@ void main() {
 
 ### GridView
 
-If a scrollable grid then
+If want a scrollable grid then
 [GridView](https://api.flutter.dev/flutter/widgets/GridView-class.html) is the
 widget to use.
 
-Among other things, it is perfect fit for creating a gallery or product catalog.
+Among other things, it is a perfect fit for creating a gallery or product catalog.
 
 <iframe width="560" height="315"
   src="https://www.youtube-nocookie.com/embed/bLOtZDTm4H8?si=ZAjBlTsh7kNH5kvt"
@@ -553,7 +553,7 @@ Among other things, it is perfect fit for creating a gallery or product catalog.
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   allowfullscreen></iframe>
 
-```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-60
 import 'package:flutter/material.dart';
 
 void main() {
@@ -569,7 +569,7 @@ void main() {
             Container(
               padding: const EdgeInsets.all(8),
               color: Colors.lightBlue[100],
-              child: FlutterLogo(style: FlutterLogoStyle .values[i % FlutterLogoStyle.values.length]),
+              child: FlutterLogo(style: FlutterLogoStyle.values[i % FlutterLogoStyle.values.length]),
             ),
           )
         ),
@@ -587,10 +587,8 @@ You can use the
 [GridTile](https://api.flutter.dev/flutter/material/GridTile-class.html) widget
 in children list to quickly add some flair.
 
-```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-70
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-460px:split-60
 import 'package:flutter/material.dart';
-
-final List<int> colorCodes = [800, 600, 300, 100];
 
 void main() {
   runApp(
