@@ -305,6 +305,73 @@ void main() {
 }
 ```
 
+If you don't want empty space around the children, then you can wrap children in
+[Expanded](https://api.flutter.dev/flutter/widgets/Expanded-class.html) widget.
+It makes the child widget expand to fill out the available space.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-500px:split-60
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Row(
+          children: [
+            Container(width: 50, height: 50, color: Colors.amber),
+            Expanded(
+              child: Container(width: 50, height: 50, color: Colors.blue),
+            ),
+            Container(width: 50, height: 50, color: Colors.brown),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+If you wrap all the children in `Expanded` then they will fill out the space by
+dividing it between them.
+You can control how much space (relative to the others) a `Expanded` gets by
+setting the flex value.
+
+```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-500px:split-60
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Row(
+          children: [
+            Expanded(
+              child: Container(width: 50, height: 50, color: Colors.amber),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(width: 50, height: 50, color: Colors.blue),
+            ),
+            Expanded(
+              flex: 3,
+              child: Container(width: 50, height: 50, color: Colors.brown),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+`Expanded` is allocated space on the fraction of its flex value out of the sum
+of all flex values.
+It has a default flex value of 1.
+
+In the code above the sum of flex values is 6.
+So, the first child gets $6/1$ of the space.
+Second gets $6/2$ and third gets $6/3$ (or half).
+
 ### Wrap
 
 Sometimes you might want more children in a `Row` or `Column` than what fits on the screen.
@@ -646,3 +713,5 @@ void main() {
   );
 }
 ```
+
+{% include mathtex.html %}
