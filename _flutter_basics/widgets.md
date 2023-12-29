@@ -137,6 +137,7 @@ They include:
 - [AppBar](https://api.flutter.dev/flutter/material/AppBar-class.html)
 - [BottomAppBar](https://api.flutter.dev/flutter/material/BottomAppBar-class.html)
 - [FloatingActionButton](https://api.flutter.dev/flutter/material/FloatingActionButton-class.html)
+- [Drawer](https://api.flutter.dev/flutter/material/Drawer-class.html)
 
 Open the links to see examples of what they look like.
 
