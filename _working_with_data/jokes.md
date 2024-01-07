@@ -1,5 +1,5 @@
 ---
-title: Jokes
+title: Joke teller app
 layout: default
 ---
 
