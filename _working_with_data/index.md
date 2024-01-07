@@ -11,4 +11,5 @@ layout: default
 
 # Working with Data
 
+- [JSON](json)
 - [Joke teller app](jokes)

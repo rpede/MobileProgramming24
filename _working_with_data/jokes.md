@@ -2,9 +2,10 @@
 title: Jokes
 layout: default
 ---
+
 <script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
 
-# Joke Teller
+# Introduction
 
 This will be a fun one (hopefully).
 Today we are going to kill the boredom by writing an app that tells jokes.
@@ -27,7 +28,7 @@ Luckily there is a nice free API we can use to fetch random jokes.
 
 Head over to [jokeapi](https://jokeapi.dev/#try-it).
 
-I suggest that you select *Programming* as the category.
+I suggest that you select _Programming_ as the category.
 It is also recommended that you select everything under **Select flags to
 blacklist** as some of the jokes are really offensive otherwise.
 
@@ -39,7 +40,7 @@ The URL should look something like this:
 https://v2.jokeapi.dev/joke/Programming?blacklistFlags=nsfw,religious,political,racist,sexist,explicit
 ```
 
-Feel free to hit the *Send Request* button a couple of times to see how the API
+Feel free to hit the _Send Request_ button a couple of times to see how the API
 responds.
 
 Remember the URL because you will need it later.
@@ -52,23 +53,23 @@ So you get something like:
 
 ```json
 {
-    "error": false,
-    "category": "Programming",
-    "type": "twopart",
-    "setup": "Why do programmers confuse Halloween and Christmas?",
-    "delivery": "Because Oct 31 = Dec 25",
-    "joke": "Java is like Alzheimer's, it starts off slow, but eventually, your memory is gone.",
-    "flags": {
-        "nsfw": false,
-        "religious": false,
-        "political": false,
-        "racist": false,
-        "sexist": false,
-        "explicit": false
-    },
-    "id": 11,
-    "safe": true,
-    "lang": "en"
+  "error": false,
+  "category": "Programming",
+  "type": "twopart",
+  "setup": "Why do programmers confuse Halloween and Christmas?",
+  "delivery": "Because Oct 31 = Dec 25",
+  "joke": "Java is like Alzheimer's, it starts off slow, but eventually, your memory is gone.",
+  "flags": {
+    "nsfw": false,
+    "religious": false,
+    "political": false,
+    "racist": false,
+    "sexist": false,
+    "explicit": false
+  },
+  "id": 11,
+  "safe": true,
+  "lang": "en"
 }
 ```
 
@@ -77,7 +78,7 @@ It should have both `setup`, `delivery` and `joke` fields.
 Copy the merged JSON.
 Head over to [JSON to Dart](https://javiercbk.github.io/json_to_dart/) and paste
 it in.
-For the Dart class name field you type `JokeDto` and hit the *Generate Dart* button.
+For the Dart class name field you type `JokeDto` and hit the _Generate Dart_ button.
 
 Copy all the generated Dart code and paste it into a new file named
 `joke_dto.dart` inside your project.
@@ -93,8 +94,8 @@ For that you need a package.
 flutter pub add http
 ```
 
-*There is a HTTP client build into Dart but the
-[http package](https://pub.dev/packages/http) is a lot nicer to work with.*
+_There is a HTTP client build into Dart but the
+[http package](https://pub.dev/packages/http) is a lot nicer to work with._
 
 You also need to add the [provider package](https://pub.dev/packages/provider).
 
@@ -210,6 +211,12 @@ Spend some time to make it pretty, before you head to the challenges.
 
 ## Challenges
 
+Following challenges can be completed independent of each other.
+
+You are not required to complete them all, but you should at least read the
+text.
+However completing the challenges will make your app a lot more awesome 😎.
+
 ### Challenge 1 - Add some graphics
 
 Without some graphics the app will still look a bit boring.
@@ -278,7 +285,7 @@ I suggest using a
 [MultiProvider](https://pub.dev/packages/provider#multiprovider) to cleanly
 provider both `DataSource` and settings.
 
-#### 2. Persistence
+#### 2. Persistence (optional)
 
 You can use the [localstorage package](https://pub.dev/packages/localstorage) to
 easily persist simple data in your app.
@@ -287,3 +294,149 @@ One caveat is that whatever data you try to persist needs to be JSON
 serializable.
 Meaning you can only use types like: int, double, bool, String List & Map.
 Also you will have to cast the value you get back to the appropriate type.
+
+Add `load` and `save` methods to `Settings` that use `LocalStorage` to persist
+settings.
+
+#### 3. Settings page
+
+Create a new `StatefulWidget` for the settings page.
+
+You can navigate to it with:
+
+```dart
+Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingsPage()));
+```
+
+Which can be invoked from `onPressed` on a button.
+
+You can use the [settings_ui package](https://pub.dev/packages/settings_ui) to
+easily create a UI with toggles for various settings such as categories.
+
+Remember to call `setState(() {})` when you want the UI to update.
+
+You can use [PopScope](https://api.flutter.dev/flutter/widgets/PopScope-class.html)
+to save the settings before the widget gets popped from the navigation stack.
+
+```dart
+Widget build(BuildContext context) {
+  return PopScope(
+    canPop: false,
+    onPopInvoked: (didPop) async {
+      final navigator = Navigator.of(context);
+      await settings.save(settings);
+      if (navigator.canPop()) navigator.pop();
+    },
+    child: Scaffold(
+      appBar: AppBar(title: const Text("Settings")),
+      body: SettingsList(sections: [
+        // your settings here
+      ]),
+    ),
+  );
+}
+```
+
+#### 4. Use settings in DataSource
+
+Update `DataSource` to use the settings:
+
+```dart
+class DataSource {
+  Future<JokeDto> getJoke(Settings settings) async {
+    final categories = settings.categories.isEmpty ? "Any" : settings.categories.map((e) => e.name).join(",");
+    final url = "https://v2.jokeapi.dev/joke/$categories";
+    final response = await http.get(Uri.parse(url));
+    final map = json.decode(response.body);
+    return JokeDto.fromJson(map);
+  }
+}
+```
+
+You can get the settings in you widget with `context.read<Settings>()`.
+
+### Challenge 3 - Read it out loud
+
+Wouldn't it be cool if your app could read jokes out load?
+
+What you need is some text-to-speech (aka speech synthesis) functionality.
+
+The [Cloud Text-To-Speech](https://pub.dev/packages/cloud_text_to_speech) allows
+you to easily use cloud services from major providers to convert text to sound.
+
+You will also need another package such as
+[audioplayers](https://pub.dev/packages/audioplayers) to play the sound.
+
+Third your app will need secrets to access the speech cloud service.
+As you know, one should never commit such to source repository.
+You can store the secrets in a `.env` file and read them using
+[flutter_dotenv](https://pub.dev/packages/flutter_dotenv).
+
+Add the packages:
+
+```sh
+flutter pub add cloud_text_to_speech
+flutter pub add audioplayers
+flutter pub add flutter_dotenv
+```
+
+1. Add `.env` to `.gitignore`
+2. Go to [Azure Portal](https://portal.azure.com/).
+3. Create a new **Speech Services** resource in the region North Europe.
+4. Copy one of the two keys on the resource overview page under **Keys and endpoint** section.
+
+Create a `.env` file with your key at the root of your Flutter project:
+
+```sh
+TTS_SUBSCRIPTION_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TTS_REGION=northeurope
+```
+
+**IMPORTANT** verify that `.env` file isn't included before you commit and push.
+
+Change main method in `main.dart`:
+
+```dart
+void main() async {
+  await dotenv.load(fileName: ".env");
+  TtsMicrosoft.init(
+    subscriptionKey: dotenv.env["TTS_SUBSCRIPTION_KEY"]!,
+    region: dotenv.env["TTS_REGION"]!,
+    withLogs: true,
+  );
+  runApp(const MyApp());
+}
+```
+
+Add the following to one of your widget state objects:
+
+```dart
+final player = AudioPlayer();
+
+@override
+void dispose() {
+  player.stop().then((value) => player.dispose());
+  super.dispose();
+}
+```
+
+You can now have the text converted to sound and play with the following code.
+
+```dart
+final voicesResponse = await TtsMicrosoft.getVoices();
+final voices = voicesResponse.voices;
+
+TtsParamsMicrosoft ttsParams = TtsParamsMicrosoft(
+    voice:
+        voices.firstWhere((element) => element.locale.code.startsWith("en-")),
+    audioFormat: AudioOutputFormatMicrosoft.audio48Khz192kBitrateMonoMp3,
+    text: textYouWantToBeSpoken,
+);
+
+final ttsResponse = await TtsMicrosoft.convertTts(ttsParams);
+
+player.play(BytesSource(ttsResponse.audio.buffer.asUint8List()));
+```
+
+Be mindful not to make excessive amounts of request to the service, as you will
+likely hit a limit at some point.
