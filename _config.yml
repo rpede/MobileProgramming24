@@ -24,3 +24,6 @@ collections:
   flutter_basics:
     output: true
     permalink: /flutter-basics/:name
+  working_with_data:
+    output: true
+    permalink: /working-with-data/:name
