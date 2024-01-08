@@ -21,9 +21,9 @@ You can use a different project name if you want.
 ## Fetch data
 
 You could write a long list of jokes yourself for the app.
-However that sounds like a lot of work for something supposed to be fun.
+However, that sounds like a lot of work for something supposed to be fun.
 
-Instead, lets use jokes other people have written.
+Instead, let's use jokes other people have written.
 Luckily there is a nice free API we can use to fetch random jokes.
 
 Head over to [jokeapi](https://jokeapi.dev/#try-it).
@@ -49,7 +49,7 @@ There are two types of jokes `single` and `twopart`.
 You can tell which type you get from the `type` field in the response.
 
 For the next step you need to merge a response of both types.
-So you get something like:
+So, you get something like:
 
 ```json
 {
@@ -215,20 +215,20 @@ Following challenges can be completed independent of each other.
 
 You are not required to complete them all, but you should at least read the
 text.
-However completing the challenges will make your app a lot more awesome 😎.
+However, completing the challenges will make your app a lot more awesome 😎.
 
 ### Challenge 1 - Add some graphics
 
 Without some graphics the app will still look a bit boring.
-So lets fix it!
+So, let's fix it!
 
 You are not required to follow the steps in this section.
 You can get creative instead and do your own thing instead.
 
-I though it would be cool if it looks like there were different characters
-telling the jokes.
+I thought it would be cool if it looks like there were different cartoon
+characters telling jokes.
 
-I've found a avatar library/service called [DiceBear with an HTTP
+I've found an avatar library/service called [DiceBear with an HTTP
 API](https://www.dicebear.com/how-to-use/http-api/).
 
 Find a [avatar style](https://www.dicebear.com/styles/) you like.
@@ -243,7 +243,7 @@ Where `joke.id` is the id field from the DTO.
 
 Replace `pixel-art` with your preferred style.
 
-SVG is nice format since it looks crisp no matter the size.
+SVG is a nice format since it looks crisp no matter the size.
 However Flutter out-of-the-box doesn't easily allow you to draw SVGs.
 But that can easily be fixed just by adding another package.
 
@@ -263,9 +263,9 @@ Mine ended up looking like this:
 
 ### Challenge 2 - Settings
 
-Remember there where a lot of settings you could change on the [jokeapi website](https://jokeapi.dev/)?
+Remember there were a lot of settings you could change on the [jokeapi website](https://jokeapi.dev/)?
 
-Wouldn't it be cool if your users could change settings themselves?
+Wouldn't it be cool if your users could change the settings themselves?
 
 For that you need a couple things.
 
@@ -293,10 +293,17 @@ easily persist simple data in your app.
 One caveat is that whatever data you try to persist needs to be JSON
 serializable.
 Meaning you can only use types like: int, double, bool, String List & Map.
-Also you will have to cast the value you get back to the appropriate type.
+Also, you will have to cast the value you get back to the appropriate type.
 
 Add `load` and `save` methods to `Settings` that use `LocalStorage` to persist
 settings.
+
+NOTE: You need to wait for `LocalStorage` to be ready before you can use it:
+
+```dart
+final LocalStorage storage = LocalStorage('settings');
+await storage.ready
+```
 
 #### 3. Settings page
 
@@ -316,7 +323,7 @@ easily create a UI with toggles for various settings such as categories.
 Remember to call `setState(() {})` when you want the UI to update.
 
 You can use [PopScope](https://api.flutter.dev/flutter/widgets/PopScope-class.html)
-to save the settings before the widget gets popped from the navigation stack.
+to save the settings before the widget is popped from the navigation stack.
 
 ```dart
 Widget build(BuildContext context) {
@@ -353,11 +360,12 @@ class DataSource {
 }
 ```
 
-You can get the settings in you widget with `context.read<Settings>()`.
+You can get the settings from within your widget with
+`context.read<Settings>()`.
 
 ### Challenge 3 - Read it out loud
 
-Wouldn't it be cool if your app could read jokes out load?
+Wouldn't it be cool if your app could read jokes out loud?
 
 What you need is some text-to-speech (aka speech synthesis) functionality.
 
@@ -382,7 +390,7 @@ flutter pub add flutter_dotenv
 
 1. Add `.env` to `.gitignore`
 2. Go to [Azure Portal](https://portal.azure.com/).
-3. Create a new **Speech Services** resource in the region North Europe.
+3. Create a new **Speech Services** resource in the region of North Europe.
 4. Copy one of the two keys on the resource overview page under **Keys and endpoint** section.
 
 Create a `.env` file with your key at the root of your Flutter project:
