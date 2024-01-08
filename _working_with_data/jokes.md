@@ -30,7 +30,7 @@ Head over to [jokeapi](https://jokeapi.dev/#try-it).
 
 I suggest that you select _Programming_ as the category.
 It is also recommended that you select everything under **Select flags to
-blacklist** as some of the jokes are really offensive otherwise.
+blacklist** as some of the jokes will be really offensive otherwise.
 
 ![Recommended jokeapi settings](../jokeapi.png)
 
@@ -211,7 +211,7 @@ Spend some time to make it pretty, before you head to the challenges.
 
 ## Challenges
 
-Following challenges can be completed independent of each other.
+The following challenges can be completed independent of each other.
 
 You are not required to complete them all, but you should at least read the
 text.
@@ -223,9 +223,10 @@ Without some graphics the app will still look a bit boring.
 So, let's fix it!
 
 You are not required to follow the steps in this section.
-You can get creative instead and do your own thing instead.
+You can get creative instead and add graphics a different way instead with the
+[Image widget](https://api.flutter.dev/flutter/widgets/Image-class.html).
 
-I thought it would be cool if it looks like there were different cartoon
+Anyway, I thought it would be cool if it looks like there are different cartoon
 characters telling jokes.
 
 I've found an avatar library/service called [DiceBear with an HTTP
@@ -283,7 +284,7 @@ You can make the `Settings` class accessible across your application with a
 provider (just like DataSource).
 I suggest using a
 [MultiProvider](https://pub.dev/packages/provider#multiprovider) to cleanly
-provider both `DataSource` and settings.
+provide both `DataSource` and settings.
 
 #### 2. Persistence (optional)
 
@@ -369,8 +370,9 @@ Wouldn't it be cool if your app could read jokes out loud?
 
 What you need is some text-to-speech (aka speech synthesis) functionality.
 
-The [Cloud Text-To-Speech](https://pub.dev/packages/cloud_text_to_speech) allows
-you to easily use cloud services from major providers to convert text to sound.
+The [Cloud Text-To-Speech](https://pub.dev/packages/cloud_text_to_speech)
+package allows you to easily use cloud services from major providers to convert
+text to sound.
 
 You will also need another package such as
 [audioplayers](https://pub.dev/packages/audioplayers) to play the sound.
@@ -428,7 +430,8 @@ void dispose() {
 }
 ```
 
-You can now have the text converted to sound and play with the following code.
+You can now have the text converted to sound and play it with the following
+code.
 
 ```dart
 final voicesResponse = await TtsMicrosoft.getVoices();
