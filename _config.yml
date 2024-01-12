@@ -15,6 +15,9 @@ github:
   is_project_page: false
 
 collections:
+  install:
+    output: true
+    permalink: /install/:name
   learning_dart:
     output: true
     permalink: /learning-dart/:name

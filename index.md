@@ -6,6 +6,7 @@ description: >-
 
 # Table of content
 
+- [Install](install)
 - [Learning Dart](learning-dart)
 - [Working with collections](working-with-collections)
 - [Flutter Basics](flutter-basics)
