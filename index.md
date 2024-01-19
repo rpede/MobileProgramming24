@@ -11,3 +11,4 @@ description: >-
 - [Working with collections](working-with-collections)
 - [Flutter Basics](flutter-basics)
 - [Working with data](working-with-data)
+- [Tricks](tricks)
