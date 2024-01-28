@@ -11,6 +11,7 @@ layout: default
 
 - [Iterables](iterables)
 - [Acronym generator](acronym)
+- [Reverse Polish notation](rpn)
 
 ## Advanced
 
