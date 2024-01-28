@@ -24,9 +24,16 @@ With postfix notation, the operator follows the operands.
 
 RPN has the advantage of not using parentheses.
 
+Values entered are stored in a stack.
+
+Picture a stack of cards.
+
+- You put a card in the stack by placing it on top of other cards.
+- You can remove a card by taking the topmost card.
+- You can also peek at the card in the top of the stack.
+
 ## Implementation
 
-Values entered are stored in a stack.
 Base your stack on the [List class](https://api.dart.dev/stable/2.19.0/dart-core/List-class.html).
 The end of the list, should represent the top of the stack.
 
