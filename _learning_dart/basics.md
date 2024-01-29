@@ -135,7 +135,7 @@ Current rules are:
 
 #### switch
 
-**switch** can be used in similar ways as in C# or TypeScript.
+**switch-statement** can be used in similar ways as in C# or TypeScript.
 But with the exception that each-empty `case` clause jumps to the end of the
 `switch` statement.
 Meaning there is no need for `break` statement in `case`-clauses.
@@ -165,7 +165,10 @@ print(message)
 
 Note that `_` functions as a default.
 
-Solve the following two exercises with either a switch-statement or switch-expression.
+> Expressions evaluate to a value that can either be assigned to a value or returned.
+Statements do not evaluate to a value.
+
+Solve the following exercises with either a switch-statement.
 
 Imagine you have an API that returns day of week as an `int`.
 The numeric values follows
@@ -177,4 +180,13 @@ On invalid input it should throw an [ArgumentError](https://api.dart.dev/stable/
 
 ```run-dartpad:mode-dart
 {% include exercise path="codelab/lib/switch_statement/" %}
+```
+
+Solve this one with a switch-expression.
+
+Write a simple function that converts Denmark's 7-step-scale to ECTS grading scale.
+See [Academic grading in Denmark](https://en.wikipedia.org/wiki/Academic_grading_in_Denmark).
+
+```run-dartpad:mode-dart
+{% include exercise path="codelab/lib/switch_expression/" %}
 ```
