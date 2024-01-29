@@ -190,3 +190,13 @@ See [Academic grading in Denmark](https://en.wikipedia.org/wiki/Academic_grading
 ```run-dartpad:mode-dart
 {% include exercise path="codelab/lib/switch_expression/" %}
 ```
+
+## Variables
+
+The official documentation explains it better than I can.
+
+**[Dart - Variables](https://dart.dev/language/variables)**
+
+**Note** `const` in TypeScript are the same as `final` in Dart.
+In Dart you can only declare a variable as `const` when the value can be
+determined during compilation and will never change at runtime.
