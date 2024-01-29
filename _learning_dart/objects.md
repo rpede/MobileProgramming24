@@ -319,7 +319,7 @@ method in a base class.
 It is also possible to have a class only implement the interface of another,
 but none of the functionality.
 
-```run-dartpad:run-true
+```run-dartpad:mode-dart:height-500px
 class Greeter {
   void greet(String name) {
     print("Hello $name");
@@ -380,6 +380,6 @@ class MockUserService implements UserService {}
 
 Here is an example of using it all together.
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-800px
 {% include demo path="codelab/lib/objects/" %}
 ```
