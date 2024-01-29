@@ -3,7 +3,6 @@ title: Learning Dart
 layout: default
 ---
 <script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
-<style>iframe {height: 300px;}</style>
 
 # The basics
 
@@ -41,7 +40,7 @@ num add(num a, num b) {
 
 The entry point for a program in Dart is a main function.
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-200px
 void main() {
     print("This prints");
 }
@@ -57,7 +56,7 @@ But the compiler can't type check if you don't specify types.
 This will give you an error when you run the code, because you can't divide a
 number by a string.
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-200px
 divide(a, b) {
     return a / b;
 }
@@ -70,7 +69,7 @@ main(){
 Here we get a syntax error, which allows us to fix the mistake before it becomes
 a bug in our program.
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-200px
 num divide(num a, num b) {
     return a / b;
 }
@@ -86,7 +85,7 @@ void main(){
 
 **for loops** works as you will expect.
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-200px
 void main() {
     for (var i = 1; i < 5; i++) {
         print(i);
@@ -96,7 +95,7 @@ void main() {
 
 The same with **for-each loops**
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-200px
 void main() {
     var numbers = [1, 2, 3, 4];
     for (var i in numbers) {
@@ -107,7 +106,7 @@ void main() {
 
 And **while loops**
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-200px
 void main() {
     var counter = 1;
     while(counter < 5) {
@@ -117,6 +116,8 @@ void main() {
 ```
 
 ### Branching
+
+#### if
 
 **if** statements are also works as you might expect.
 
@@ -129,8 +130,10 @@ Current rules are:
 - Beverages with 16.5 percent alcohol or more may not be sold to persons under the age of 18
 
 ```run-dartpad:mode-dart
-{% include demo path="codelab/lib/if_statement/" %}
+{% include exercise path="codelab/lib/if_statement/" %}
 ```
+
+#### switch
 
 **switch** can be used in similar ways as in C# or TypeScript.
 But with the exception that each-empty `case` clause jumps to the end of the
@@ -161,3 +164,17 @@ print(message)
 ```
 
 Note that `_` functions as a default.
+
+Solve the following two exercises with either a switch-statement or switch-expression.
+
+Imagine you have an API that returns day of week as an `int`.
+The numeric values follows
+[DayOfWeek](https://docs.oracle.com/javase/8/docs/api/java/time/DayOfWeek.html)
+definition in Java.
+Write a simple function that takes a day of the week as input and returns
+whether it's a weekday or a weekend.
+On invalid input it should throw an [ArgumentError](https://api.dart.dev/stable/3.2.6/dart-core/ArgumentError-class.html).
+
+```run-dartpad:mode-dart
+{% include exercise path="codelab/lib/switch_statement/" %}
+```
