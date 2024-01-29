@@ -2,6 +2,7 @@
 title: Learning Dart
 layout: default
 ---
+
 <script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
 
 # The basics
@@ -166,7 +167,7 @@ print(message)
 Note that `_` functions as a default.
 
 > Expressions evaluate to a value that can either be assigned to a value or returned.
-Statements do not evaluate to a value.
+> Statements do not evaluate to a value.
 
 Solve the following exercises with either a switch-statement.
 
@@ -176,7 +177,7 @@ The numeric values follows
 definition in Java.
 Write a simple function that takes a day of the week as input and returns
 whether it's a weekday or a weekend.
-On invalid input it should throw an [ArgumentError](https://api.dart.dev/stable/3.2.6/dart-core/ArgumentError-class.html).
+On invalid input it should `throw ArgumentError('Invalid day')`.
 
 ```run-dartpad:mode-dart
 {% include exercise path="codelab/lib/switch_statement/" %}
@@ -200,3 +201,72 @@ The official documentation explains it better than I can.
 **Note** `const` in TypeScript are the same as `final` in Dart.
 In Dart you can only declare a variable as `const` when the value can be
 determined during compilation and will never change at runtime.
+
+## Error handling
+
+In Dart you can throw any arbitrary object (just like TypeScript).
+
+```dart
+throw "Party!!!";
+```
+
+However you pretty much always want to throw types that implement
+[Error](https://api.dart.dev/stable/3.2.6/dart-core/Error-class.html) or
+[Exception](https://api.dart.dev/stable/3.2.6/dart-core/Exception-class.html).
+
+Try-catch can look very similar to TypeScript:
+
+```run-dartpad:mode-dart:height-300px
+void coolFunction() => throw new UnimplementedError();
+
+void main() {
+  try {
+      coolFunction();
+  } catch (error) {
+      print("Oh no, oh no, oh no no no");
+  }
+}
+```
+
+As indicated, having `new` before invoking a constructor is not necessary.
+
+```dart
+void coolFunction() => throw UnimplementedError();
+```
+
+If you want to catch some specific type, you can do:
+
+```run-dartpad:mode-dart:height-250px
+void coolFunction() => throw UnimplementedError();
+
+void main() {
+    try {
+        coolFunction();
+    } on UnimplementedError {
+        print("Bro need to implement that function!");
+    }
+}
+```
+
+In case you want to do something with the catch object.
+
+
+```run-dartpad:mode-dart:height-400px
+class ValidationError extends ArgumentError {
+    ValidationError(super.message);
+}
+
+void validateAge(int age) {
+    if (age < 0) {
+        throw ValidationError("Age can be less than 0");
+    }
+}
+
+void main() {
+    try {
+        validateAge(-1);
+    } on ArgumentError catch (e) {
+        print(e.message);
+    }
+}
+```
