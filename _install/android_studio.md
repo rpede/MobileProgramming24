@@ -26,13 +26,13 @@ You should now be back to the "Welcome to Android Studio" screen.
 
 Click **Plugins** in left panel.
 
-![](./screenshots/flutter_plugin.png)
+![](../flutter_plugin.png)
 
 Install **Flutter** pluging and **Restart IDE**.
 
 That should add a **New Flutter Project** button to the welcome screen as seen below.
 
-![](./screenshots/new_flutter_project.png)
+![](../new_flutter_project.png)
 
 ## Verify installation
 
