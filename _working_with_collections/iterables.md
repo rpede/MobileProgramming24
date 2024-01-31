@@ -48,12 +48,12 @@ void main() {
 
 These kinds of operations exists in many programming languages, though naming might be different.
 
-| Description | C# | JavaScript | Dart |
+| Description | Dart | C# | JavaScript | 
 |-|-|-|-|
-| Filter (keep) elements that match the predicate | [Where](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.where) | [filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) | [where](https://api.dart.dev/stable/dart-core/Iterable/where.html) |
-| Map (convert) each element to another type | [Select](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.select) | [map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) | [map](https://api.dart.dev/stable/dart-core/Iterable/map.html) |
-| Flatten nested collections | [SelectMany](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.selectmany) | [flatMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap) | [expand](https://api.dart.dev/stable/dart-core/Iterable/expand.html) |
-| Group elements by a common value | [GroupBy](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.groupby) | [Object.groupBy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy) | [groupBy](https://pub.dev/documentation/collection/latest/collection/groupBy.html) |
+| Filter (keep) elements that match the predicate | [where](https://api.dart.dev/stable/dart-core/Iterable/where.html) | [Where](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.where) | [filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) |
+| Map (convert) each element to another type | [map](https://api.dart.dev/stable/dart-core/Iterable/map.html) | [Select](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.select) | [map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) | 
+| Flatten nested collections | [expand](https://api.dart.dev/stable/dart-core/Iterable/expand.html) | [SelectMany](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.selectmany) | [flatMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap) | 
+| Group elements by a common value | [groupBy](https://pub.dev/documentation/collection/latest/collection/groupBy.html) | [GroupBy](https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.groupby) | [Object.groupBy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy) |
 
 ## Exercise
 
