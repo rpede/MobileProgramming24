@@ -8,3 +8,4 @@ layout: default
 
 - [Widgets](widgets)
 - [Layouts](layouts)
+- [Challenge](challenge)
