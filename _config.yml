@@ -33,3 +33,6 @@ collections:
   working_with_data:
     output: true
     permalink: /working-with-data/:name
+  tricks:
+    output: true
+    permalink: /tricks/:name

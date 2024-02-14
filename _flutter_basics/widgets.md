@@ -12,7 +12,7 @@ layout: default
 In Flutter the entire UI is built from widgets.
 A widget serves a similar purpose es a component in Angular (React or Vue).
 
-```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-340px:split-60
+```run-dartpad:mode-flutter:run-false:width-100%:height-340px:split-60
 import 'package:flutter/material.dart';
 
 void main() {
@@ -57,7 +57,7 @@ Each therefore has their own set of widgets.
 
 ### Cupertino demo
 
-```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-600px:split-60
+```run-dartpad:mode-flutter:run-false:width-100%:height-600px:split-60
 import 'package:flutter/cupertino.dart';
 
 void main() {
@@ -86,7 +86,7 @@ void main() {
 
 ### Android demo
 
-```run-dartpad:theme-light:mode-flutter:run-false:width-100%:height-600px:split-60
+```run-dartpad:mode-flutter:run-false:width-100%:height-600px:split-60
 import 'package:flutter/material.dart';
 
 void main() {
@@ -120,6 +120,43 @@ See [here](https://docs.flutter.dev/platform-integration/platform-adaptations#wi
 The rest of the exercises will mostly focus on Android style widgets, since it
 would be a lot of extra work to provide all examples twice.
 However, you are welcome to experiment with both styles.
+
+## Buttons
+
+Material buttons comes in many different flavours.
+Here are some examples:
+
+import 'package:flutter/material.dart';
+
+```run-dartpad:mode-flutter:run-false:width-100%:height-500px:split-70
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        body: Column(
+          children: [
+            const Text('Different kinds of buttons:'),
+            TextButton(child: const Text("TextButton"), onPressed: () {}),
+            ElevatedButton(child: const Text("ElevatedButton"), onPressed: () {}),
+            OutlinedButton(child: const Text("OutlinedButton"), onPressed: () {}),
+            FilledButton(child: const Text("FilledButton"), onPressed: () {}),
+            IconButton(icon: const Icon(Icons.settings), onPressed: () {})
+          ],
+        ),
+      ),
+    ),
+  );
+}
+```
+
+The parameter `onPressed` takes a function to execute when the button is pressed.
+Here an empty function `() {}` is being used.
+You could also set the value of `onPressed` to `null` if you want the button to
+be disabled.
+
+You can find a list of icons [here](https://fonts.google.com/icons?icon.platform=flutter).
 
 ## Widget trees
 
