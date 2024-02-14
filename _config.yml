@@ -27,6 +27,9 @@ collections:
   flutter_basics:
     output: true
     permalink: /flutter-basics/:name
+  interactivity:
+    output: true
+    permalink: /interactivity/:name
   working_with_data:
     output: true
     permalink: /working-with-data/:name
