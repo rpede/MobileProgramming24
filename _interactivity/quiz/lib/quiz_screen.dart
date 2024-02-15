@@ -11,9 +11,8 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  int index = 0;
   bool done = false;
-
+  int index = 0;
   Quiz get questions => widget.quiz;
 
   _onOptionPressed(String answer) {
@@ -23,25 +22,25 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   _onNextPressed() {
-    assert(index < questions.length - 1);
-    setState(() {
-      index++;
-    });
+    if (index < questions.length - 1) {
+      setState(() {
+        index++;
+      });
+    }
   }
 
   _onDonePressed(BuildContext context) {
     setState(() {
       done = true;
     });
-    final correct =
-        questions.where((element) => element.answered == element.correct);
-    final allCorrect = correct.length == questions.length;
-    final controller = showBottomSheet(
+    final allCorrect =
+        questions.every((element) => element.answered == element.correct);
+
+    final controller = showModalBottomSheet(
         context: context,
         builder: (context) => _buildBottomSheet(context, allCorrect));
-    Future.delayed(const Duration(seconds: 5))
-        .then((_) => controller.close())
-        .then((value) {
+
+    controller.whenComplete(() {
       setState(() {
         index = 0;
         done = false;
@@ -52,18 +51,22 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     final currentQuestion = questions[index];
+    final number = index + 1;
+    final total = questions.length;
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: const Text("Quiz")),
       body: Column(
         children: [
-          ..._buildProgress(),
-          _buildQuestion(context, currentQuestion),
+          ..._buildProgress(number, total),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: _buildQuestion(context, currentQuestion),
+          ),
           Expanded(
             child: Center(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: _buildOptions(currentQuestion),
-              ),
+                  mainAxisSize: MainAxisSize.min,
+                  children: _buildOptions(currentQuestion)),
             ),
           )
         ],
@@ -72,9 +75,7 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
-  List<Widget> _buildProgress() {
-    final number = index + 1;
-    final total = questions.length;
+  List<Widget> _buildProgress(int number, int total) {
     return [
       LinearProgressIndicator(value: number / total),
       const SizedBox(height: 8),
@@ -89,14 +90,6 @@ class _QuizScreenState extends State<QuizScreen> {
     ];
   }
 
-  Widget _buildQuestion(BuildContext context, Question question) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      child:
-          Text(question.text, style: Theme.of(context).textTheme.headlineLarge),
-    );
-  }
-
   List<Widget> _buildOptions(Question question) {
     return [
       for (final option in question.options)
@@ -107,6 +100,11 @@ class _QuizScreenState extends State<QuizScreen> {
           FilledButton(
               onPressed: () => _onOptionPressed(option), child: Text(option))
     ];
+  }
+
+  Text _buildQuestion(BuildContext context, Question question) {
+    return Text(question.text,
+        style: Theme.of(context).textTheme.headlineLarge);
   }
 
   Widget? _buildActionButton(Question currentQuestion) {
@@ -124,20 +122,18 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Widget _buildBottomSheet(BuildContext context, bool allCorrect) {
     final textTheme = Theme.of(context).textTheme;
-    return SafeArea(
-      child: Container(
-        color: allCorrect ? Colors.green : Colors.red,
-        width: double.infinity,
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30.0),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text(
-                  allCorrect
-                      ? "Hurray 🥳, you are a true expert!"
-                      : "😥 you can do better!",
-                  style: textTheme.headlineSmall),
-            ])),
-      ),
+    return Container(
+      color: allCorrect ? Colors.green : Colors.red,
+      width: double.infinity,
+      child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30.0),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+                allCorrect
+                    ? "Hurray 🥳, you are a true expert!"
+                    : "😥 you can do better!",
+                style: textTheme.headlineSmall),
+          ])),
     );
   }
 }

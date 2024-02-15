@@ -215,7 +215,7 @@ class QuizScreen extends StatelessWidget {
 Go ahead and run the application to see how it looks.
 You can change the color if you like.
 
-[Check your progress](/quiz_screen0.dart)
+[Check your progress](../quiz_screen0.dart)
 
 # Refactor
 
@@ -253,7 +253,7 @@ But a StatefulWidget creates a state object that are allowed to mutate.
 With "mutate", you should understand "have changing state", or "have non-final
 instance variables".
 
-[Check your progress](/quiz_screen1.dart)
+[Check your progress](../quiz_screen1.dart)
 
 # Theory
 
@@ -411,7 +411,7 @@ We now have changing UI 🥳.
 The call to `setState` results in the UI being rebuild.
 The method is only available within the State object of a StatefulWidget.
 
-[Check your progress](/quiz_screen2.dart)
+[Check your progress](../quiz_screen2.dart)
 
 # Next question
 
@@ -457,7 +457,7 @@ floatingActionButton: _buildActionButton(currentQuestion)
 
 Run the app again!
 
-[Check your progress](/quiz_screen3.dart)
+[Check your progress](../quiz_screen3.dart)
 
 # Show progress
 
@@ -527,7 +527,7 @@ Widget build(BuildContext context) {
 
 Run the app again to how far you have come 😉.
 
-[Check your progress](/quiz_screen4.dart)
+[Check your progress](../quiz_screen4.dart)
 
 # When done
 
@@ -627,7 +627,11 @@ controller.whenComplete(() {
 
 Try the app again.
 
-[Check your progress](/quiz_screen5.dart)
+[Check your progress](../quiz_screen.dart)
+
+# Full source
+
+[View on GitHub](https://github.com/rpede/MobileProgramming24/tree/main/_interactivity/quiz)
 
 # Challenge
 
