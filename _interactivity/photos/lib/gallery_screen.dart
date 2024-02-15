@@ -19,32 +19,32 @@ class GalleryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Gallery')),
-        drawer: const AppDrawer(),
-        body: FutureBuilder(
-          future: Directory(imageDir).list().toList(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return GridView.count(
-              crossAxisCount: 3,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-              children: (snapshot.data ?? [])
-                  .map((e) => File(e.path))
-                  .map(
-                    (e) => GestureDetector(
-                      onTap: () => _onPhotoTap(context, e),
-                      child: Hero(
-                        tag: e.path,
-                        child: Image.file(e, fit: BoxFit.cover),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            );
-          },
-        ));
+      appBar: AppBar(title: const Text('Gallery')),
+      drawer: const AppDrawer(),
+      body: FutureBuilder(
+        future: Directory(imageDir).list().toList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final files = (snapshot.data ?? []).map((entry) => File(entry.path));
+          return GridView.count(
+            crossAxisCount: 3,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
+            children: [
+              for (final file in files)
+                GestureDetector(
+                  onTap: () => _onPhotoTap(context, file),
+                  child: Hero(
+                    tag: file.path,
+                    child: Image.file(file, fit: BoxFit.cover),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }
