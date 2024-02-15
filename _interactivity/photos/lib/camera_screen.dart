@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:photos/app_drawer.dart';
 
+import 'app_drawer.dart';
 import 'camera_widget.dart';
 
 // https://docs.flutter.dev/cookbook/plugins/picture-using-camera

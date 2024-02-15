@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:photos/app_drawer.dart';
 
+import 'app_drawer.dart';
 import 'photo_screen.dart';
 
 const imageDir = '/data/user/0/com.example.photos/cache/';

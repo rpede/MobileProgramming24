@@ -339,7 +339,8 @@ Here is an example:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:photos/app_drawer.dart';
+
+import 'app_drawer.dart';
 
 class CameraScreen extends StatelessWidget {
   const CameraScreen({super.key});
@@ -410,4 +411,11 @@ Change it to:
 
 ```gradle
 minSdkVersion 21
+```
+
+## Camera screen
+
+Replace the content of `lib/camera_screen.dart` with:
+
+```dart
 ```

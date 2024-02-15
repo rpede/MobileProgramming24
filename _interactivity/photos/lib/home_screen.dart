@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:photos/app_drawer.dart';
+
+import 'app_drawer.dart';
 
 const appTitle = 'Photos';
 const appDescription =
