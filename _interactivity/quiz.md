@@ -250,3 +250,49 @@ But a StatefulWidget creates a state object that are allowed to mutate.
 
 With "mutate", you should understand "have changing state", or "have non-final
 fields".
+
+# Theory
+
+Flutter aims at providing fast rendering (60 fps).
+In our apps we tell Flutter how to draw the screen by providing widget trees.
+However it wouldn't be efficient to redraw the entire screen from scratch each
+frame, just because some small part of the screen is animated (like when you tap
+a button).
+
+Flutter got some clever wizardry to solve the problem.
+There aren't just one tree of object representing the screen.
+There are 3 😯 !.
+
+{% include_relative trees.drawio.svg %}
+
+In short. For each piece of UI, there are 3 trees of objects.
+
+- **Widget** are what we use to tell the framework that we want on the screen.
+- **RenderObject** takes care of the painting.
+- **Element** sits between and is responsible for updating the RenderObject to a
+new configuration.
+
+Recreating all render-objects each frame would be expensive.
+The framework therefore makes attempts to reuse them.
+If it determines that a render-object should be reused, it update the existing
+render-object to match the new widget configuration.
+The element is responsible managing this.
+
+You can view [How Flutter renders
+Widgets](https://www.youtube.com/watch?v=996ZgFRENMs) to learn more.
+
+But what about the State object?
+Well, it can tell the element to update its render-object and provide it new
+widget tree to use as configuration.
+
+`setState(() {...})` takes a function as parameter.
+After executing the function, it will mark the element as needing to be rebuild.
+
+You are supposed to wrap your state changes in a call to `setState()`.
+Example:
+
+```dart
+setState(() {
+  _counter = _counter + 1; // or `_counter++`
+});
+```
