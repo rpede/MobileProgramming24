@@ -628,3 +628,11 @@ controller.whenComplete(() {
 Try the app again.
 
 [Check your progress](/quiz_screen5.dart)
+
+# Challenge
+
+Upgrade the app to support multiple quizzes.
+You probably need a different widget to allow the user to select a quiz.
+
+If you lack creativity to come om with additional quizzes then you can always
+ask ChatGTP.
