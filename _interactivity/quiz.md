@@ -215,6 +215,8 @@ class QuizScreen extends StatelessWidget {
 Go ahead and run the application to see how it looks.
 You can change the color if you like.
 
+[Check your progress](/quiz_screen0.dart)
+
 # Refactor
 
 The QuizScreen widget is going to grow as you progress through the tutorial.
@@ -250,6 +252,8 @@ But a StatefulWidget creates a state object that are allowed to mutate.
 
 With "mutate", you should understand "have changing state", or "have non-final
 fields".
+
+[Check your progress](/quiz_screen1.dart)
 
 # Theory
 
@@ -296,3 +300,231 @@ setState(() {
   _counter = _counter + 1; // or `_counter++`
 });
 ```
+
+# Showing data
+
+## Injecting the quiz
+
+The QuizScreen needs access to the quiz data.
+So change the constructor to:
+
+```dart
+final Quiz quiz;
+const QuizScreen({required this.quiz, super.key});
+```
+
+You will see an error in main.dart.
+Fix it by importing the data and passing it as parameter to QuizScreen.
+
+At the top:
+
+```dart
+import 'quiz_data.dart';
+```
+
+Change change:
+
+```dart
+home: QuizScreen(quiz: quiz),
+```
+
+## Showing current question
+
+At the top of _QuizScreenState add:
+
+```dart
+int index = 0;
+Quiz get questions => widget.quiz;
+```
+
+The `Quiz get questions => ...` is how you can make getters in Dart.
+
+State object can access the widget through the `widget` variable.
+This is how it is able to access the quiz on the widget.
+
+Now at the top of the `build()` method, right before `return Scaffold`.
+Add:
+
+```dart
+final currentQuestion = questions[index];
+```
+
+Add another parameter to `_buildQuestion()` method, so it can access the current
+question.
+Also change so it displays the text from the parameter.
+
+```dart
+Text _buildQuestion(BuildContext context, Question question) {
+    return Text(question.text,
+        style: Theme.of(context).textTheme.headlineLarge);
+}
+```
+
+The `_buildOptions()` method also needs to change.
+Each question can have a different number of options.
+So we need to loop over the options.
+
+```dart
+List<Widget> _buildOptions(Question question) {
+  return [
+    for (final option in question.options)
+      if (question.answered != option)
+        OutlinedButton(
+            onPressed: () => _onOptionPressed(option), child: Text(option))
+      else
+        FilledButton(
+            onPressed: () => _onOptionPressed(option), child: Text(option))
+  ];
+}
+```
+
+Notice, in Dart we can have for-loop and if/else withing the declaration of
+a list `[]`.
+Pretty cool 😎, right?
+
+Then add a new method to handle the `onPressed` event.
+
+```dart
+_onOptionPressed(String answer) {
+  setState(() {
+    questions[index].answered = answer;
+  });
+}
+```
+
+Now within the `build()` method, pass `currentQuestion` as parameter to
+`_buildOptions` and `_buildQuestion`.
+
+```dart
+child: _buildQuestion(context, currentQuestion),
+//...
+children: _buildOptions(currentQuestion)
+```
+
+*I think it makes it slightly easier to follow the application flow if you use
+parameters in such cases, instead of accessing the fields directly.*
+
+Run the application an click the buttons.
+
+We now have changing UI 🥳.
+
+The call to `setState` results in the UI being rebuild.
+The method is only available within the State object of a StatefulWidget.
+
+[Check your progress](/quiz_screen2.dart)
+
+# Next question
+
+Now we need a button to progress through the questions.
+Add:
+
+```dart
+Widget? _buildActionButton(Question currentQuestion) {
+  if (currentQuestion.answered == null) return null;
+  return TextButton(onPressed: _onNextPressed, child: const Text("Next"));
+}
+```
+
+When the current question has been answered it will return a button allowing the
+user to progress.
+
+We also need a method to handle the event:
+
+```dart
+_onNextPressed() {
+  if (index < questions.length - 1) {
+    setState(() {
+      index++;
+    });
+  }
+}
+```
+
+When the button is pressed, the index gets increased.
+It is done within a `setState` so the UI rebuilds.
+The first line in `build()` method retrieves the current question from the
+index.
+
+Increasing the index beyond the last question will make the app crash.
+We therefore wrap it in an if-statement.
+
+Before the button shows up in the UI, it needs to be added to the Scaffold.
+Withing `Scaffold` in the `build()` method:
+
+```dart
+floatingActionButton: _buildActionButton(currentQuestion)
+```
+
+Run the app again!
+
+[Check your progress](/quiz_screen3.dart)
+
+# Show progress
+
+It would be nice if the user could follow their progress.
+Add a methods to build progress indicator widgets.
+
+```dart
+List<Widget> _buildProgress(int number, int total) {
+  return [
+    LinearProgressIndicator(value: number / total),
+    const SizedBox(height: 8),
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [const Text('Question:'), Text('$number of $total')],
+      ),
+    ),
+    const Divider(),
+  ];
+}
+```
+
+It takes a *number* and a *total* as parameters.
+Add declaration to the top of `build()`.
+
+```dart
+final number = index + 1;
+final total = questions.length;
+```
+
+Then invoke new method before the other children at the outermost column.
+
+```dart
+..._buildProgress(number, total),
+```
+
+Your entire `build()` method should look like this:
+
+```dart
+Widget build(BuildContext context) {
+  final currentQuestion = questions[index];
+  final number = index + 1;
+  final total = questions.length;
+  return Scaffold(
+    appBar: AppBar(centerTitle: true, title: const Text("Quiz")),
+    body: Column(
+      children: [
+        ..._buildProgress(number, total),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: _buildQuestion(context, currentQuestion),
+        ),
+        Expanded(
+          child: Center(
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: _buildOptions(currentQuestion)),
+          ),
+        )
+      ],
+    ),
+    floatingActionButton: _buildActionButton(currentQuestion),
+  );
+}
+```
+
+Run the app again to how far you have come 😉.
+
+[Check your progress](/quiz_screen4.dart)
