@@ -5,6 +5,20 @@ description: >-
 layout: default
 ---
 
+# Shortcut
+
+Here is another shortcut you should try to practice.
+
+**Go to declaration**
+
+To see how something in the code is defined.
+
+- Windows: <kbd>Control</kbd> + <kbd>B</kbd>  or <kbd>Control</kbd> + <kbd>Left-click</kbd>
+- macOS: <kbd>Command</kbd> + <kbd>B</kbd> or <kbd>Command</kbd> +
+<kbd>Click</kbd>
+
+You can also right-click -> "Go To" -> "Declaration or Usages".
+
 # Setup
 
 Create a new project and open it in Android Studio.
@@ -220,10 +234,9 @@ const menu = {
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
-  _onMenuTap(BuildContext context, Widget Function({Key? key}) ctor) {
-    final navigator = Navigator.of(context);
-    navigator.pushReplacement(
-      MaterialPageRoute(builder: (context) => ctor.call()),
+  _onMenuTap(BuildContext context, Widget Function({Key? key}) constructor) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => constructor.call()),
     );
   }
 
@@ -255,4 +268,93 @@ class AppDrawer extends StatelessWidget {
   }
 }
 ```
+
+That's a mouthful.
+Let's break it down.
+
+## Defining the menu
+
+```dart
+const menu = {
+  'Home': HomeScreen.new,
+  'Camera': CameraScreen.new,
+  'Gallery': GalleryScreen.new,
+};
+```
+
+Is the definition of the menu the drawer will show.
+It is a map where the key is the name of the menu item.
+Value is the screen to navigate to when item has been selected.
+
+The `.new` part gives us a reference to the primary constructor.
+By invoking it we will get an instance of the class.
+
+## Show a different page/screen
+
+```dart
+_onMenuTap(BuildContext context, Widget Function({Key? key}) constructor) {
+  Navigator.of(context).pushReplacement(
+    MaterialPageRoute(builder: (context) => constructor.call()),
+  );
+}
+```
+
+The `Widget Function({Key? key})` is a function that optionally takes a key as
+parameter and returns a widget.
+So basically the signature of a widget constructor.
+The constructor can be invoked with `ctor.call()` thereby returning the widget.
+
+[MaterialApp](https://api.flutter.dev/flutter/material/MaterialApp-class.html)
+provides a
+[Navigator](https://api.flutter.dev/flutter/widgets/Navigator-class.html)
+which is what we use to change to a different screen in our app.
+
+As you can tell, the terminology is similar to what we will find in a web
+application.
+With words like *route* and *page*.
+
+By default a MaterialApp will show the widget that is given by the `home`
+parameter.
+The Navigator can be used to change the widget being shown.
+
+Navigator is a child widget provided through MaterialApp's `build()` method.
+A widgets `BuildContext` can be used to find specific parent widget.
+Literally `Navigator.of(context)` finds an ancestor `State` object for the
+`Navigator`.
+If you go to the definition of the `of` function you will see
+`context.findAncestorStateOfType<NavigatorState>()`.
+
+NavigatorState maintains a stack of widgets.
+The top of the stack is the widget that MaterialApp shows.
+The use can pop widgets from the stack with the back-navigation button or
+gesture (depending on platform).
+
+In our case we will replace the top-most widget in the navigation stack, instead
+of pushing a new widget to the stack for each navigation with the drawer.
+We can replace it with the `pushReplacement()` method.
+
+Before we can use the drawer, it needs to be added to the Scaffold on each
+screen.
+Here is an example:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:photos/app_drawer.dart';
+
+class CameraScreen extends StatelessWidget {
+  const CameraScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Camera")),
+      drawer: const AppDrawer(), // <-- like this
+    );
+  }
+}
+```
+
+Go ahead and do the same with the other screens.
+
+Try it out! Navigate 🧭 around the different screens.
 

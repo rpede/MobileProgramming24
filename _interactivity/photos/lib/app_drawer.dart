@@ -15,10 +15,9 @@ const menu = {
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
-  _onMenuTap(BuildContext context, Widget Function({Key? key}) ctor) {
-    final navigator = Navigator.of(context);
-    navigator.pushReplacement(
-      MaterialPageRoute(builder: (context) => ctor.call()),
+  _onMenuTap(BuildContext context, Widget Function({Key? key}) constructor) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => constructor.call()),
     );
   }
 
