@@ -7,3 +7,4 @@ layout: default
 ---
 
 - [Quiz](quiz)
+- [Photos](photos)
