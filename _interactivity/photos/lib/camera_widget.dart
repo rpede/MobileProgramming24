@@ -19,7 +19,7 @@ class _CameraWidgetState extends State<CameraWidget> {
     // To display the current output from the Camera,
     // create a CameraController.
     _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
+      // Use the camera given to the widget.
       widget.camera,
       // Define the resolution to use.
       ResolutionPreset.medium,
@@ -41,14 +41,23 @@ class _CameraWidgetState extends State<CameraWidget> {
     return FutureBuilder<void>(
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          // If the Future is complete, display the preview.
-          return Column(
-            children: [CameraPreview(_controller), _takePictureButton(context)],
-          );
-        } else {
-          // Otherwise, display a loading indicator.
+        if (snapshot.hasError) {
+          // The future errored, display the error.
+          return Center(child: Text(snapshot.error!.toString()));
+        }
+        if (!_controller.value.isInitialized) {
+          // While waiting for initialization, display a loading indicator.
           return const Center(child: CircularProgressIndicator());
+        } else {
+          // When the Future is complete, display the preview.
+          return Column(
+            children: [
+              // Live preview of what the camera is pointing at.
+              CameraPreview(_controller),
+              // Button for taking pictures.
+              _takePictureButton(context),
+            ],
+          );
         }
       },
     );
@@ -68,14 +77,16 @@ class _CameraWidgetState extends State<CameraWidget> {
           // Attempt to take a picture and then get the location
           // where the image file is saved.
           final image = await _controller.takePicture();
-          print(image.path);
+          // Displaying the path can be useful for debugging.
           messenger.showSnackBar(SnackBar(content: Text(image.path)));
         } catch (e) {
-          // If an error occurs, log the error to the console.
-          print(e);
+          // If an error occurs, display it with a red background.
+          messenger.showSnackBar(
+            SnackBar(backgroundColor: Colors.red, content: Text(e.toString())),
+          );
         }
       },
-      child: const Icon(Icons.camera_alt),
+      child: const Icon(Icons.camera),
     );
   }
 }

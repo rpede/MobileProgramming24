@@ -14,56 +14,47 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  CameraDescription? camera;
-
-  Future<List<CameraDescription>> _getCameras() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final cameras = await availableCameras();
-    return cameras;
-  }
-
-  _onCameraChanged(CameraDescription? camera) {
-    setState(() {
-      this.camera = camera;
-    });
-  }
+  CameraDescription? selectedCamera;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Camera')),
-      drawer: const AppDrawer(),
-      body: Column(
-        children: [
-          if (camera == null)
-            _buildCameraSelection()
-          else
-            CameraWidget(
-              camera: camera!,
-              key: ValueKey('camera-${camera!.name}'),
-            )
-        ],
-      ),
+        appBar: AppBar(title: const Text('Camera')),
+        drawer: const AppDrawer(),
+        body: switch (selectedCamera) {
+          null => _buildCameraSelection(),
+          _ => CameraWidget(
+              camera: selectedCamera!,
+              key: ValueKey('camera-${selectedCamera!.name}')),
+        });
+  }
+
+  Widget _buildCameraSelection() {
+    return FutureBuilder(
+      future: availableCameras(),
+      builder: (context, snapshot) {
+        return Center(
+          child: Column(
+            children: [
+              const Text('Select a camera to use:'),
+              for (final camera in snapshot.data ?? <CameraDescription>[])
+                _buildCameraButton(camera)
+            ],
+          ),
+        );
+      },
     );
   }
 
-  FutureBuilder<List<CameraDescription>> _buildCameraSelection() {
-    return FutureBuilder(
-      future: _getCameras(),
-      builder: (context, snapshot) {
-        return DropdownButton<CameraDescription>(
-          value: camera,
-          hint: const Text('Select a camera'),
-          items: [
-            for (final e in snapshot.data ?? <CameraDescription>[])
-              DropdownMenuItem(
-                value: e,
-                child: Text('${e.lensDirection.name} ${e.name}'),
-              )
-          ],
-          onChanged: _onCameraChanged,
-        );
+  Widget _buildCameraButton(CameraDescription camera) {
+    return OutlinedButton.icon(
+      onPressed: () => setState(() => selectedCamera = camera),
+      icon: switch (camera.lensDirection) {
+        CameraLensDirection.front => const Icon(Icons.person),
+        CameraLensDirection.back => const Icon(Icons.landscape),
+        CameraLensDirection.external => const Icon(Icons.camera_alt),
       },
+      label: Text(camera.name),
     );
   }
 }
