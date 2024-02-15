@@ -358,3 +358,56 @@ Go ahead and do the same with the other screens.
 
 Try it out! Navigate 🧭 around the different screens.
 
+# Camera action
+
+## Install plugin
+
+Packages for Dart and Flutter can be found at [pub.dev](https://pub.dev/).
+We call it a plugin if it adds platform specific functionality to Flutter.
+Which is exactly what we need to use the cameras in your phone.
+
+Packages each have their on page on pub.dev.
+The page will likely contain important information about how to get started
+using the package/plugin.
+Example, see [camera page](https://pub.dev/packages/camera).
+
+That is the plugin we will be using.
+
+Dependencies in any Dart/Flutter project is defined in the `dependencies`
+section of `pubspec.yaml`.
+A pubspec.yaml file in a Dart project serves a similar purpose as package.json
+in a JavaScript/Node.js project.
+
+We can either add dependencies directly to pubspec.yaml or use the CLI.
+Lets add it with the CLI:
+
+```sh
+flutter pub add camera
+```
+
+Notice that `camera` got added to pubspec.yaml file.
+Since we didn't specify a version it added the latest.
+
+If you want to run the app on a iPhone then you will need to add the following
+to `ios/Runner/Info.plist`.
+
+```xml
+<key>NSCameraUsageDescription</key>
+<string>Take photos with the app</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Take photos with the app</string>
+```
+
+For Android, you need to edit `android/app/build.gradle`.
+
+Find:
+
+```gradle
+minSdkVersion flutter.minSdkVersion
+```
+
+Change it to:
+
+```gradle
+minSdkVersion 21
+```
