@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'quiz_data.dart';
-import 'quiz_screen4.dart';
+import 'quiz_screen5.dart';
 
 void main() {
   runApp(const MyApp());

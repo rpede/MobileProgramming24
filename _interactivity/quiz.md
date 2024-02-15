@@ -251,7 +251,7 @@ Their constructor should be const.
 But a StatefulWidget creates a state object that are allowed to mutate.
 
 With "mutate", you should understand "have changing state", or "have non-final
-fields".
+instance variables".
 
 [Check your progress](/quiz_screen1.dart)
 
@@ -402,7 +402,7 @@ children: _buildOptions(currentQuestion)
 ```
 
 *I think it makes it slightly easier to follow the application flow if you use
-parameters in such cases, instead of accessing the fields directly.*
+parameters in such cases, instead of accessing the properties directly.*
 
 Run the application an click the buttons.
 
@@ -528,3 +528,103 @@ Widget build(BuildContext context) {
 Run the app again to how far you have come 😉.
 
 [Check your progress](/quiz_screen4.dart)
+
+# When done
+
+Nothing really happens when user taps next at the last question.
+It would be nice if they could tell wether they got the answers correct.
+
+Change the `_buildActionButton()` to:
+
+```dart
+Widget? _buildActionButton(Question currentQuestion) {
+  if (done || currentQuestion.answered == null) return null;
+  if (index < questions.length - 1) {
+    return TextButton(onPressed: _onNextPressed, child: const Text("Next"));
+  } else {
+    return Builder(
+      builder: (context) => TextButton(
+          onPressed: () => _onDonePressed(context),
+          child: const Text("Done")),
+    );
+  }
+}
+```
+
+When user is at the last question, we show a "Done" button instead of "Next".
+
+To keep track we need another property.
+So at the very top of `_QuizScreenState`, add:
+
+```dart
+bool done = false;
+```
+
+Add an event handler for when the "Done" button is pressed.
+
+```dart
+_onDonePressed(BuildContext context) {
+  setState(() {
+    done = true;
+  });
+  final allCorrect =
+      questions.every((element) => element.answered == element.correct);
+
+  showModalBottomSheet(
+      context: context,
+      builder: (context) => _buildBottomSheet(context, allCorrect));
+}
+```
+
+It sets a new state for `done`, making the button disappear (see
+`_buildActionButton`).
+Then it finds out if all questions have been answered correctly.
+Passing the information to a method (yet to be defined) for building a bottom
+sheet.
+
+[Documentation for showModalBottomSheet
+](https://api.flutter.dev/flutter/material/showModalBottomSheet.html)
+
+Also, add a method to build widgets for the bottom sheet.
+
+```dart
+Widget _buildBottomSheet(BuildContext context, bool allCorrect) {
+  final textTheme = Theme.of(context).textTheme;
+  return Container(
+    color: allCorrect ? Colors.green : Colors.red,
+    width: double.infinity,
+    child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30.0),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text(
+              allCorrect
+                  ? "Hurray 🥳, you are a true expert!"
+                  : "😥 you can do better!",
+              style: textTheme.headlineSmall),
+        ])),
+  );
+}
+```
+
+The container will show a different text and background color depending on if
+all answers are correct.
+
+Let's go back to the first question when the bottom sheet is closed.
+Change the last half of `_onDonePressed` to:
+
+```dart
+final controller = showModalBottomSheet(
+    context: context,
+    builder: (context) => _buildBottomSheet(context, allCorrect));
+
+controller.whenComplete(() {
+  setState(() {
+    index = 0;
+    done = false;
+  });
+});
+```
+
+Try the app again.
+
+[Check your progress](/quiz_screen5.dart)
