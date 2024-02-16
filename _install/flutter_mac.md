@@ -106,6 +106,11 @@ brew link cocoapods
 
 Hopefully you should see a checkmark for cocoapods now when running `flutter doctor` .
 
+If you see "Unable to get list of installed Simulator runtimes." it can be fixed
+by running `xcodebuild -downloadPlatform iOS` as shown in the screenshot.
+
+![Fix missing Simulator runtimes](../mac_missing_simulator_runtime.png)
+
 Next you will install an IDE for Flutter, namely Android Studio.
 Don't let the name fool you, as it is great for Flutter development no matter the platform.
 
