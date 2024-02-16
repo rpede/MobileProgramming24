@@ -38,7 +38,7 @@ class _CameraScreenState extends State<CameraScreen> {
             children: [
               const Text('Select a camera to use:'),
               for (final camera in snapshot.data ?? <CameraDescription>[])
-                _buildCameraButton(camera)
+                _buildSelectCameraButton(camera)
             ],
           ),
         );
@@ -46,7 +46,7 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
-  Widget _buildCameraButton(CameraDescription camera) {
+  Widget _buildSelectCameraButton(CameraDescription camera) {
     return OutlinedButton.icon(
       onPressed: () => setState(() => selectedCamera = camera),
       icon: switch (camera.lensDirection) {

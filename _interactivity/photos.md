@@ -418,4 +418,421 @@ minSdkVersion 21
 Replace the content of `lib/camera_screen.dart` with:
 
 ```dart
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+
+import 'app_drawer.dart';
+import 'camera_widget.dart';
+
+class CameraScreen extends StatefulWidget {
+  const CameraScreen({super.key});
+
+  @override
+  State<CameraScreen> createState() => _CameraScreenState();
+}
+
+class _CameraScreenState extends State<CameraScreen> {
+  CameraDescription? selectedCamera;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('Camera')),
+        drawer: const AppDrawer(),
+        body: switch (selectedCamera) {
+          null => _buildCameraSelection(),
+          _ => CameraWidget(
+              camera: selectedCamera!,
+              key: ValueKey('camera-${selectedCamera!.name}')),
+        });
+  }
+
+  Widget _buildCameraSelection() {
+    return FutureBuilder(
+      future: availableCameras(),
+      builder: (context, snapshot) {
+        return Center(
+          child: Column(
+            children: [
+              const Text('Select a camera to use:'),
+              for (final camera in snapshot.data ?? <CameraDescription>[])
+                _buildSelectCameraButton(camera)
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSelectCameraButton(CameraDescription camera) {
+    return OutlinedButton.icon(
+      onPressed: () => setState(() => selectedCamera = camera),
+      icon: switch (camera.lensDirection) {
+        CameraLensDirection.front => const Icon(Icons.person),
+        CameraLensDirection.back => const Icon(Icons.landscape),
+        CameraLensDirection.external => const Icon(Icons.camera_alt),
+      },
+      label: Text(camera.name),
+    );
+  }
+}
 ```
+
+Lets break it down.
+
+```dart
+CameraDescription? selectedCamera;
+```
+
+The class `CameraDescription` holds information about a camera of the device.
+Modern phones got multiple cameras, so we need a way to tell which one to use.
+
+```dart
+Widget build(BuildContext context) {
+  return Scaffold(
+      appBar: AppBar(title: const Text('Camera')),
+      drawer: const AppDrawer(),
+      body: switch (selectedCamera) {
+        null => _buildCameraSelection(),
+        _ => CameraWidget(
+            camera: selectedCamera!,
+            key: ValueKey('camera-${selectedCamera!.name}')),
+      });
+}
+```
+
+If we don't know what camera to use, show a camera selection.
+Otherwise show a camera widget for taking pictures (more on that later).
+
+Your phone likely got multiple cameras.
+One for average distance photos, another for wide angle, and maybe even a third
+for macro.
+The default camera app on your phone will attempt to seamless switch between
+cameras depending on the zoom level.
+Such fancy camera switching is way beyond the scope of this tutorial.
+Instead we simply list all the cameras and let the user pick the one to use.
+
+```dart
+Widget _buildCameraSelection() {
+  return FutureBuilder(
+    future: availableCameras(),
+    builder: (context, snapshot) {
+      return Center(
+        child: Column(
+          children: [
+            const Text('Select a camera to use:'),
+            for (final camera in snapshot.data ?? <CameraDescription>[])
+              _buildSelectCameraButton(camera)
+          ],
+        ),
+      );
+    },
+  );
+}
+```
+
+The camera plugin got a function that can be used to query the device for
+available cameras.
+It returns a
+[Future](https://api.dart.dev/stable/3.3.0/dart-async/Future-class.html) which
+is similar to a Promise in JavaScript or Task in C#.
+
+We can use a
+[FutureBuilder](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html)
+to automatically rebuild when the Future completes.
+When the Future has completed we can find the value at `snapshot.data`.
+
+Confused? Watch the [FutureBuilder (Widget of the
+Week)](https://www.youtube.com/watch?v=zEdw_1B7JHY) video.
+
+To select a camera, we use a button.
+
+```dart
+Widget _buildSelectCameraButton(CameraDescription camera) {
+  return OutlinedButton.icon(
+    onPressed: () => setState(() => selectedCamera = camera),
+    icon: switch (camera.lensDirection) {
+      CameraLensDirection.front => const Icon(Icons.person),
+      CameraLensDirection.back => const Icon(Icons.landscape),
+      CameraLensDirection.external => const Icon(Icons.camera_alt),
+    },
+    label: Text(camera.name),
+  );
+}
+```
+
+The name of the camera is shown as label.
+Names will likely just be a number, so a icon makes it look nicer.
+
+Phones have a front facing (selfie) camera and multiple back facing cameras.
+It could also have one that is externally connected.
+Different icons is used so the user can quickly tell them apart.
+
+## Camera widget
+
+Add a file `lib/camera_widget.dart` with:
+
+```dart
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+
+class CameraWidget extends StatefulWidget {
+  final CameraDescription camera;
+  const CameraWidget({required this.camera, super.key});
+
+  @override
+  State<CameraWidget> createState() => _CameraWidgetState();
+}
+
+class _CameraWidgetState extends State<CameraWidget> {
+  late CameraController _controller;
+  late Future<void> _initializeControllerFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // To display the current output from the Camera,
+    // create a CameraController.
+    _controller = CameraController(
+      // Use the camera given to the widget.
+      widget.camera,
+      // Define the resolution to use.
+      ResolutionPreset.medium,
+    );
+
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed.
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: _initializeControllerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          // The future errored, display the error.
+          return Center(child: Text(snapshot.error!.toString()));
+        }
+        if (!_controller.value.isInitialized) {
+          // While waiting for initialization, display a loading indicator.
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          // When the Future is complete, display the preview.
+          return Column(
+            children: [
+              // Live preview of what the camera is pointing at.
+              CameraPreview(_controller),
+              // Button for taking pictures.
+              _takePictureButton(context),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget _takePictureButton(BuildContext context) {
+    final messenger = ScaffoldMessenger.of(context);
+    return FloatingActionButton(
+      // Provide an onPressed callback.
+      onPressed: () async {
+        // Take the Picture in a try / catch block. If anything goes wrong,
+        // catch the error.
+        try {
+          // Ensure that the camera is initialized.
+          await _initializeControllerFuture;
+
+          // Attempt to take a picture and then get the location
+          // where the image file is saved.
+          final image = await _controller.takePicture();
+          // Displaying the path can be useful for debugging.
+          messenger.showSnackBar(SnackBar(content: Text(image.path)));
+        } catch (e) {
+          // If an error occurs, display it with a red background.
+          messenger.showSnackBar(
+            SnackBar(backgroundColor: Colors.red, content: Text(e.toString())),
+          );
+        }
+      },
+      child: const Icon(Icons.camera),
+    );
+  }
+}
+```
+
+You can try to take photos with the app now.
+However you won't be able to view them yet.
+
+## Gallery screen
+
+To view the photos taken by the app, we need another screen.
+
+```dart
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
+import 'app_drawer.dart';
+import 'photo_screen.dart';
+
+const imageDir = '/data/user/0/com.example.photos/cache/';
+
+class GalleryScreen extends StatelessWidget {
+  const GalleryScreen({super.key});
+
+  _onPhotoTap(BuildContext context, File file) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => PhotoScreen(file: file),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Gallery')),
+      drawer: const AppDrawer(),
+      body: FutureBuilder(
+        future: Directory(imageDir).list().toList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final files = (snapshot.data ?? []).map((entry) => File(entry.path));
+          return GridView.count(
+            crossAxisCount: 3,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
+            children: [
+              for (final file in files)
+                GestureDetector(
+                  onTap: () => _onPhotoTap(context, file),
+                  child: Hero(
+                    tag: file.path,
+                    child: Image.file(file, fit: BoxFit.cover),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+```
+
+**Important:** you will need to change `imageDir` if you created the project with a different name.
+
+The pictures taken can be accessed as files.
+
+```dart
+Directory(imageDir).list().toList()
+```
+
+Returns a Future that list the filesystem entries in the given directory.
+
+```dart
+if (snapshot.connectionState != ConnectionState.done) {
+  return const Center(child: CircularProgressIndicator());
+}
+```
+
+The state of the Future can be retrieved with `snapshot.connectionState`.
+A
+[CircularProgressIndicator](https://api.flutter.dev/flutter/material/CircularProgressIndicator-class.html)
+is shown unless the state is done.
+
+```dart
+final files = (snapshot.data ?? []).map((entry) => File(entry.path));
+```
+
+Map filesystem entries to File objects.
+
+```dart
+GridView.count(
+  crossAxisCount: 3,
+  crossAxisSpacing: 2,
+  mainAxisSpacing: 2,
+  children: [
+    for (final file in files)
+      GestureDetector(
+        onTap: () => _onPhotoTap(context, file),
+        child: Hero(
+          tag: file.path,
+          child: Image.file(file, fit: BoxFit.cover),
+        ),
+      ),
+  ],
+)
+```
+
+Show a grid with an image for each file.
+When tapping on an image...
+
+```dart
+_onPhotoTap(BuildContext context, File file) {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => PhotoScreen(file: file),
+  ));
+}
+```
+
+We navigate to a now screen where the image/photo is shown in a larger size.
+The new route is pushed to the navigation stack this time.
+Because it makes sense that the user should be able to get back after viewing
+the photo.
+
+## Photo screen
+
+Add `lib/photo_screen.dart` with:
+
+```dart
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
+class PhotoScreen extends StatelessWidget {
+  final File file;
+
+  const PhotoScreen({super.key, required this.file});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(file.path.split('/').last)),
+      body: Hero(tag: file.path, child: Image.file(file)),
+    );
+  }
+}
+```
+
+Notice the Hero widget.
+It makes an animated transition of its child across widget tree builds.
+The `tag` value is used to match the Hero across rebuilds.
+
+Visit the documentation to learn more about [Hero
+animations](https://docs.flutter.dev/ui/animations/hero-animations).
+
+That's all 🎊.
+You have now coded your own photo app from scratch.
+
+# Challenges
+
+## Spring cleaning
+
+Get rid of those embarrassing photo mistakes by adding functionality to delete
+files.
+
+## Filters
+
+Add customizable color filters to PhotoScreen using
+[ImageFiltered class](https://api.flutter.dev/flutter/widgets/ColorFiltered-class.html).
+
+Throw in some some social media, then brag to all your friends and family about
+how you created the next Instagram 😉 😉.
