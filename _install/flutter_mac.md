@@ -83,14 +83,6 @@ If you are unsure, you can check by entering `brew` in Terminal.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Then add the following to `.zshrc` :
-
-```sh
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-Type `source .zshrc` to apply changes.
-
 You can use brew to install Ruby which is required by CocoaPods.
 
 ```sh
