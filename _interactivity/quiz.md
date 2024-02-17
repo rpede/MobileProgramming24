@@ -5,6 +5,8 @@ description: >-
 layout: default
 ---
 
+![Screenshot](../quiz_app_screenshot.png)
+
 # Shortcut
 
 You will be able to write code so much faster, if you learn a couple of

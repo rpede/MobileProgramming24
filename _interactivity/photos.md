@@ -5,6 +5,8 @@ description: >-
 layout: default
 ---
 
+![Screenshot](../photos_app_screenshot.png)
+
 # Shortcut
 
 Here is another shortcut you should try to practice.
