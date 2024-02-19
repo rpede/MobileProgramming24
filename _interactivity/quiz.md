@@ -94,7 +94,7 @@ comment.*
 
 ## Add some data
 
-For simplicity we are just going to hardcode the quiz.
+For simplicity, we are just going to hard-code the quiz.
 Working with data from an REST-API will be shown in a future tutorial.
 
 Create a file `lib/quiz_data.dart` and add:
@@ -292,7 +292,7 @@ Well, it can tell the element to update its render-object and provide it new
 widget tree to use as configuration.
 
 `setState(() {...})` takes a function as parameter.
-After executing the function, it will mark the element as needing to be rebuild.
+After executing the function, it will mark the element as needing to be rebuilt.
 
 You are supposed to wrap your state changes in a call to `setState()`.
 Example:
@@ -353,7 +353,7 @@ final currentQuestion = questions[index];
 
 Add another parameter to `_buildQuestion()` method, so it can access the current
 question.
-Also change so it displays the text from the parameter.
+Also change, so it displays the text from the parameter.
 
 ```dart
 Text _buildQuestion(BuildContext context, Question question) {
@@ -410,7 +410,7 @@ Run the application an click the buttons.
 
 We now have changing UI 🥳.
 
-The call to `setState` results in the UI being rebuild.
+The call to `setState` results in the UI being rebuilt.
 The method is only available within the State object of a StatefulWidget.
 
 [Check your progress](../quiz_screen2.dart)
@@ -534,7 +534,7 @@ Run the app again to how far you have come 😉.
 # When done
 
 Nothing really happens when user taps next at the last question.
-It would be nice if they could tell wether they got the answers correct.
+It would be nice if they could tell whether they got the answers correct.
 
 Change the `_buildActionButton()` to:
 
@@ -640,5 +640,5 @@ Try the app again.
 Upgrade the app to support multiple quizzes.
 You probably need a different widget to allow the user to select a quiz.
 
-If you lack creativity to come om with additional quizzes then you can always
+If you lack creativity to come up with additional quizzes then you can always
 ask ChatGTP.

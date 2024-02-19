@@ -148,7 +148,7 @@ Run the app and marvel at your creation 🤩.
 
 # Navigation
 
-We need a couple of more screens so we have something to navigate between.
+We need a couple of more screens, so we have something to navigate between.
 
 ## More screens
 
@@ -315,7 +315,7 @@ As you can tell, the terminology is similar to what we will find in a web
 application.
 With words like *route* and *page*.
 
-By default a MaterialApp will show the widget that is given by the `home`
+By default, a MaterialApp will show the widget that is given by the `home`
 parameter.
 The Navigator can be used to change the widget being shown.
 
@@ -504,7 +504,7 @@ Widget build(BuildContext context) {
 ```
 
 If we don't know what camera to use, show a camera selection.
-Otherwise show a camera widget for taking pictures (more on that later).
+Otherwise, show a camera widget for taking pictures (more on that later).
 
 Your phone likely got multiple cameras.
 One for average distance photos, another for wide angle, and maybe even a third
@@ -512,7 +512,7 @@ for macro.
 The default camera app on your phone will attempt to seamless switch between
 cameras depending on the zoom level.
 Such fancy camera switching is way beyond the scope of this tutorial.
-Instead we simply list all the cameras and let the user pick the one to use.
+Instead, we simply list all the cameras and let the user pick the one to use.
 
 ```dart
 Widget _buildCameraSelection() {
@@ -564,11 +564,11 @@ Widget _buildSelectCameraButton(CameraDescription camera) {
 ```
 
 The name of the camera is shown as label.
-Names will likely just be a number, so a icon makes it look nicer.
+Names will likely just be a number, so an icon makes it look nicer.
 
 Phones have a front facing (selfie) camera and multiple back facing cameras.
 It could also have one that is externally connected.
-Different icons is used so the user can quickly tell them apart.
+Different icons are used, so the user can quickly tell them apart.
 
 ## Camera widget
 
@@ -670,7 +670,7 @@ class _CameraWidgetState extends State<CameraWidget> {
 ```
 
 You can try to take photos with the app now.
-However you won't be able to view them yet.
+However, you won't be able to view them yet.
 
 ## Gallery screen
 
@@ -836,5 +836,5 @@ files.
 Add customizable color filters to PhotoScreen using
 [ImageFiltered class](https://api.flutter.dev/flutter/widgets/ColorFiltered-class.html).
 
-Throw in some some social media, then brag to all your friends and family about
+Throw in some social media, then brag to all your friends and family about
 how you created the next Instagram 😉 😉.
