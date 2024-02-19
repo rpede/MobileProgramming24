@@ -2,8 +2,8 @@
 title: Learning Dart
 layout: default
 ---
-<script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
-<style>iframe {height: 800px;}</style>
+
+{% include dart_embed %}
 
 # Patterns
 
@@ -40,6 +40,6 @@ Here are the rules:
 - When selling beverages with 1.2 to 16.5 percent alcohol, the retailer must verify that the customer are 16 years of age
 - Beverages with 16.5 percent alcohol or more may not be sold to persons under the age of 18
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-800px
 {% include demo path="codelab/lib/patterns/" %}
 ```

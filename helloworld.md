@@ -2,7 +2,7 @@
 title: "Testing Pages with DartPad"
 ---
 
-<script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
+{% include dart_embed %}
 
 These are not the droids you are using for.
 

@@ -3,7 +3,7 @@ title: Flutter basics challenge
 layout: default
 ---
 
-<script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
+{% include dart_embed %}
 
 Can you match the screenshot?
 

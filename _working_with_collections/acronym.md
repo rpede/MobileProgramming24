@@ -2,8 +2,7 @@
 title: Learning Dart
 layout: default
 ---
-<script type="text/javascript" src="https://dartpad.dev/inject_embed.dart.js" defer></script>
-<style>iframe { width: 100%; height: 800px; }</style>
+{% include dart_embed %}
 
 # Acronym generator
 
@@ -22,6 +21,6 @@ You give it some text and it will abbreviate it to an acronym.
 
 ## Code
 
-```run-dartpad:mode-dart
+```run-dartpad:mode-dart:height-800px
 {% include exercise path="codelab/lib/acronym/" %}
 ```
