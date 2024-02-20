@@ -280,3 +280,95 @@ So, `BuildContext` allows us to reach up the tree, therefore it must hold
 information about the tree.
 **Components** also hold information about the tree.
 In fact `BuildContext` is just an interface implemented by `Component` 🤯.
+
+# Named routes
+
+Navigation can also be done using named routes.
+
+Here, we give `MaterialApp` a map of `routes` and an initial route.
+
+```dart
+MaterialApp(
+  initialRoute: '/',
+  routes: {
+    '/': (context) => const NavigationScreen(),
+    '/home': (context) => const HomeScreen(),
+    '/settings': (context) => const SettingsScreen(),
+  },
+)
+```
+
+You can then navigate to a route using the name.
+
+```dart
+Navigator.pushNamed(context, '/home')
+```
+
+Here is a demo with a couple of screens.
+
+```run-dartpad:theme-light:mode-flutter:width-100%:height-800px
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    MaterialApp(
+      title: 'Named Routes Demo',
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const NavigationScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/settings': (context) => const SettingsScreen(),
+      },
+    ),
+  );
+}
+
+class NavigationScreen extends StatelessWidget {
+  const NavigationScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          ElevatedButton.icon(
+            icon: Icon(Icons.home),
+            label: Text("Home"),
+            onPressed: () => Navigator.pushNamed(context, '/home'),
+          ),
+          SizedBox(height: 8),
+          ElevatedButton.icon(
+            icon: Icon(Icons.settings),
+            label: Text("Settings"),
+            onPressed: () => Navigator.pushNamed(context, '/settings'),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home')),
+      body: Center(child: Icon(Icons.home)),
+    );
+  }
+}
+
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Settings')),
+      body: Center(child: Icon(Icons.settings)),
+    );
+  }
+}
+```
