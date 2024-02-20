@@ -243,7 +243,7 @@ It might be a good idea to reformat the file.
 
 1. Place the cursor on QuizScreen in the line
 `class QuizScreen extends StatelessWidget`
-2. <kbd>Ctrl</kbd> + <kbd>.</kbd>, or click 💡
+2. <kbd>Alt</kbd> + <kbd>Enter</kbd>, or click 💡
 3. Then "Convert to StatefulWidget"
 
 Notice that you now have two classes.
