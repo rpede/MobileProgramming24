@@ -50,7 +50,7 @@ flutter create . --platforms=android,web
 
 # Data
 
-## Class for data
+## Model
 
 Before we get started writing widgets, let's add some data.
 
@@ -92,7 +92,7 @@ documentation.
 You can see it in action if you hover over the name/symbol underneath the
 comment.*
 
-## Add some data
+## Add a quiz 
 
 For simplicity, we are just going to hard-code the quiz.
 Working with data from an REST-API will be shown in a future tutorial.
