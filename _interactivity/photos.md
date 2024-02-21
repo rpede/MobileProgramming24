@@ -114,8 +114,8 @@ Just be sure to save it to `images/camera.jpg` (within the project).
 ## Bundle assets
 
 Asset files can be bundled into the application.
-To do that we need to edit `pubspec.yaml`
-Under `flutter` section you want to add:
+To do that, we need to edit `pubspec.yaml` Under `flutter` section you want to
+add:
 
 ```yml
   assets:
@@ -284,11 +284,11 @@ const menu = {
 };
 ```
 
-Is the definition of the menu the drawer will show.
+This is the definition of the menu the drawer will show.
 It is a map where the key is the name of the menu item.
-Value is the screen to navigate to when item has been selected.
+Value is the screen to navigate to when a menu item is selected.
 
-The `.new` part gives us a reference to the primary constructor.
+The `.new` part gives us a reference to the constructor of the class.
 By invoking it we will get an instance of the class.
 
 ## Show a different page/screen
@@ -308,11 +308,11 @@ The constructor can be invoked with `ctor.call()` thereby returning the widget.
 
 [MaterialApp](https://api.flutter.dev/flutter/material/MaterialApp-class.html)
 provides a
-[Navigator](https://api.flutter.dev/flutter/widgets/Navigator-class.html)
-which is what we use to change to a different screen in our app.
+[Navigator](https://api.flutter.dev/flutter/widgets/Navigator-class.html).
+It is what we use to change to a different screen in our app.
 
-As you can tell, the terminology is similar to what we will find in a web
-application.
+As you can tell, the terminology is similar to that of web
+applications.
 With words like *route* and *page*.
 
 By default, a MaterialApp will show the widget that is given by the `home`
@@ -321,19 +321,20 @@ The Navigator can be used to change the widget being shown.
 
 Navigator is a child widget provided through MaterialApp's `build()` method.
 A widgets `BuildContext` can be used to find specific parent widget.
-Literally `Navigator.of(context)` finds an ancestor `State` object for the
-`Navigator`.
-If you go to the definition of the `of` function you will see
+Literally `Navigator.of(context)` finds a `State` object for the
+`Navigator` by looking up the tree.
+
+Try, go to the definition of the `of` function you will see
 `context.findAncestorStateOfType<NavigatorState>()`.
 
 NavigatorState maintains a stack of widgets.
-The top of the stack is the widget that MaterialApp shows.
-The use can pop widgets from the stack with the back-navigation button or
+The top-most is the widget that MaterialApp shows.
+The user can pop widgets from the stack with the back-navigation button or
 gesture (depending on platform).
 
 In our case we will replace the top-most widget in the navigation stack, instead
-of pushing a new widget to the stack for each navigation with the drawer.
-We can replace it with the `pushReplacement()` method.
+of pushing a new widget to the stack for each.
+We can replace the top-most widget with the `pushReplacement()` method.
 
 Before we can use the drawer, it needs to be added to the Scaffold on each
 screen.
@@ -366,20 +367,22 @@ Try it out! Navigate 🧭 around the different screens.
 ## Install plugin
 
 Packages for Dart and Flutter can be found at [pub.dev](https://pub.dev/).
-We call it a plugin if it adds platform specific functionality to Flutter.
-Which is exactly what we need to use the cameras in your phone.
+We call it a plugin, if it adds platform specific functionality to Flutter.
+So, a plugin is what we need to access cameras on a device.
 
-Packages each have their on page on pub.dev.
+Each packages have their on page on pub.dev.
 The page will likely contain important information about how to get started
 using the package/plugin.
-Example, see [camera page](https://pub.dev/packages/camera).
+Example, see [camera - pub.dev](https://pub.dev/packages/camera).
 
 That is the plugin we will be using.
 
 Dependencies in any Dart/Flutter project is defined in the `dependencies`
 section of `pubspec.yaml`.
-A pubspec.yaml file in a Dart project serves a similar purpose as package.json
-in a JavaScript/Node.js project.
+The pubspec.yaml file in a Dart, serves a similar purpose as package.json
+in a JavaScript/Node.js.
+
+Take a look at the pubspec.yaml in your project.
 
 We can either add dependencies directly to pubspec.yaml or use the CLI.
 Lets add it with the CLI:
@@ -388,8 +391,9 @@ Lets add it with the CLI:
 flutter pub add camera
 ```
 
+Open pubspec.yaml again.
 Notice that `camera` got added to pubspec.yaml file.
-Since we didn't specify a version it added the latest.
+Since we didn't specify a version, it added the latest.
 
 If you want to run the app on a iPhone then you will need to add the following
 to `ios/Runner/Info.plist`.
@@ -731,13 +735,17 @@ class GalleryScreen extends StatelessWidget {
 
 **Important:** you will need to change `imageDir` if you created the project with a different name.
 
+Let's break it down.
+
 The pictures taken can be accessed as files.
 
 ```dart
 Directory(imageDir).list().toList()
 ```
 
-Returns a Future that list the filesystem entries in the given directory.
+It returns a Future that list the filesystem entries in the given directory.
+
+Inside FutureBuilder, we have:
 
 ```dart
 if (snapshot.connectionState != ConnectionState.done) {
@@ -754,7 +762,7 @@ is shown unless the state is done.
 final files = (snapshot.data ?? []).map((entry) => File(entry.path));
 ```
 
-Map filesystem entries to File objects.
+It maps filesystem entries to File objects.
 
 ```dart
 GridView.count(
@@ -774,7 +782,7 @@ GridView.count(
 )
 ```
 
-Show a grid with an image for each file.
+Shows a grid with an image for each file.
 When tapping on an image...
 
 ```dart
@@ -785,10 +793,9 @@ _onPhotoTap(BuildContext context, File file) {
 }
 ```
 
-We navigate to a now screen where the image/photo is shown in a larger size.
-The new route is pushed to the navigation stack this time.
-Because it makes sense that the user should be able to get back after viewing
-the photo.
+We navigate to a new screen, where the image/photo is shown in a larger size.
+The new route is pushed to the navigation stack this time, because it makes
+sense that the user can get back after viewing the photo.
 
 ## Photo screen
 
@@ -822,13 +829,13 @@ Visit the documentation to learn more about [Hero
 animations](https://docs.flutter.dev/ui/animations/hero-animations).
 
 That's all 🎊.
-You have now coded your own photo app from scratch.
+You have now coded your own photo app from scratch 📷.
 
 # Challenges
 
 ## Spring cleaning
 
-Get rid of those embarrassing photo mistakes by adding functionality to delete
+Get rid of those embarrassing photo mistakes, by adding functionality to delete
 files.
 
 ## iOS-style
