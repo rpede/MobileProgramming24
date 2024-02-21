@@ -831,6 +831,15 @@ You have now coded your own photo app from scratch.
 Get rid of those embarrassing photo mistakes by adding functionality to delete
 files.
 
+## iOS-style
+
+Change the application to look-n-feel more like an iOS app.
+
+Replace the material widgets with
+[Cupertino (iOS-style) widgets](https://docs.flutter.dev/ui/widgets/cupertino).
+
+Are there alternatives to Drawer that are more iOS-like, for navigation?
+
 ## Filters
 
 Add customizable color filters to PhotoScreen using
