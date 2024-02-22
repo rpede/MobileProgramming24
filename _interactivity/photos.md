@@ -65,7 +65,6 @@ Add a new file `lib/home_screen.dart` with:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:photos/app_drawer.dart';
 
 const appTitle = 'Photos';
 const appDescription =
