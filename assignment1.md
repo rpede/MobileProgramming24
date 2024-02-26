@@ -118,6 +118,8 @@ Unit-tests for the logic in part 1 and integration tests for the UI in part 2.
 Tests must be executed from a GitHub Actions pipeline.
 The pipeline should also build for web and deploy to GitHub Pages.
 
+[See instructions](https://github.com/rpede/flutter_web_test_deploy/blob/main/README.md)
+
 # Hand-in
 
 Submit a link to the GitHub repository with your solution.
