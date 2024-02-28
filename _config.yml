@@ -30,6 +30,9 @@ collections:
   interactivity:
     output: true
     permalink: /interactivity/:name
+  testing:
+    output: true
+    permalink: /testing/:name
   working_with_data:
     output: true
     permalink: /working-with-data/:name

@@ -11,5 +11,6 @@ description: >-
 - [Working with collections](working-with-collections)
 - [Flutter Basics](flutter-basics)
 - [Interactivity](interactivity)
+- [Testing](testing)
 - [Working with data](working-with-data)
 - [Tricks](tricks)
