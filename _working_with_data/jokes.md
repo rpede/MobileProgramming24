@@ -1,5 +1,5 @@
 ---
-title: Joke teller app
+title: Jokes
 layout: default
 ---
 
@@ -76,9 +76,9 @@ So, you get something like:
 It should have both `setup`, `delivery` and `joke` fields.
 
 Copy the merged JSON.
-Head over to [JSON to Dart](https://javiercbk.github.io/json_to_dart/) and paste
+Head over to [JSON to Dart](https://jsontodart.zariman.dev/) and paste
 it in.
-For the Dart class name field you type `JokeDto` and hit the _Generate Dart_ button.
+In the "Class Name" input, type `JokeDto` and hit the _Generate_ button.
 
 Copy all the generated Dart code and paste it into a new file named
 `joke_dto.dart` inside your project.
