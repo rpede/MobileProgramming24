@@ -9,3 +9,7 @@ layout: default
 
 - [JSON](json)
 - [Jokes](jokes)
+
+# Weather
+
+- [Part 1](weather1)
