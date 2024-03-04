@@ -18,7 +18,7 @@ flutter create make_me_laugh
 
 You can use a different project name if you want.
 
-## Fetch data
+## Data
 
 You could write a long list of jokes yourself for the app.
 However, that sounds like a lot of work for something supposed to be fun.
@@ -171,8 +171,8 @@ class _JokePageState extends State<JokePage> {
 
   @override
   void initState() {
-    _loadJoke();
     super.initState();
+    _loadJoke();
   }
 
   _loadJoke() async {
@@ -219,18 +219,20 @@ However, completing the challenges will make your app a lot more awesome 😎.
 
 ### Challenge 1 - Add some graphics
 
-Without some graphics the app will still look a bit boring.
+Without graphics the app looks pretty boring.
 So, let's fix it!
 
 You are not required to follow the steps in this section.
-You can get creative instead and add graphics a different way instead with the
-[Image widget](https://api.flutter.dev/flutter/widgets/Image-class.html).
+You can get creative and add some other graphics instead.
+With the [Image
+widget](https://api.flutter.dev/flutter/widgets/Image-class.html) you can easily
+add images.
 
 Anyway, I thought it would be cool if it looks like there are different cartoon
 characters telling jokes.
 
-I've found an avatar library/service called [DiceBear with an HTTP
-API](https://www.dicebear.com/how-to-use/http-api/).
+I've found an avatar library/service called
+[DiceBear](https://www.dicebear.com/how-to-use/http-api/), that have a HTTP API.
 
 Find a [avatar style](https://www.dicebear.com/styles/) you like.
 
@@ -264,7 +266,8 @@ Mine ended up looking like this:
 
 ### Challenge 2 - Settings
 
-Remember there were a lot of settings you could change on the [jokeapi website](https://jokeapi.dev/)?
+Remember, there were a lot of settings you could change on the [jokeapi
+website](https://jokeapi.dev/)?
 
 Wouldn't it be cool if your users could change the settings themselves?
 
@@ -273,33 +276,33 @@ For that you need a couple things.
 1. an object to hold the settings
 2. (optionally) persistent storage of the settings
 3. another page to change the settings
-4. change `DataSource` to use the settings
+4. update `DataSource` to use the settings
 
 #### 1. Object to hold settings
 
-You can solve the first by simple adding a `Settings` class for the settings you
-want the user to be able to change.
+You can solve the first, by simply adding a `Settings` class with fields for the
+settings you want the user to be able to change.
 
 You can make the `Settings` class accessible across your application with a
 provider (just like DataSource).
 I suggest using a
 [MultiProvider](https://pub.dev/packages/provider#multiprovider) to cleanly
-provide both `DataSource` and settings.
+provide both `DataSource` and your new settings object.
 
 #### 2. Persistence (optional)
 
-You can use the [localstorage package](https://pub.dev/packages/localstorage) to
-easily persist simple data in your app.
+You can use the [localstorage](https://pub.dev/packages/localstorage) package to
+persist simple data in your app.
 
-One caveat is that whatever data you try to persist needs to be JSON
+One caveat, is that whatever data you try to persist, needs to be JSON
 serializable.
-Meaning you can only use types like: int, double, bool, String List & Map.
+Meaning, you can only use types like: int, double, bool, String List & Map.
 Also, you will have to cast the value you get back to the appropriate type.
 
-Add `load` and `save` methods to `Settings` that use `LocalStorage` to persist
+Add `load` and `save` methods to `Settings` and use `LocalStorage` to persist
 settings.
 
-NOTE: You need to wait for `LocalStorage` to be ready before you can use it:
+**Important:** You need to wait for `LocalStorage` to be ready before you can use it:
 
 ```dart
 final LocalStorage storage = LocalStorage('settings');
@@ -318,7 +321,7 @@ Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Setting
 
 Which can be invoked from `onPressed` on a button.
 
-You can use the [settings_ui package](https://pub.dev/packages/settings_ui) to
+You can use the [settings_ui](https://pub.dev/packages/settings_ui) package to
 easily create a UI with toggles for various settings such as categories.
 
 Remember to call `setState(() {})` when you want the UI to update.
@@ -361,12 +364,12 @@ class DataSource {
 }
 ```
 
-You can get the settings from within your widget with
+You can get the settings from within your widget using
 `context.read<Settings>()`.
 
 ### Challenge 3 - Read it out loud
 
-Wouldn't it be cool if your app could read jokes out loud?
+Wouldn't it be cool if your app could read the jokes out loud?
 
 What you need is some text-to-speech (aka speech synthesis) functionality.
 
@@ -377,8 +380,8 @@ text to sound.
 You will also need another package such as
 [audioplayers](https://pub.dev/packages/audioplayers) to play the sound.
 
-Third your app will need secrets to access the speech cloud service.
-As you know, one should never commit such to source repository.
+Third, your app will need secrets to access the speech cloud service.
+As you know, one should never commit secrets to source repository.
 You can store the secrets in a `.env` file and read them using
 [flutter_dotenv](https://pub.dev/packages/flutter_dotenv).
 
