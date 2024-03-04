@@ -7,14 +7,14 @@ layout: default
 
 # Manual serialization
 
-## Deserialization
+## Decoding
 
 In Dart we can deserialize JSON using
 [jsonDecode](https://api.dart.dev/stable/3.3.0/dart-convert/jsonDecode.html)
 function from the `dart:convert` library.
 
-The function has a return type of `dynamic`, which means we don't know the type
-in source code, we can tell when running the application.
+The function has a return type of `dynamic`, which means that Dart can't tell
+what type it is before running the the application.
 
 It is important to know how types a treated when working with JSON.
 Here are some examples you can play around with:
@@ -52,11 +52,11 @@ void main() {
 
 ---
 
-## Serialization
+## Encoding
 
 For serialization to JSON we can use [jsonEncode](https://api.dart.dev/stable/3.3.0/dart-convert/jsonEncode.html).
 
-It works for the fine for the following types:
+It works fine for the following types:
 
 - num, int, double
 - bool
@@ -64,7 +64,7 @@ It works for the fine for the following types:
 - List
 - Map
 
-```run-dartpad:run-true:width-100%:height-400px
+```run-dartpad:run-true:width-100%:height-350px
 import 'dart:convert';
 
 void main() {
@@ -81,12 +81,12 @@ void main() {
 }
 ```
 
-Notice how similar JSON are to the literals in Dart.
+Notice how similar Dart literals are to JSON.
 
 You can make the JSON more readable to humans with
 `JsonEncoder.withIndent('\t').convert`.
 
-```run-dartpad:run-true:width-100%:height-400px
+```run-dartpad:run-true:width-100%:height-350px
 import 'dart:convert';
 
 void main() {
@@ -100,11 +100,11 @@ void main() {
 
 What if we want to work with classes?
 We don't get classes back when deserializing.
-And we can **not** just serialize classes directly.
+And we can **not** serialize classes directly.
 
 Attempting to do so, gives us a nasty error.
 
-```run-dartpad:run-true:width-100%:height-610px
+```run-dartpad:run-true:width-100%:height-500px
 import 'dart:convert';
 
 class JokeDto {
@@ -132,7 +132,7 @@ Instead we need some methods to convert between `Map<String, dynamic>` and our
 
 It is common to put those conversion methods in the DTO class.
 
-```run-dartpad:run-true:width-100%:height-610px
+```run-dartpad:run-true:width-100%:height-800px
 import 'dart:convert';
 
 const json = '''{
@@ -178,7 +178,7 @@ void main() {
 ```
 
 Wondering why the methods are called `fromJson` and `toJson` when they work with `Map` type?
-It is just a common convention people in the Dart community use.
+It is just a convention that people in the Dart community use.
 
 The convention implies that `fromJson` is compatible with `jsonDecode` and
 `toJson` with `jsonEncode`.
