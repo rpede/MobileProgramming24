@@ -7,7 +7,7 @@ layout: default
 
 # Manual serialization
 
-## Encoding
+## Deserialization
 
 In Dart we can deserialize JSON using
 [jsonDecode](https://api.dart.dev/stable/3.3.0/dart-convert/jsonDecode.html)
@@ -52,7 +52,7 @@ void main() {
 
 ---
 
-## Decoding
+## Serialization
 
 For serialization to JSON we can use [jsonEncode](https://api.dart.dev/stable/3.3.0/dart-convert/jsonEncode.html).
 
