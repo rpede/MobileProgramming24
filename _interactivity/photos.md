@@ -6,6 +6,7 @@ layout: default
 ---
 
 ![Screenshot](../photos_app_screenshot.png)
+![Screenshot](../photos_app_screenshot_ios.png)
 
 # Shortcut
 
