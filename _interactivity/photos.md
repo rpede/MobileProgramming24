@@ -1,7 +1,7 @@
 ---
 title: Photos
 description: >-
-    A photo/camera with navigation between screens
+  A photo/camera with navigation between screens
 layout: default
 ---
 
@@ -15,9 +15,9 @@ Here is another shortcut you should try to practice.
 
 To see how something in the code is defined.
 
-- Windows: <kbd>Control</kbd> + <kbd>B</kbd>  or <kbd>Control</kbd> + <kbd>Left-click</kbd>
+- Windows: <kbd>Control</kbd> + <kbd>B</kbd> or <kbd>Control</kbd> + <kbd>Left-click</kbd>
 - macOS: <kbd>Command</kbd> + <kbd>B</kbd> or <kbd>Command</kbd> +
-<kbd>Click</kbd>
+  <kbd>Click</kbd>
 
 You can also right-click -> "Go To" -> "Declaration or Usages".
 
@@ -29,8 +29,8 @@ Create a new project and open it in Android Studio.
 flutter create photos --platform=android,ios,web
 ```
 
-*Note: We will be using a plugin to access camera that isn't supported on desktop platforms.
-Not all plugins for Flutter are supported on all the platforms that Flutter itself supports.*
+_Note: We will be using a plugin to access camera that isn't supported on desktop platforms.
+Not all plugins for Flutter are supported on all the platforms that Flutter itself supports._
 
 # Home screen
 
@@ -117,8 +117,8 @@ To do that, we need to edit `pubspec.yaml` Under `flutter` section you want to
 add:
 
 ```yml
-  assets:
-    - images/camera.jpg
+assets:
+  - images/camera.jpg
 ```
 
 Pay attention to whitespace.
@@ -312,7 +312,7 @@ It is what we use to change to a different screen in our app.
 
 As you can tell, the terminology is similar to that of web
 applications.
-With words like *route* and *page*.
+With words like _route_ and _page_.
 
 By default, a MaterialApp will show the widget that is given by the `home`
 parameter.
@@ -679,6 +679,15 @@ However, you won't be able to view them yet.
 
 To view the photos taken by the app, we need another screen.
 
+But first we need to add a package to help os find the path where the app stores
+its files.
+
+```sh
+flutter pub add path_provider
+```
+
+Add the following to `lib/gallery_screen.dart`.
+
 ```dart
 import 'dart:io';
 
@@ -687,15 +696,26 @@ import 'package:flutter/material.dart';
 import 'app_drawer.dart';
 import 'photo_screen.dart';
 
-const imageDir = '/data/user/0/com.example.photos/cache/';
-
 class GalleryScreen extends StatelessWidget {
   const GalleryScreen({super.key});
 
-  _onPhotoTap(BuildContext context, File file) {
+  void _onPhotoTap(BuildContext context, File file) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => PhotoScreen(file: file),
     ));
+  }
+
+  Future<List<FileSystemEntity>> _listPhotos() async {
+    late String imagePath;
+    if (Platform.isIOS) {
+      final documentsDir = await getApplicationDocumentsDirectory();
+      imagePath = [documentsDir.path, 'camera', 'pictures'].join('/');
+    } else {
+      // Assume Android
+      final cacheDir = await getApplicationCacheDirectory();
+      imagePath = cacheDir.path;
+    }
+    return Directory(imagePath).list().toList();
   }
 
   @override
@@ -704,7 +724,7 @@ class GalleryScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Gallery')),
       drawer: const AppDrawer(),
       body: FutureBuilder(
-        future: Directory(imageDir).list().toList(),
+        future: _listPhotos(),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
@@ -732,11 +752,28 @@ class GalleryScreen extends StatelessWidget {
 }
 ```
 
-**Important:** you will need to change `imageDir` if you created the project with a different name.
-
 Let's break it down.
 
-The pictures taken can be accessed as files.
+The location where images are stored (by default) depends on the platform.
+So here we are setting `imagePath` to the right path.
+
+```dart
+String imagePath;
+if (Platform.isIOS) {
+  final documentsDir = await getApplicationDocumentsDirectory();
+  imagePath = [documentsDir.path, 'camera', 'pictures'].join('/');
+} else {
+  // Assume Android
+  final cacheDir = await getApplicationCacheDirectory();
+  imagePath = cacheDir.path;
+}
+```
+
+The functions `getApplicationDocumentsDirectory` and
+`getApplicationCacheDirectory` both comes from the
+[path_provider](https://pub.dev/packages/path_provider) package.
+
+The pictures taken can be accessed as files from our `imageDir` variable.
 
 ```dart
 Directory(imageDir).list().toList()
@@ -744,6 +781,7 @@ Directory(imageDir).list().toList()
 
 It returns a Future that list the filesystem entries in the given directory.
 
+We use a FutureBuilder to automatically update when the future completes.
 Inside FutureBuilder, we have:
 
 ```dart

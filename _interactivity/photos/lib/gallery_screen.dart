@@ -1,19 +1,31 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'app_drawer.dart';
 import 'photo_screen.dart';
 
-const imageDir = '/data/user/0/com.example.photos/cache/';
-
 class GalleryScreen extends StatelessWidget {
   const GalleryScreen({super.key});
 
-  _onPhotoTap(BuildContext context, File file) {
+  void _onPhotoTap(BuildContext context, File file) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => PhotoScreen(file: file),
     ));
+  }
+
+  Future<List<FileSystemEntity>> _listPhotos() async {
+    String imagePath;
+    if (Platform.isIOS) {
+      final documentsDir = await getApplicationDocumentsDirectory();
+      imagePath = [documentsDir.path, 'camera', 'pictures'].join('/');
+    } else {
+      // Assume Android
+      final cacheDir = await getApplicationCacheDirectory();
+      imagePath = cacheDir.path;
+    }
+    return Directory(imagePath).list().toList();
   }
 
   @override
@@ -22,7 +34,7 @@ class GalleryScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Gallery')),
       drawer: const AppDrawer(),
       body: FutureBuilder(
-        future: Directory(imageDir).list().toList(),
+        future: _listPhotos(),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
