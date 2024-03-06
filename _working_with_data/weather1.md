@@ -16,8 +16,7 @@ Create a new project.
 flutter create weather --platforms=android,ios
 ```
 
-Open `main.dart`.
-And paste the end result from the workshop.
+Open `main.dart` and replace its content with the result from the workshop.
 
 ## Refactor
 
@@ -57,7 +56,7 @@ Temperature (2 m)** under "Daily Weather Variables".
 10. Download the JSON from API URL to `assets/daily_weather.json`.
 11. Paste the JSON into the site [Json To
 Dart](https://jsontodart.zariman.dev/), check **Use num** type
-**WeeklyForecast** as class name and click "Generate".
+**WeeklyForecastDto** as class name and click "Generate".
 12. Save the generated dart code to `lib/models.dart`.
 13. Add your `assets/` folder to flutter->assets section in `pubspec.yaml`.
 
@@ -71,7 +70,7 @@ flutter:
 
 *Weather Code* describes the weather conditions (sunny, rain, snow etc).
 I wrote an enum that might help interpret the `int` value we get from API.
-You should drop that into your `lib/models.dart` file too.
+You should drop it into your `lib/models.dart` file too.
 
 ```dart
 // 0 	Clear sky
@@ -143,33 +142,33 @@ Add this to your `lib/data_source.dart`:
 
 ```dart
 class FakeDataSource {
-  Future<WeeklyForecast> getWeeklyForecast() async {
+  Future<WeeklyForecastDto> getWeeklyForecast() async {
     final json = await rootBundle.loadString("assets/daily_weather.json");
-    return WeeklyForecast.fromJson(jsonDecode(json));
+    return WeeklyForecastDto.fromJson(jsonDecode(json));
   }
 }
 ```
 
 It simply loads, decodes and converts JSON from asset to an instance of
-WeeklyForecast.
+WeeklyForecastDto.
 
 # Modify UI to use the new mock data
 
 When we make HTTP requests in Flutter, we are always going to get a Future back
 (like Promise in JS).
-That is because it takes some time for our request to hit the server, for it to
+That is because, it takes some time for our request to hit the server, for it to
 generate a response, and for the response to be transferred over the internet.
 
 Even when loading a bundled assets, it doesn't happen instantaneously.
 
 The app needs to handle the Future somewhere.
-I think a good place for that somewhere, is to introduce a new screen, that sits
+I think a good place for it, would be to introduce a new screen, that sits
 between  `WeatherApp` and `WeeklyForecastList`.
 
 That way we can let `WeeklyForecastList` just deal with how to show the
 forecast.
-Also it makes it easier for us to add new screens later that show some different
-data.
+Also it makes it easier for us to add new screens to show some different data
+later on.
 
 Add following code to `lib/weekly_forecast_screen.dart`.
 
@@ -199,7 +198,7 @@ class WeeklyForecastScreen extends StatelessWidget {
     );
   }
 
-  SliverToBoxAdapter buildError(Object? error, BuildContext context) {
+  Widget buildError(Object? error, BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -211,7 +210,7 @@ class WeeklyForecastScreen extends StatelessWidget {
     );
   }
 
-  SliverFillRemaining buildSpinner() {
+  Widget buildSpinner() {
     return const SliverFillRemaining(
       hasScrollBody: false,
       child: Center(
@@ -222,11 +221,11 @@ class WeeklyForecastScreen extends StatelessWidget {
 }
 ```
 
-**Important** we can't put our normal layout widgets inside slivers.
+**Important** we can't directly put our normal layout widgets inside slivers.
 It doesn't work directly with the fancy scrolling.
-We can get around the limitation by wrapping with it with a
+We can get around the limitation by wrapping it with a
 [SliverToBoxAdapter](https://api.flutter.dev/flutter/widgets/SliverToBoxAdapter-class.html).
-There is also a
+Btw, there is also a
 [SliverFillRemaining](https://api.flutter.dev/flutter/widgets/SliverFillRemaining-class.html)
 which is like the Expanded widget but for slivers.
 
@@ -257,7 +256,7 @@ In `lib/weekly_forecast_list.dart` replace the constructor with:
 
 ```dart
 class WeeklyForecastList extends StatelessWidget {
-  final WeeklyForecast weeklyForecast;
+  final WeeklyForecastDto weeklyForecast;
 
   const WeeklyForecastList({super.key, required this.weeklyForecast});
 
@@ -273,7 +272,7 @@ final DailyForecast dailyForecast =
     Server.getDailyForecastByID(index);
 ```
 
-It gives some compile errors, see if you can fix those.
+It gives some compile errors, see if you can fix them.
 
 Here are some code for showing name of week days, that might come handy.
 
@@ -319,18 +318,18 @@ You can adjust the JSON data to simulate different weather conditions.
 
 Also change the image in the app bar and play around with the colors.
 
-When done, you should be able to remove `lib/server.dart` with the old mock
-data.
+When done, you should be able to remove the `lib/server.dart` file containing
+the old mock data from codelab.
 
 # Use live data
 
 ## Dependency injection with providers
 
-It would be nice to be able to quickly switch between mock and real data.
-So we need to dependency injection.
+It would be nice, if we were able to quickly switch between mock and real data.
+Therefore, we need to dependency injection!
 
-A popular option for accessing dependencies where you need them is with the
-[provider](https://pub.dev/packages/provider) package.
+A popular option that allows accessing dependencies in the widgets that need
+them is with the [provider package](https://pub.dev/packages/provider).
 
 Open a terminal and type:
 
@@ -342,19 +341,19 @@ Change `lib/data_source.dart` to:
 
 ```dart
 abstract class DataSource {
-  Future<WeeklyForecast> getWeeklyForecast();
+  Future<WeeklyForecastDto> getWeeklyForecast();
 }
 
 class FakeDataSource extends DataSource {
   @override
-  Future<WeeklyForecast> getWeeklyForecast() async {
+  Future<WeeklyForecastDto> getWeeklyForecast() async {
     final json = await rootBundle.loadString("assets/daily_weather.json");
-    return WeeklyForecast.fromJson(jsonDecode(json));
+    return WeeklyForecastDto.fromJson(jsonDecode(json));
   }
 }
 ```
 
-Remember, in dart we use abstract classes instead of interfaces.
+Remember, in Dart we use abstract classes instead of interfaces.
 
 In `lib/main.dart` you need to have:
 
@@ -373,7 +372,7 @@ void main() {
 }
 ```
 
-Actually you do with just the following in `runApp`:
+Actually, you do with just the following in `runApp`:
 
 ```dart
 Provider<DataSource>(
@@ -391,7 +390,7 @@ You can think of:
 Provider<DataSource>(create: (context) => FakeDataSource()),
 ```
 
-As Flutters of this in .NET:
+As Flutters version of this in .NET:
 
 ```csharp
 builder.Services.AddSingleton<IDataSource, FakeDataSource>();
@@ -413,15 +412,15 @@ with
 context.read<DataSource>().getWeeklyForecast()
 ```
 
-If you look at the definition of `read` it basically does
-`Provider.of<DataSource>(contex, listen: false)` where this a the
-`BuildContext`.
+If you look at the definition of `read`, it basically does
+`Provider.of<DataSource>(context, listen: false)`.
 The `Something.of(context)` pattern should start to look familiar by now.
 It is the same we do with `Theme` and `Navigator`.
 
-So the `read` method is reaching up the widget tree for a
-`Provider<DataSource>`, from which we get a `DataSource` that we configured to
-be the concrete type `FakeDataSource`.
+So what happens, is that the `read` method is reaching up the widget tree for a
+`Provider<DataSource>` from which we get a `DataSource`.
+We configured `Provider<DataCourse>` to provide the concrete type `FakeDataSource`.
+We could have many screens/pages in the app accessing the same `DataSource` this way.
 
 Never mind the `listen: false` part.
 That's a story for day.
@@ -433,29 +432,31 @@ Lets create another data-source.
 1. Add the [http](https://pub.dev/packages/http) package.
 2. Grab the API URL you had from the beginning.
 3. Create a class called `RealDataSource` that extends `DataSource`.
-4. Implement `getWeeklyForecast()` it makes a GET request to API URL.
+4. Implement `getWeeklyForecast()` such that it returns data from a GET request
+to API URL.
 
-Refer to [Jokes](jokes) page for how to use the http package.
+Refer to [Jokes pages](jokes) for an example on how to use the http package.
 
 Now you can switch between the real and fake data source with a small change in
 `lib/main.dart`.
 
 ## Refresh data
 
-It would be nice if there were a way to refresh the data within closing and
+It would be nice if there were a way to refresh the data without closing and
 reopening the app.
 
 The app bar has a `onStretchTrigger` that fires when you pull down from the top
 of the screen.
-Which is perfect for what we need.
+This is perfect for what we need.
 There is just one problem.
-It lives in a different class than from where we call the data source.
+It lives in a different class than where we call the data source.
 
 To solve the problem, add an instance variable `final AsyncCallback? onRefresh`
 in `WeatherSliverAppBar`.
 Add it as a parameter in the constructor.
-Assign `onRefresh` to `onStretchTrigger`.
+Assign `onRefresh` to `onStretchTrigger` in the build method.
 
+Btw.
 AsyncCallback is defined as:
 
 ```dart
@@ -464,6 +465,7 @@ typedef AsyncCallback = Future<void> Function();
 
 So `AsyncCallback` is just an alias for `Future<void> Function()`.
 
+Back on track.
 Now we need to fetch need data when `onRefresh` is called.
 
 To do that, convert `WeeklyForecastScreen` to a **StatefulWidget**.
@@ -471,7 +473,7 @@ To do that, convert `WeeklyForecastScreen` to a **StatefulWidget**.
 In `_WeeklyForecastScreenState` add an instance variable:
 
 ```dart
-final controller = StreamController<WeeklyForecast>();
+final controller = StreamController<WeeklyForecastDto>();
 
 @override
 void initState() {
@@ -487,21 +489,23 @@ Future<void> loadForecast() async {
 ```
 
 **Important** when overriding `initState`, the method must start with
-*`super.initState()`.
-And you can **not** use `await` inside it.
+`super.initState()`.
+Also you can **not** use `await` inside it.
 
-We use a [StreamController](https://api.flutter.dev/flutter/dart-async/StreamController-class.html) here.
 
-StreamController is a cool class.
+[StreamController](https://api.flutter.dev/flutter/dart-async/StreamController-class.html)
+is a cool class.
 Picture a pipe.
 One person can add things at one end.
 While another person retrieves them in another.
 We call the end where things get added a *sink*.
 And where it comes out the *stream*.
 
+{% include_relative pipe.drawio.svg %}
+
 Person at *stream* and might not be able to see then things are added to the
 *sink*.
-But can listen for when something is going to flow throw.
+But can listen for when something is going to flow through.
 
 Consider:
 
@@ -509,14 +513,14 @@ Consider:
 controller.addStream(future.asStream());
 ```
 
-Here we convert the future to a stream, adding it to the controller.
+Here we convert the future to a stream, adding it to the sink of our controller.
 It means that when the future resolves to a value then it will flow through the
 pipe.
 If the future fails, then an error will flow through instead.
 
 The
 [StreamBuilder](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html)
-can be used to listen on a stream from within the widget tree.
+can be used to listen to a stream from within the widget tree.
 
 Replace the `FutureBuilder` in build method with a `StreamBuild`.
 So instead of:
