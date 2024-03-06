@@ -439,6 +439,18 @@ to API URL.
 
 Refer to [Jokes pages](jokes) for an example on how to use the http package.
 
+Remember that you need to add permissions in `android/app/src/main/AndroidManifest.xml`.
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These two lines -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    ...
+```
+
 Now you can switch between the real and fake data source with a small change in
 `lib/main.dart`.
 
