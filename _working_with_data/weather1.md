@@ -6,6 +6,8 @@ layout: default
 
 {% include hint.html %}
 
+![Screenshot](../weather_app_part1_screenshot.png)
+
 # Setup
 
 In this lesson we will be building on the [Building scrolling experiences in Flutter Workshop](https://old-dartpad-3ce3f.web.app/workshops.html?webserver=https%3A%2F%2Fdartpad-workshops-io2021.web.app%2Fgetting_started_with_slivers).
