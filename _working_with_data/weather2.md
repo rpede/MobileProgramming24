@@ -6,11 +6,11 @@ layout: default
 
 # Introduction
 
-[Open-Meteo](https://open-meteo.com/en/docs/) got a many different variables we
+[Open-Meteo](https://open-meteo.com/en/docs/) got many different variables we
 can query.
-Here variable means a measurement or prediction that changes over time.
-
 It would be nice if we could plot the data in a chart.
+
+*Here variable means a measurement or prediction that changes over time.*
 
 # Packages
 
@@ -21,17 +21,13 @@ Picking a popular package is often a safe bet.
 However "FL Chart" doesn't work well with time-series data.
 And "Syncfusion Flutter Charts" has a license that makes it impractical for us.
 
-There used to be a 3rd popular option, [charts_flutter](https://pub.dev/packages/charts_flutter).
-It had been developed for use internally at Google.
+There also used to be a 3rd popular option, [charts_flutter](https://pub.dev/packages/charts_flutter).
+It was developed for use internally at Google.
 But the project has been abandoned.
 
-Luckily a community member and is now maintaining a fork under the name
+Luckily a community member is now maintaining a fork named
 [community_charts_flutter](https://pub.dev/packages/community_charts_flutter).
 So we are going with that package.
-
-[Examples](https://juliansteenbakker.github.io/community_charts/flutter/gallery.html)
-
-Software development can be a bit crazy sometimes.
 
 The chosen package isn't the best looking of the bunch.
 But it has the simplest API.
@@ -82,15 +78,15 @@ import 'package:community_charts_flutter/community_charts_flutter.dart' as chart
 
 The [library
 prefix](https://dart.dev/language/libraries#specifying-a-library-prefix)
-`charts` is used because it has types that can conflict with types from other
-packages.
+`charts` is used, because the library got some types that conflict with types
+from other packages.
 
 # Transform data
 
 To make it simpler to plot the data we get from Open-Meteo, we are going to
 transform/convert it into a different shape.
 
-Here is an exempt of the kind of data we in API response.
+Here is an exempt of the data found in API response.
 
 ```json
 {
@@ -162,7 +158,12 @@ class TimeSeriesDatum {
 }
 ```
 
-Now for the code that does the conversion:
+Here is a sketch of how we are going to convert the data.
+
+![Sketch of data conversion](../weather_data_transform.drawio.png)
+
+Not sure if that was useful at all.
+Anyway, here is the code:
 
 ```dart
 const _kTime = 'time';
