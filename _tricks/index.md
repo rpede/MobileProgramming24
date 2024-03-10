@@ -10,3 +10,4 @@ layout: default
 - [Port to TV](tv)
 - [Flutter Inspector](inspector)
 - [Dark-mode changer](darkmode-changer)
+- [Deepen your understanding](understanding)
