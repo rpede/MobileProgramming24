@@ -403,3 +403,38 @@ See [API documentation](https://pub.dev/documentation/community_charts_flutter/l
 **[Chart examples gallery](https://rpede.github.io/charts_flutter_examples/)**
 
 [More, but slightly outdated examples](https://juliansteenbakker.github.io/community_charts/flutter/gallery.html)
+
+# Challenge
+
+## Introduction
+
+In this tutorial we replaced the entire app with just a chart.
+
+The basics of this challenges is for you to find a way to integrate charts into
+the weather app while still maintaining the weekly forecast.
+
+This challenge gives you a lot of freedom to explore and in the end you will end
+up with your own unique customized weather app.
+
+## Target audience
+
+Find your target audience.
+Describe a persona for your weather app.
+What do they need in a app like this.
+Then make the app.
+
+Do you do any activities that are weather dependent?
+If so, here is your change make the perfect app to keep track of the weather
+metrics that are important to you.
+Or, maybe you have a friend or family member that loves hiking, surfing or some
+other outdoor activity.
+
+## Hints
+
+Box constraint widgets can't be used inside directly inside a Sliver.
+Most Flutter widgets you have working with this far are box constraint.
+
+You can adapt a widget to work inside a Sliver by wrapping it in either a
+[SliverToBoxAdapter](https://api.flutter.dev/flutter/widgets/SliverToBoxAdapter-class.html)
+and
+[SliverFillRemaining](https://api.flutter.dev/flutter/widgets/SliverFillRemaining-class.html).
