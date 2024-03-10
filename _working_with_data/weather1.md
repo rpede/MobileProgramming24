@@ -1,6 +1,6 @@
 ---
 title: Weather
-description: Part 1
+description: Part 1 - Weekly forecast
 layout: default
 ---
 

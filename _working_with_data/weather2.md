@@ -1,6 +1,6 @@
 ---
 title: Weather
-description: Part 2
+description: Part 2 - Charts
 layout: default
 ---
 
@@ -394,3 +394,11 @@ Color dartColor =
 charts.Color chartsColor =
     charts.ColorUtil.fromDartColor(Color.fromRGBO(255, 192, 203, 1));
 ```
+
+See [API documentation](https://pub.dev/documentation/community_charts_flutter/latest/community_charts_flutter/community_charts_flutter-library.html).
+
+# Example
+
+**[Chart examples gallery](https://rpede.github.io/charts_flutter_examples/)**
+
+[More, but slightly outdated examples](https://juliansteenbakker.github.io/community_charts/flutter/gallery.html)
