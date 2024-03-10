@@ -9,3 +9,4 @@ layout: default
 - [Deploy to web](web)
 - [Port to TV](tv)
 - [Flutter Inspector](inspector)
+- [Dark-mode changer](darkmode-changer)
