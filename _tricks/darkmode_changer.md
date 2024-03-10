@@ -92,3 +92,63 @@ widget.
 It rebuilds using the `builder` function each time the value listened to changes.
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/s-ZG-jS5QHQ?si=mdkhajuuDpvJzVpp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+You can also have a [Switch]() toggle between light and dark mode.
+
+```run-dartpad:mode-flutter:height-800px
+import 'package:flutter/material.dart';
+
+class ThemeChanger extends StatefulWidget {
+  const ThemeChanger({super.key});
+
+  @override
+  State<ThemeChanger> createState() => _ThemeChangerState();
+}
+
+class _ThemeChangerState extends State<ThemeChanger> {
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: MyApp.themeNotifier.value == ThemeMode.dark,
+      onChanged: (darkMode) {
+        setState(() {
+          MyApp.themeNotifier.value =
+              darkMode ? ThemeMode.dark : ThemeMode.light;
+        });
+      },
+    );
+  }
+}
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.dark);
+
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (context, themeMode, child) => MaterialApp(
+        title: 'Charts Examples',
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: themeMode,
+        home: Scaffold(
+          body: Center(
+            child: Padding(
+              padding: EdgeInsets.all(50),
+              child: ThemeChanger(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
