@@ -4,6 +4,8 @@ description: Part 2 - Charts
 layout: default
 ---
 
+![Screenshot](../weather_app_part2_screenshot.png)
+
 # Introduction
 
 [Open-Meteo](https://open-meteo.com/en/docs/) got many different variables we
@@ -394,6 +396,38 @@ Color dartColor =
 // Dart Color -> charts.Color
 charts.Color chartsColor =
     charts.ColorUtil.fromDartColor(Color.fromRGBO(255, 192, 203, 1));
+```
+
+The charts don't look that great out-of-the-box with dark mode.
+Here is how to fix it:
+
+```dart
+Widget build(BuildContext context) {
+  final axisColor = charts.MaterialPalette.gray.shadeDefault;
+  return charts.TimeSeriesChart(
+    [ /* Your time series data here */ ],
+
+    /// Assign a custom style for the domain axis.
+    domainAxis: charts.DateTimeAxisSpec(
+      renderSpec: charts.SmallTickRendererSpec(
+        // Tick and Label styling here.
+        labelStyle: charts.TextStyleSpec(color: axisColor),
+        // Change the line colors to match text color.
+        lineStyle: charts.LineStyleSpec(color: axisColor),
+      ),
+    ),
+
+    /// Assign a custom style for the measure axis.
+    primaryMeasureAxis: charts.NumericAxisSpec(
+      renderSpec: charts.GridlineRendererSpec(
+        // Tick and Label styling here.
+        labelStyle: charts.TextStyleSpec(color: axisColor),
+        // Change the line colors to match text color.
+        lineStyle: charts.LineStyleSpec(color: axisColor),
+      ),
+    ),
+  );
+}
 ```
 
 See [API documentation](https://pub.dev/documentation/community_charts_flutter/latest/community_charts_flutter/community_charts_flutter-library.html).
