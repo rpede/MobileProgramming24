@@ -10,21 +10,28 @@ layout: default
 
 ## macOS
 
-<kbd>Shift</kbd> + <kbd>Command</kbd> + <kbd>4</kbd> then <kbd>Space</kdb>
+1. <kbd>Shift</kbd> + <kbd>Command</kbd> + <kbd>4</kbd> then <kbd>Space</kdb>
+2. Click on the window you want to screenshot
 
 ## Windows
+
+1. <kbd>Windows</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+2. Click on the window you want to screenshot
 
 # Screen record
 
 ## macOS
 
-<kbd>Shift</kbd> + <kbd>Command</kbd> + <kbd>5</kbd>
-
-Then select "Record Selected Portion".
+1. <kbd>Shift</kbd> + <kbd>Command</kbd> + <kbd>5</kbd>
+2. Select "Record Selected Portion".
 
 ![](../mac_screen_record.png)
 
 ## Windows
+
+1. Focus window you want to record
+2. <kbd>Windows</kdb> + <kdb>G</kdb>
+3. <kbd>Windows</kdb> + <kdb>Alt</kdb> + <kdb>R</kdb>
 
 # Mirror
 
@@ -49,9 +56,18 @@ Connect your phone with cable.
 
 ### macOS
 
+Terminal:
+
 ```sh
 brew install scrcpy
 echo 'export PATH="/Users/rasmus/Library/Android/sdk/platform-tools:$PATH"' >> .zshrc
 source .zshrc
 scrcpy
 ```
+
+### Windows
+
+1. [Download scrcpy zip](https://github.com/Genymobile/scrcpy/blob/master/doc/windows.md)
+2. Extract All...
+3. Right-click inside the folder with the extracted files, then "Open in Terminal"
+4. Type `scrscpy`
