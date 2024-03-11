@@ -41,6 +41,17 @@ Select your iPhone as Screen source.
 
 ## Android
 
-- Install [scrcpy](https://github.com/Genymobile/scrcpy)
-- Connect your phone
-- Open scrcpy
+You can use [scrcpy](https://github.com/Genymobile/scrcpy) to mirror your phones
+scree.
+(Works on all platforms).
+
+Connect your phone with cable.
+
+### macOS
+
+```sh
+brew install scrcpy
+echo 'export PATH="/Users/rasmus/Library/Android/sdk/platform-tools:$PATH"' >> .zshrc
+source .zshrc
+scrcpy
+```
