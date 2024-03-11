@@ -33,11 +33,11 @@ Then select "Record Selected Portion".
 Connect your phone with lighting cable.
 Open "QuickTime Player", then "File" -> "New Movie Recording".
 
-![](./mac_mirror_iphone1.png)
+![](../mac_mirror_iphone1.png)
 
 Select your iPhone as Screen source.
 
-![](./mac_mirror_iphone2.png)
+![](../mac_mirror_iphone2.png)
 
 ## Android
 
