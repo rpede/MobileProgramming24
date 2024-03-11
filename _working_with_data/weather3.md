@@ -1,6 +1,6 @@
 ---
 title: Weather
-description: Part 2 - Location
+description: Part 3 - Location
 layout: default
 ---
 
