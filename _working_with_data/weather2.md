@@ -238,7 +238,7 @@ Add `getChartData` to `DataSource`.
 ```dart
 abstract class DataSource {
   Future<WeeklyForecastDto> getWeeklyForecast();
-  Future<WeeklyForecastDto> getChartData();
+  Future<WeatherChartData> getChartData();
 }
 ```
 
