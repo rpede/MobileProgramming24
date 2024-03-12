@@ -1,6 +1,6 @@
 ---
 title: Weather
-description: Part 2 - Location
+description: Part 3 - Location
 layout: default
 ---
 
@@ -89,8 +89,10 @@ Which I fixed by changing `android/settings.gradle`.
 +    id "org.jetbrains.kotlin.android" version "1.9.23" apply false
 ```
 
-Found a solution here [Required Kotlin
-version](https://docs.flutter.dev/release/breaking-changes/kotlin-version).
+Btw, you can change the location in the emulator by clicking on the "..." button
+next to the emulator screen.
+
+![](../android_emulator_location.png)
 
 ### iOS
 

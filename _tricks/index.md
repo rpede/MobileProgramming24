@@ -5,6 +5,7 @@ description: >-
 layout: default
 ---
 
+- [Screen capture](screen-capture)
 - [Develop on a real phone](phone)
 - [Deploy to web](web)
 - [Port to TV](tv)
