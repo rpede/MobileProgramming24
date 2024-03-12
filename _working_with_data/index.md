@@ -14,3 +14,4 @@ layout: default
 
 - [Part 1 - Weekly forecast](weather1)
 - [Part 2 - Charts](weather2)
+- [Part 3 - Location](weather)

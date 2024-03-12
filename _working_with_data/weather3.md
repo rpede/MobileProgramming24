@@ -200,6 +200,14 @@ Now the app shows the forecast based on users location.
 
 Finish up your awesome weather app.
 
+## Error handling
+
+There will always going to be some users that find stupid ways to break your
+app.
+Like tapping "Don't allow" to the location permission dialog.
+
+Maybe you should show slightly more helpful message then?
+
 ## Navigation hint
 
 You will likely end up with several screens in your app.
