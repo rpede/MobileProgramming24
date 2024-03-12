@@ -187,7 +187,7 @@ class WeatherDataConverter {
 
     // Find out what variables exist the group.
     final variables =
-        (json[group] as JsonObject).keys.where((key) => key != _kTime);
+        (json[group] as Map<String, dynamic>).keys.where((key) => key != _kTime);
 
     return variables
         .map((variable) =>
