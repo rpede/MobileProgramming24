@@ -137,6 +137,13 @@ class RealDataSource extends DataSource {
 }
 ```
 
+**Important** make sure you are importing `Location` from
+`'package:location/location.dart'`.
+
+*Notice: `apiUrl` can no longer be final.
+That is because we are now using string interpolation to construct the string
+using values from variables.*
+
 Make sure your are providing `RealDataSource` in `lib/main.dart`.
 
 First time you try the app after adding `Location.instance.getLocation()`, you
@@ -179,3 +186,25 @@ same as what we had before.
 *Note: 3rd parameter to `Uri.https` is a `Map` where the values can either be `String`
 or `Iterable<String>` (a List is an Iterable).
 Meaning we need to convert the double for latitude and longitude to String*
+
+# Done
+
+That's it.
+Now the app shows the forecast based on users location.
+
+🥂 🥳 
+
+# Challenge
+
+Finish up your awesome weather app.
+
+## Navigation hint
+
+You will likely end up with several screens in your app.
+So you need a to navigate between them.
+
+See the [Navigation page](../interactivity/navigation) for a refresher.
+
+Maybe you need a
+[Drawer](https://api.flutter.dev/flutter/material/Drawer-class.html) or a
+[NavigationBar](https://api.flutter.dev/flutter/material/NavigationBar-class.html)?
