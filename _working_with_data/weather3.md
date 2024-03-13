@@ -189,12 +189,26 @@ same as what we had before.
 or `Iterable<String>` (a List is an Iterable).
 Meaning we need to convert the double for latitude and longitude to String*
 
-# Done
+# Refresh indicator
+
+It is good practice to always give the user some sort of indication on what the
+app is doing.
+
+To make an indicator for when the app is frefreshing its data.
+Simply wrap `CustomScrollView` with a
+[RefreshIndicator](https://api.flutter.dev/flutter/material/RefreshIndicator-class.html)
+and use its `onRefresh` callback instead of the `onStretchTrigger` callback in
+`SliverAppBar`.
+
+# Closing thought
 
 That's it.
 Now the app shows the forecast based on users location.
 
 🥂 🥳 
+
+You can use a StreamController and StreamBuilder if you want to refresh the
+chart when user pulls down, just like last lesson.
 
 # Challenge
 
