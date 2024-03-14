@@ -63,7 +63,7 @@ Edit `android/app/build.gradle` to include:
 android {
     // ...
     defaultConfig {
-      minSdk 21
+      minSdkVersion 21
       // ...
     }
 }
