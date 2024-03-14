@@ -10,7 +10,7 @@ layout: default
 
 ## macOS
 
-1. <kbd>Shift</kbd> + <kbd>Command</kbd> + <kbd>4</kbd> then <kbd>Space</kdb>
+1. <kbd>Shift</kbd> + <kbd>Command</kbd> + <kbd>4</kbd> then <kbd>Space</kbd>
 2. Click on the window you want to screenshot
 
 ## Windows
@@ -30,8 +30,8 @@ layout: default
 ## Windows
 
 1. Focus window you want to record
-2. <kbd>Windows</kdb> + <kdb>G</kdb>
-3. <kbd>Windows</kdb> + <kdb>Alt</kdb> + <kdb>R</kdb>
+2. <kbd>Windows</kbd> + <kbd>G</kbd>
+3. <kbd>Windows</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd>
 
 # Mirror
 
@@ -49,10 +49,11 @@ Select your iPhone as Screen source.
 ## Android
 
 You can use [scrcpy](https://github.com/Genymobile/scrcpy) to mirror your phones
-scree.
+screen.
 (Works on all platforms).
 
 Connect your phone with cable.
+Make sure USB Debugging is enabled.
 
 ### macOS
 
@@ -70,4 +71,4 @@ scrcpy
 1. [Download scrcpy zip](https://github.com/Genymobile/scrcpy/blob/master/doc/windows.md)
 2. Extract All...
 3. Right-click inside the folder with the extracted files, then "Open in Terminal"
-4. Type `scrscpy`
+4. Type `scrcpy.exe`

@@ -1,6 +1,6 @@
 ---
 title: Weather
-description: Part 2 - Location
+description: Part 3 - Location
 layout: default
 ---
 
@@ -89,8 +89,10 @@ Which I fixed by changing `android/settings.gradle`.
 +    id "org.jetbrains.kotlin.android" version "1.9.23" apply false
 ```
 
-Found a solution here [Required Kotlin
-version](https://docs.flutter.dev/release/breaking-changes/kotlin-version).
+Btw, you can change the location in the emulator by clicking on the "..." button
+next to the emulator screen.
+
+![](../android_emulator_location.png)
 
 ### iOS
 
@@ -137,6 +139,13 @@ class RealDataSource extends DataSource {
 }
 ```
 
+**Important** make sure you are importing `Location` from
+`'package:location/location.dart'`.
+
+*Notice: `apiUrl` can no longer be final.
+That is because we are now using string interpolation to construct the string
+using values from variables.*
+
 Make sure your are providing `RealDataSource` in `lib/main.dart`.
 
 First time you try the app after adding `Location.instance.getLocation()`, you
@@ -179,3 +188,47 @@ same as what we had before.
 *Note: 3rd parameter to `Uri.https` is a `Map` where the values can either be `String`
 or `Iterable<String>` (a List is an Iterable).
 Meaning we need to convert the double for latitude and longitude to String*
+
+# Refresh indicator
+
+It is good practice to always give the user some sort of indication on what the
+app is doing.
+
+To make an indicator for when the app is frefreshing its data.
+Simply wrap `CustomScrollView` with a
+[RefreshIndicator](https://api.flutter.dev/flutter/material/RefreshIndicator-class.html)
+and use its `onRefresh` callback instead of the `onStretchTrigger` callback in
+`SliverAppBar`.
+
+# Closing thought
+
+That's it.
+Now the app shows the forecast based on users location.
+
+🥂 🥳 
+
+You can use a StreamController and StreamBuilder if you want to refresh the
+chart when user pulls down, just like last lesson.
+
+# Challenge
+
+Finish up your awesome weather app.
+
+## Error handling
+
+There will always going to be some users that find stupid ways to break your
+app.
+Like tapping "Don't allow" to the location permission dialog.
+
+Maybe you should show slightly more helpful message then?
+
+## Navigation hint
+
+You will likely end up with several screens in your app.
+So you need a to navigate between them.
+
+See the [Navigation page](../interactivity/navigation) for a refresher.
+
+Maybe you need a
+[Drawer](https://api.flutter.dev/flutter/material/Drawer-class.html) or a
+[NavigationBar](https://api.flutter.dev/flutter/material/NavigationBar-class.html)?
