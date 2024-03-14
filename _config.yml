@@ -39,3 +39,6 @@ collections:
   tricks:
     output: true
     permalink: /tricks/:name
+  bloc:
+    output: true
+    permalink: /bloc/:name
