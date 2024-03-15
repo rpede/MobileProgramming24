@@ -108,7 +108,7 @@ class EncryptedVault {
 
 ```dart
 import '../infrastructure/protection.dart';
-import 'credential.dart';
+import '../_bloc/credential.dart';
 
 class OpenVault {
   List<Credential> credentials;
@@ -246,11 +246,11 @@ It printed some stuff, thats it.
 [INFO] Reading cached asset graph completed, took 114ms
 [INFO] Checking for updates since last build completed, took 1.0s
 [WARNING] source_gen:combining_builder on lib/models/encrypted_vault.dart:
-encrypted_vault.g.dart must be included as a part directive in the input library with:
-    part 'encrypted_vault.g.dart';
+encrypted_vault.g.dart must be included as a part "../_bloc"directive in the input library with:
+    part '../_bloc/encrypted_vault.g.dart';
 [WARNING] source_gen:combining_builder on lib/models/credential.dart:
-credential.g.dart must be included as a part directive in the input library with:
-    part 'credential.g.dart';
+credential.g.dart must be included as a part "../_bloc"directive in the input library with:
+    part '../_bloc/credential.g.dart';
 [INFO] Running build completed, took 14.7s
 [INFO] Caching finalized dependency graph completed, took 128ms
 [INFO] Succeeded after 14.8s with 585 outputs (1181 actions)
@@ -260,8 +260,8 @@ Let's examine one of the warnings.
 
 ```
 [WARNING] source_gen:combining_builder on lib/models/credential.dart:
-credential.g.dart must be included as a part directive in the input library with:
-    part 'credential.g.dart';
+credential.g.dart must be included as a part "../_bloc"directive in the input library with:
+    part '../_bloc/credential.g.dart';
 ```
 
 Add the following right under the imports in `lib/models/credential.dart`.
@@ -273,7 +273,7 @@ If you open it up, you will find:
 ```dart
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'credential.dart';
+part of '../_bloc/credential.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -432,7 +432,7 @@ See [sealed class modifier](https://dart.dev/language/class-modifiers#sealed).
 
 It means that the only way to instantiate `Key` is through its `_Key` sub-class
 which isn't accessible outside its own package.
-The only public available part of `Key` is its `destroy()` method.
+The only public available part of "../_bloc"`Key` is its `destroy()` method.
 
 The cryptography package works with `SecretBox` class.
 Add these extensions to the file, so you can easily convert between it and our

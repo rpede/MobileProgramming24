@@ -13,4 +13,5 @@ description: >-
 - [Interactivity](interactivity)
 - [Testing](testing)
 - [Working with data](working-with-data)
+- [Advanced state management](advanced-state)
 - [Tricks](tricks)

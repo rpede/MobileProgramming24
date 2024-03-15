@@ -39,6 +39,6 @@ collections:
   tricks:
     output: true
     permalink: /tricks/:name
-  bloc:
+  advanced_state:
     output: true
-    permalink: /bloc/:name
+    permalink: /advanced-state/:name
