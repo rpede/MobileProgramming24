@@ -146,6 +146,9 @@ It can be super annoying to do manually.
 So we will use the [equatable](https://pub.dev/packages/equatable) package to
 help us.
 
+Equatable also supports `toString`.
+However we don't want passwords in logs, so we override it manually.
+
 Change `Credential` class, so it extends `Equatable`.
 Now, you just need to implement the `prop` method to return all instance
 variables.
@@ -168,6 +171,9 @@ class Credential extends Equatable {
 
   @override
   List<Object?> get props => [name, username, password];
+
+  @override
+  String toString() => "$runtimeType($name, $username, ***)";
 }
 ```
 
