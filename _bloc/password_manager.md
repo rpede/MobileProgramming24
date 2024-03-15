@@ -44,6 +44,9 @@ But you are free to only create it for the platforms you actually care about.
 flutter pub add json_annotation dev:build_runner dev:json_serializable equatable logging shared_preferences cryptography flutter_bloc fast_immutable_collections
 ```
 
+Some of the package are only need for development that's why some are prefixed
+with `dev:`.
+
 | Package | Description |
 |-|-|
 | build_runner | Runner for programmatic generation of Dart code |
@@ -61,6 +64,111 @@ Packages will be explained in for detail when we use them.
 # Models
 
 This time we will use code generation for JSON serialization/deserialization.
+
+The short version of how it works is that you add annotations to a plain Dart
+class.
+[json_serializable](https://pub.dev/packages/json_serializable) use the
+annotations to generate code for serialization/deserialization.
+
+You can read more about it on the package page or
+[here](https://docs.flutter.dev/data-and-backend/serialization/json#serializing-json-using-code-generation-libraries).
+
+## Model classes
+
+Add the following files.
+*Note it won't compile immediately*
+
+`lib/models/credential.dart`
+
+```dart
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'credential.g.dart';
+
+@JsonSerializable()
+class Credential implements Equatable {
+  final String name;
+  final String username;
+  final String password;
+
+  const Credential({
+    required this.name,
+    required this.username,
+    required this.password,
+  });
+
+  factory Credential.fromJson(Map<String, dynamic> json) =>
+      _$CredentialFromJson(json);
+  Map<String, dynamic> toJson() => _$CredentialToJson(this);
+
+  @override
+  List<Object?> get props => [name, username, password];
+
+  @override
+  bool? get stringify => true;
+}
+```
+
+`lib/models/encrypted_vault.dart`
+
+```dart
+import 'dart:convert';
+
+import 'package:json_annotation/json_annotation.dart';
+part 'encrypted_vault.g.dart';
+
+@JsonSerializable()
+class EncryptedVault {
+  @Base64Converter()
+  final List<int> salt;
+  @Base64Converter()
+  final List<int> nonce;
+  @Base64Converter()
+  final List<int> mac;
+  @Base64Converter()
+  final List<int> cipherText;
+
+  EncryptedVault({
+    required this.salt,
+    required this.nonce,
+    required this.mac,
+    required this.cipherText,
+  });
+
+  factory EncryptedVault.fromJson(Map<String, dynamic> json) =>
+      _$EncryptedVaultFromJson(json);
+  Map<String, dynamic> toJson() => _$EncryptedVaultToJson(this);
+}
+
+class Base64Converter implements JsonConverter<List<int>, String> {
+  const Base64Converter();
+  @override
+  List<int> fromJson(String json) => base64Decode(json);
+
+  @override
+  String toJson(List<int> bytes) => base64Encode(bytes);
+}
+```
+
+`lib/models/open_vault.dart`
+
+```dart
+import '../infrastructure/protection.dart';
+import 'credential.dart';
+
+class OpenVault {
+  List<Credential> credentials;
+  Key key;
+  OpenVault({required this.credentials, required this.key});
+}
+```
+
+## About the classes
+
+A vault is basically just a list of credentials.
+
+`Credentials` represents are credential for a service (username+password).
+It has a name field, so you can tell what service the credentials are for.
 
 ## Code generation
 
@@ -169,3 +277,96 @@ class _Key extends Key {
   }
 }
 ```
+
+Sealed classes are abstract classes that can not be extended outside their own
+package.
+See [sealed class modifier](https://dart.dev/language/class-modifiers#sealed).
+
+It means that the only way to instantiate `Key` is through its `_Key` sub-class
+which isn't accessible outside its own package.
+The only public available part of `Key` is its `destroy()` method.
+
+The cryptography package works with `SecretBox` class.
+Add these extensions to the file, so you can easily convert between it and our
+`EncryptedVault` model class.
+
+```dart
+extension EncryptedVaultX on EncryptedVault {
+  SecretBox toSecretBox() => SecretBox(cipherText, nonce: nonce, mac: Mac(mac));
+}
+
+extension SecretBoxX on SecretBox {
+  EncryptedVault toEncryptedVault({required List<int> salt}) {
+    return EncryptedVault(
+      salt: salt,
+      nonce: nonce,
+      mac: mac.bytes,
+      cipherText: cipherText,
+    );
+  }
+}
+```
+
+Now for the actual vault protection layer.
+Add this to the same file.
+
+```dart
+class Protection {
+  final KdfAlgorithm kdfAlgorithm;
+  final Cipher cipher;
+
+  Protection({required this.kdfAlgorithm, required this.cipher});
+
+  Protection.sensibleDefaults()
+      : kdfAlgorithm = Argon2id(
+          parallelism: 1,
+          memory: 12288,
+          iterations: 3,
+          hashLength: 256 ~/ 8,
+        ),
+        cipher = AesGcm.with256bits();
+
+  Future<Key> createKey(String masterPassword) async {
+    final salt = generateSalt();
+    final secretKey = await kdfAlgorithm.deriveKeyFromPassword(
+        password: masterPassword, nonce: salt);
+    return _Key(secretKey, salt: salt);
+  }
+
+  List<int> generateSalt() =>
+      List<int>.generate(32, (i) => SecureRandom.safe.nextInt(256));
+
+  Future<Key> getKey(EncryptedVault vault, String masterPassword) async {
+    final secretKey = await kdfAlgorithm.deriveKeyFromPassword(
+      password: masterPassword,
+      nonce: vault.salt,
+    );
+    return _Key(secretKey, salt: vault.salt);
+  }
+
+  Future<List<Credential>> decrypt(EncryptedVault encryptedVault, Key key) async {
+    final jsonString = await cipher.decryptString(
+      encryptedVault.toSecretBox(),
+      secretKey: (key as _Key).secretKey,
+    );
+    final json = jsonDecode(jsonString) as List<dynamic>;
+    return List<Credential>.from(json.map((e) => Credential.fromJson(e)));
+  }
+
+  Future<EncryptedVault> encrypt(OpenVault openVault) async {
+    final key = (openVault.key as _Key);
+    final encrypted = await cipher.encryptString(
+        jsonEncode(openVault.credentials),
+        secretKey: key.secretKey);
+    return encrypted.toEncryptedVault(salt: key.salt);
+  }
+}
+```
+
+The `Protection` class can create en encryption key from a password.
+It can then encrypt and decrypt a vault with the key.
+
+It can be instantiated with different algorithms, but also provides a
+`Protection.saneDefaults()` to instantiate it with some sensible defaults.
+Being able to change the algorithms allows you to instantiate it with a dummy
+implementation to speed up tests.
