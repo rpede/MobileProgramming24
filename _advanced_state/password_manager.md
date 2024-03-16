@@ -7,7 +7,7 @@ layout: default
 
 {% include alert.html %}
 
-<div class="alert">
+<div class="alert danger">
   I do not recommend actually using it.
 
   The app you will build following this project is overly simplified and therefore not suitable for real world use. 
@@ -32,12 +32,17 @@ flutter create password_manager
 This project will work on all platforms supported by Flutter.
 But you are free to only create it for the platforms you actually care about.
 
+Then install the following packages.
+
 ```sh
 flutter pub add json_annotation dev:build_runner dev:json_serializable equatable logging shared_preferences cryptography flutter_bloc fast_immutable_collections
 ```
 
 Some of the package are only need for development that's why some are prefixed
 with `dev:`.
+
+Packages will be explained when we use them.
+But here is a quick overview.
 
 | Package | Description |
 |-|-|
@@ -51,24 +56,21 @@ with `dev:`.
 | flutter_bloc | Flutter package for BLoC |
 | fast_immutable_collections | Makes it simple to work with immutable collections |
 
-Packages will be explained in for detail when we use them.
-
 # Models
 
 This time we will use code generation for JSON serialization/deserialization.
 
-The short version of how it works is that you add annotations to a plain Dart
+The short version of how it works, is that you add annotations to a plain Dart
 class.
-[json_serializable](https://pub.dev/packages/json_serializable) use the
+[json_serializable](https://pub.dev/packages/json_serializable) use these
 annotations to generate code for serialization/deserialization.
 
-You can read more about it on the package page or
-[here](https://docs.flutter.dev/data-and-backend/serialization/json#serializing-json-using-code-generation-libraries).
+You can read more about it on the [package page](https://pub.dev/packages/json_serializable) or
+[Flutter docs on JSON](https://docs.flutter.dev/data-and-backend/serialization/json#serializing-json-using-code-generation-libraries).
 
 ## Model classes
 
 Add the following files.
-*Note it won't compile immediately*
 
 `lib/models/credential.dart`
 
@@ -120,7 +122,7 @@ class OpenVault {
 ## About the classes
 
 `Credential` represents a credential for a service (username+password).
-It has a name field, so you can tell what service the credentials are for.
+It also got a name field, so you can tell what service the credentials are for.
 
 A vault is a container for a list of credentials.
 We got two versions of a vault.
@@ -187,7 +189,7 @@ The unencrypted `OpenVault` is only meant to exist in memory for a short-period
 of time.
 We will never store credentials unencrypted, so no need to make it serializable.
 
-Make `Credential` and `EncryptedVault` JSON serializable by
+Make `Credential` and `EncryptedVault` JSON serializable by adding
 `@JsonSerializable()` to the class definition.
 Example:
 
@@ -199,7 +201,7 @@ class Credential {
 ```
 
 By default `List<int>` will be serialized as an array of numbers.
-We can make it more compact by base64 encoding it.
+We can make it more compact by base64 encoding it instead.
 
 Add a converter to `lib/models/encrypted_vault.dart`.
 
@@ -227,6 +229,9 @@ class EncryptedVault {
 ```
 
 ## Code generation
+
+The code for `toJson` and `fromJson` can be generated based on the annotations
+you just added.
 
 You can generate once with:
 
@@ -270,7 +275,8 @@ credential.g.dart must be included as a part "../_bloc"directive in the input li
     part '../_bloc/credential.g.dart';
 ```
 
-Add the following right under the imports in `lib/models/credential.dart`.
+Add `part 'credential.g.dart';` right under the imports in
+`lib/models/credential.dart`.
 Now, try the code generation command again.
 This time it created a `credential.g.dart` file.
 The "g" is short for generated.
@@ -317,8 +323,8 @@ However, for a big project with many models that occasionally change, then this
 technique will save you a lot of hassle.
 
 <div class="alert info">
-  <b>Why do you need to do so much work in Dart just to serialize something to
-  JSON?</b>
+  <b>Why do you need to do so much work just to serialize something to
+  JSON in Dart?</b>
   <p>
   C# and some other programming languages that you might be familiar with.
   They got something called <a
@@ -341,7 +347,7 @@ technique will save you a lot of hassle.
 
 In all password managers, it's important that the stored credentials are kept
 confidential.
-We can archive this by only storing encrypted credentials.
+We can achieve the goal by only storing encrypted credentials.
 
 The basic model is as follows:
 
@@ -377,11 +383,11 @@ SecretKey encryptionKey = await kdfAlgorithm.deriveKeyFromPassword(
     password: masterPassword, nonce: salt);
 ```
 
-Settings for `Argon2d` are base on [OWASP recommendations](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id)
+Settings for `Argon2d` are based on [OWASP recommendations](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id)
 
 We use AES-GCM for encryption.
 
-*Again don't put this in you projection*
+*Again, don't put this in your project.*
 
 ```dart
 SecretBox secretBox = await AesGcm.with256bits()
@@ -400,13 +406,13 @@ It is often good practice to build an abstraction around external
 libraries/packages.
 It shields the rest of the application from API changes in the future versions
 of the package.
-And allows you to make your own API for the functionality that better fits your
+And allows you to build an API for the functionality that better fits the
 domain.
 
-First, we need class for the encryption key that can be passed around in the
+First, we need a class for the encryption key that can be passed around in the
 application.
-But we don't want still want to limit access to key and we also don't want the
-entire application to depend on the
+We also want to limit access to key.
+Our entire application to depend on the
 [cryptography](https://pub.dev/packages/cryptography) package.
 Sound like a difficult problem to solve, but it can actually be done pretty
 simple.
@@ -438,10 +444,13 @@ See [sealed class modifier](https://dart.dev/language/class-modifiers#sealed).
 
 It means that the only way to instantiate `Key` is through its `_Key` sub-class
 which isn't accessible outside its own package.
-The only public available part of "../_bloc"`Key` is its `destroy()` method.
+The only public available part of `Key` is its `destroy()` method.
+The application should call `destroy` when the key is no longer need.
+In other words when we are closing the vault.
 
 The cryptography package works with `SecretBox` class.
-Add these extensions to the file, so you can easily convert between it and our
+It is just a container for cipher-text, nonce and salt.
+Add these extensions to the file, to easily convert between `SecretBox` and our
 `EncryptedVault` model class.
 
 ```dart
@@ -521,7 +530,7 @@ The `Protection` class can create en encryption key from a password.
 It can then encrypt and decrypt a vault with the key.
 
 It can be instantiated with different algorithms, but also provides a
-`Protection.saneDefaults()` to instantiate it with some sensible defaults.
+`Protection.sensibleDefaults()` to instantiate it with some sensible defaults.
 Being able to change the algorithms allows you to instantiate it with a dummy
 implementation to speed up tests.
 
@@ -580,7 +589,7 @@ single value.
 It is done with `SharedPreferences.getInstance()`.
 This initialization is async, so it can't be done in the constructor of
 `Storage`.
-We therefor use a factory method to create an instance of it.
+We therefor use an async factory method to create an instance of it.
 
 # Core
 
@@ -628,12 +637,12 @@ class VaultApi {
 |-|-|
 | create | Creates a vault that can only be opened with the given master-password. |
 | save | Protect and store the given vault |
-| open | Opens the stored vault when given the same master-password. |
+| open | Opens the stored vault when given the same master-password that was used to create it. |
 | exists | Check if a stored vault exists. |
 
-With protect, I mean encrypt with AES.
+With protect (above), I mean encrypt with AES.
 With store, I mean JSON encode and save using SharedPreferences.
-Those are low-level concerns that we shouldn't be concerned with at this level of abstraction.
+Those are low-level details that we shouldn't be concerned with at this level of abstraction.
 
 Notice that `create`, `open` and `save` are all async.
 
