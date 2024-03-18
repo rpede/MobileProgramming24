@@ -744,15 +744,20 @@ class VaultState extends Equatable {
     this.failure,
   });
 
-  VaultState failed({required Failure reason}) {
-    return copyWith(failure: reason);
+  VaultState.initial(bool exists)
+      : credentials = <Credential>[].lock,
+        status = exists ? VaultStatus.closed : VaultStatus.absent,
+        failure = null;
+
+  VaultState failed({VaultStatus? status, required Failure reason}) {
+    return copyWith(status: status, failure: reason);
   }
 
   VaultState ok({
     IList<Credential>? credentials,
     required VaultStatus status,
   }) {
-    return copyWith(credentials: credentials, status: status);
+    return copyWith(credentials: credentials, status: status, failure: null);
   }
 
   VaultState copyWith({
@@ -794,167 +799,110 @@ To answer, let's first look at the meaning behind the word.
 - **Mutable**: able to mutate/change
 - **Immutable**: not able to mutate/change
 
+Using only immutable state prevents us from changing state all over the place
+thereby it hard to debug the app. 
+However, having an app that doesn't react to user input because its state can't
+changed is not fun.
+So we need state changes to happen somewhere.
+That somewhere is in a bloc or cubit.
+
+## Cubit
+
+Start of by adding following to `lib/core/vault_cubit.dart`:
+
 ```dart
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+class VaultCubit extends Cubit<VaultState> {
+  final VaultApi api;
+  Key? _key;
 
-void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider<Person>(
-            create: (context) => Person(firstName: "Alice", lastName: "Smith")),
-        Provider<PersonService>(create: (context) => PersonService()),
-      ],
-      child: MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: PersonTitle(),
-          ),
-          body: NameChanger(),
-        ),
-      ),
-    ),
-  );
-}
-
-class PersonTitle extends StatelessWidget {
-  const PersonTitle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final person = context.read<Person>();
-    return Text("$person");
-  }
-}
-
-class NameChanger extends StatefulWidget {
-  const NameChanger({super.key});
-
-  @override
-  State<NameChanger> createState() => _NameChangerState();
-}
-
-class _NameChangerState extends State<NameChanger> {
-  late Person person;
-
-  @override
-  void initState() {
-    super.initState();
-    person = context.read<Person>();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("$person"),
-          ElevatedButton(
-            onPressed: () {
-              final changedPerson = context
-                  .read<PersonService>()
-                  .changeName(person, lastName: "Carpenter");
-              setState(() {
-                person = changedPerson;
-              });
-            },
-            child: Text("Click me"),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PersonService {
-  Person changeName(Person person, {String? firstName, String? lastName}) {
-    return Person(
-      firstName: firstName ?? person.firstName,
-      lastName: lastName ?? person.lastName,
-    );
-  }
-}
-
-class Person {
-  String firstName;
-  String lastName;
-  Person({required this.firstName, required this.lastName});
-  toString() => "$firstName $lastName";
+  VaultCubit(this.api) : super(VaultState.initial(api.exists));
 }
 ```
 
+It takes a `VaultApi` as constructor parameter.
+Then calls the constructor on the super class with an initial state based on
+whether a stored vault exists.
+
+*(_key will be explained in a moment.)*
+
+Add methods to the VaultCubit class, one by one as I explain them.
+
+### Create vault
+
 ```dart
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+  Future<void> createVault(String masterPassword) async {
+    // If an vault is absent then allow creating one.
+    // We don't want to accidentally override all stored passwords.
+    if (state.status != VaultStatus.absent) return;
 
-void main() {
-  runApp(
-    BlocProvider(
-      create: (context) =>
-          PersonBloc(Person(firstName: "Alice", lastName: "Smith")),
-      child: MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: PersonTitle(),
-          ),
-          body: NameChanger(),
-        ),
-      ),
-    ),
-  );
-}
+    // We start by emitting an "opening" state.
+    // It can be used to show a spinner in UI.
+    emit(state.ok(status: VaultStatus.opening));
 
-class PersonTitle extends StatelessWidget {
-  const PersonTitle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final person = context.watch<PersonBloc>().state;
-    return Text("$person");
+    try {
+      // Ask api to create a new vault that can be opened with the given master
+      // password.
+      final vault = await api.create(masterPassword);
+      // The key shouldn't be accessible through the UI, so we store it in a
+      // private instance variable.
+      _key = vault.key;
+      
+      // Emit "open" state with credentials converted to IList (immutable list).
+      emit(state.ok(
+        credentials: vault.credentials.lock,
+        status: VaultStatus.open,
+      ));
+    } catch (e) {
+      // If something goes wrong we emit new "absent" state with a generic
+      // failure.
+      emit(state.failed(
+        status: VaultStatus.absent,
+        reason: UnknownVaultFailure(),
+      ));
+      // Forward details to `addError` so a BlocObserver can log it.
+      addError(e);
+    }
   }
-}
+```
 
-class NameChanger extends StatelessWidget {
-  const NameChanger({super.key});
+<div class="alert info">
+A Cubit would normally not have any instance variables (other than through its
+constructor).
+Doing it here is a compromise, as I don't want the key anyway near UI.
+</div>
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BlocBuilder<PersonBloc, Person>(
-            builder: (context, person) => Text("$person")
-          ),
-          ElevatedButton(
-            onPressed: () {
-              context.read<PersonBloc>().changeName(lastName: "Carpenter");
-            },
-            child: Text("Click me"),
-          ),
-        ],
-      ),
-    );
+### Open vault
+
+```dart
+  Future<void> openVault(String masterPassword) async {
+    // It doesn't make sense to attempt to open a vault if it is absent.
+    if (state.status != VaultStatus.closed) return;
+
+    // Emit "opening" so UI can show a spinner (or some other indicator).
+    emit(state.ok(status: VaultStatus.opening));
+    try {
+      // Attempt to open the stored vault.
+      // It will throw an exception if `masterPassword` is wrong.
+      final vault = await api.open(masterPassword);
+
+      // The key shouldn't be accessible through the UI, so we store it in a
+      // private instance variable.
+      _key = vault.key;
+
+      // Emit "open" state with credentials converted to IList (immutable list).
+      emit(state.ok(
+        credentials: vault.credentials.lock,
+        status: VaultStatus.open,
+      ));
+    } catch (e) {
+      // If something goes wrong we emit new "absent" state with a specialized
+      // failure message.
+      emit(state.failed(
+        status: VaultStatus.closed,
+        reason: OpenVaultFailure(),
+      ));
+      // Forward details to `addError` so a BlocObserver can log it.
+      addError(e);
+    }
   }
-}
-
-class PersonBloc extends Cubit<Person> {
-  PersonBloc(super.initialState);
-
-  void changeName({String? firstName, String? lastName}) {
-    emit(Person(
-      firstName: firstName ?? state.firstName,
-      lastName: lastName ?? state.lastName,
-    ));
-  }
-}
-
-class Person {
-  String firstName;
-  String lastName;
-  Person({required this.firstName, required this.lastName});
-  toString() => "$firstName $lastName";
-}
 ```
