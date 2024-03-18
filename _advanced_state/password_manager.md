@@ -21,6 +21,10 @@ layout: default
   password managers</a>
 </div> 
 
+![](../password_manager_password_screen.png)
+![](../password_manager_vault.png)
+![](../password_manager_credential.png)
+
 # Project setup
 
 Create your project as usual.
@@ -1048,6 +1052,7 @@ Start by making the `main` function async.
 Then await the creation on `Storage`:
 
 ```dart
+  WidgetsFlutterBinding.ensureInitialized();
   final storage = await Storage.create();
 ```
 
