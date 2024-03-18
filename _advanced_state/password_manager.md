@@ -35,7 +35,7 @@ But you are free to only create it for the platforms you actually care about.
 Then install the following packages.
 
 ```sh
-flutter pub add json_annotation dev:build_runner dev:json_serializable equatable logging shared_preferences cryptography flutter_bloc fast_immutable_collections
+flutter pub add json_annotation dev:build_runner dev:json_serializable equatable logging logging_appenders shared_preferences cryptography flutter_bloc fast_immutable_collections
 ```
 
 Some of the package are only need for development that's why some are prefixed
@@ -51,6 +51,7 @@ But here is a quick overview.
 | json_annotation | Annotations that tell json_serializable how the JSON should look |
 | equatable | Helps make data-classes that support equality comparison, hashCode and toString |
 | logging | logging library for Dart |
+| logging_appenders | some appenders for logging |
 | shared_preferences | Local key-value storage that works on all platforms |
 | cryptography | Implementation of many cryptographic algorithms |
 | flutter_bloc | Flutter package for BLoC |
@@ -578,7 +579,7 @@ class Storage {
     return EncryptedVault.fromJson(jsonDecode(json));
   }
 
-  delete() => _preferences.clear;
+  delete() => _preferences.clear();
 }
 ```
 
@@ -695,7 +696,7 @@ class OpenVaultFailure extends Failure {
   String get message => """
 Unable to open vault.
 Did you type the correct password?
-""";
+  """;
 }
 
 class VaultNotFoundFailure extends Failure {
@@ -703,11 +704,11 @@ class VaultNotFoundFailure extends Failure {
   String get message => "Vault not found.";
 }
 
-class KeyMissingFailure extends Failure {
+class SaveVaultFailure extends Failure {
   @override
   String get message => """
-Key is missing.
-Vault haven't been opened.
+Unable to save vault.
+Please try again or check logs.
 """;
 }
 
@@ -832,8 +833,8 @@ Add methods to the VaultCubit class, one by one as I explain them.
 ```dart
   Future<void> createVault(String masterPassword) async {
     // If an vault is absent then allow creating one.
-    // We don't want to accidentally override all stored passwords.
-    if (state.status != VaultStatus.absent) return;
+    // We shouldn't allow accidentally override all stored passwords.
+    assert(state.status == VaultStatus.absent);
 
     // We start by emitting an "opening" state.
     // It can be used to show a spinner in UI.
@@ -876,7 +877,7 @@ Doing it here is a compromise, as I don't want the key anyway near UI.
 ```dart
   Future<void> openVault(String masterPassword) async {
     // It doesn't make sense to attempt to open a vault if it is absent.
-    if (state.status != VaultStatus.closed) return;
+    assert(state.status == VaultStatus.closed);
 
     // Emit "opening" so UI can show a spinner (or some other indicator).
     emit(state.ok(status: VaultStatus.opening));
@@ -906,3 +907,630 @@ Doing it here is a compromise, as I don't want the key anyway near UI.
     }
   }
 ```
+
+### Add credential
+
+```dart
+  Future<void> addCredential(Credential credential) async {
+    // Requires that the vault have opened.
+    assert(state.status == VaultStatus.open);
+
+    // Emit "saving" so UI can show an indication.
+    emit(state.ok(status: VaultStatus.saving));
+    try {
+      // "unlock" (getting mutable copy) credentials.
+      // Then add the new credential.
+      final credentials = state.credentials.unlock..add(credential);
+
+      // Save the new credentials immediately.
+        await api.save(OpenVault(credentials: credentials, key: _key!));
+
+      // "lock" (get immutable copy) credentials and emit it as a new "open"
+      // state.
+      emit(state.ok(
+        credentials: credentials.lock,
+        status: VaultStatus.open,
+      ));
+    } catch (e) {
+      // Transition back to "open" state if something goes wrong.
+      emit(state.failed(
+        status: VaultStatus.open,
+        reason: SaveVaultFailure(),
+      ));
+      addError(e);
+    }
+  }
+```
+
+### Close vault
+
+```dart
+  void closeVault() {
+    // Destroy key.
+    // User would have to open with same master-password to access credentials
+    // again.
+    _key?.destroy();
+    // "closed" state with empty credentials.
+    emit(state.ok(
+      credentials: <Credential>[].lock,
+      status: VaultStatus.closed,
+    ));
+  }
+```
+
+### Auto close whe idle
+
+As an extra security mechanism, we want the vault to automatically close after
+it has been idle for a while.
+
+This actually really easy to do.
+There is a `onChange` method that gets called each time a new state is emitted.
+All we need is timer that gets reset each "open" state change.
+
+Add to the top of `VaultCubit`:
+
+```dart
+  static const closeAfter = Duration(minutes: 1);
+  Timer? _timer;
+```
+
+Then override `onChange`.
+
+```dart
+  @override
+  void onChange(Change<VaultState> change) {
+    super.onChange(change);
+    if (change.nextState.status == VaultStatus.open) {
+      _timer?.cancel();
+      _timer = Timer(closeAfter, closeVault);
+    }
+  }
+```
+
+We want `closeAfter` to be short enough that a malicious person can't get access
+to credentials if the device is suddenly left unattended.
+But it should also be long enough that it doesn't annoy the user.
+
+## Observability
+
+Another neat thing you can do with BLoC/Cubit is to register an observer which
+is an object that gets called each time state changes (or on errors).
+
+Add this to a file somewhere:
+
+```dart
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
+
+class LoggerBlocObserver extends BlocObserver {
+  final log = Logger('LoggerBlocObserver');
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    log.log(Level.INFO, '${bloc.runtimeType} $change');
+  }
+
+  @override
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    log.log(Level.WARNING, '${bloc.runtimeType} $error $stackTrace');
+    super.onError(bloc, error, stackTrace);
+  }
+}
+```
+
+It simply logs all errors using the [logging](https://pub.dev/packages/logging)
+package.
+This is also why `Key` isn't part of the state object.
+
+In the top of your `main` method you do:
+
+```dart
+  PrintAppender(formatter: const ColorFormatter()).attachToLogger(Logger.root);
+  Bloc.observer = LoggerBlocObserver();
+```
+
+First, we are setting the root logger to just print the logged record.
+When the project starts having beta testers, then we will reconfigure it to log
+to a server.
+That way we will automatically capture details on any errors.
+
+Next, the `LoggerBlocObserver` is registered with the bloc library.
+
+# UI
+
+## Main
+
+Start by making the `main` function async.
+
+Then await the creation on `Storage`:
+
+```dart
+  final storage = await Storage.create();
+```
+
+Next, wrap your app with a `BlocProvider` like:
+
+```dart
+  runApp(BlocProvider(
+    create: (context) => VaultCubit(
+      VaultApi(protector: Protection.sensibleDefaults(), storage: storage),
+    ),
+    child: const MyApp(),
+  ));
+```
+
+The provider allows widgets throughout the app to access `VaultCubit` and the
+state.
+
+## MyApp
+
+Replace `MyApp` with:
+
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'PasswordManager',
+      home: BlocListener<VaultCubit, VaultState>(
+          listenWhen: (previous, current) => current.failure != null,
+          listener: (context, state) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.failure!.message)));
+          },
+          child: const PasswordScreen()),
+    );
+  }
+}
+```
+
+A `BlocLister` listener allows you to execute something that should happen only
+once for every state change.
+We are going to use it to display a `SnackBar` message.
+See [BlocListener docs](https://pub.dev/documentation/flutter_bloc/latest/flutter_bloc/BlocListener-class.html).
+
+Remove the `MyHomePage` widget.
+We don't need the demo app.
+
+## PasswordScreen
+
+First thing the user will be presented with is the password screen (for
+master-password).
+
+`lib/ui/password_screen.dart`
+
+```dart
+class PasswordScreen extends StatelessWidget {
+  const PasswordScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Enter your master password"),
+        centerTitle: true,
+      ),
+      body: BlocConsumer<VaultCubit, VaultState>(
+        listenWhen: (previous, current) => current.status == VaultStatus.open,
+        listener: (context, state) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const VaultScreen()),
+          );
+        },
+        builder: (context, state) {
+          return switch (state.status) {
+            VaultStatus.absent => PasswordForm(
+                onSubmit: (password) =>
+                    context.read<VaultCubit>().createVault(password),
+                buttonText: "Create",
+              ),
+            VaultStatus.closed => PasswordForm(
+                onSubmit: (password) =>
+                    context.read<VaultCubit>().openVault(password),
+                buttonText: "Open",
+              ),
+            _ => const Center(child: CircularProgressIndicator.adaptive()),
+          };
+        },
+      ),
+    );
+  }
+}
+```
+
+Another bloc widget is being used.
+That is the `BlockConsumer`.
+It works like a `BlockLister`, but it also takes `builder` function as a
+parameter, which can build a child tree based on the `state` of a Cubit.
+In this case that will be our `VaultCubit`.
+
+There are two variations.
+Either a stored vault is **absent** in which case a new can be created with
+master password.
+Or it is **closed** in which case the user can open it by entering the same
+master password that was used to create it.
+In either case; the state will transition to "open", which makes the listener
+navigate to another screen.
+
+We also need to define the form.
+
+```dart
+class _PasswordFormState extends State<PasswordForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+
+  void _handleSubmit() {
+    if (!_formKey.currentState!.validate()) return;
+    widget.onSubmit(_passwordController.text);
+  }
+
+  String? _passwordValidator(String? value) {
+    const minLength = 8;
+    final invalid = value == null || value.length < minLength;
+    return invalid ? "Must be at least $minLength" : null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Form(
+        key: _formKey,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Padding(padding: EdgeInsets.symmetric(vertical: 16)),
+          const Text("Password"),
+          TextFormField(
+            controller: _passwordController,
+            validator: _passwordValidator,
+            obscureText: true,
+            keyboardType: TextInputType.visiblePassword,
+            onChanged: (newValue) => _formKey.currentState!.validate(),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 16)),
+          Center(
+            child: ElevatedButton(
+              onPressed: _handleSubmit,
+              child: Text(widget.buttonText),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+```
+
+The method `_passwordValidator` shows an error if the entered password is less
+than 8 characters.
+
+`_handleSubmit` checks validation invoking `onSubmit` callback.
+
+## Vault screen
+
+This is the screen that gets shown when the vault have been opened.
+
+`lib/ui/vault_screen.dart`
+
+```dart
+class VaultScreen extends StatelessWidget {
+  const VaultScreen({super.key});
+
+  void _addNewCredential(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CredentialScreen(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) => context.read<VaultCubit>().closeVault(),
+      child: Scaffold(
+        appBar: AppBar(title: const Text("Your Vault")),
+        body: BlocConsumer<VaultCubit, VaultState>(
+          listenWhen: (previous, current) =>
+              current.status == VaultStatus.closed,
+          listener: (context, state) => Navigator.pop(context),
+          builder: (context, state) => CredentialList(credentials: state.credentials),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _addNewCredential(context),
+          child: const Icon(Icons.add),
+        ),
+      ),
+    );
+  }
+}
+```
+
+[PopScope](https://api.flutter.dev/flutter/widgets/PopScope-class.html) allows
+overriding the behavior when back navigation is invoked.
+Either by gesture or the back button.
+We override it here to close the vault.
+
+We see another `BocConsumer`.
+Here the `listenerWhen` and `listener` will make sure the navigation is popped
+once the vault have been closed.
+The `builder` returns the `CredentialsList` widget we will define in a moment.
+
+We also have a button to push a new screen for adding credentials.
+
+```dart
+class CredentialList extends StatelessWidget {
+  const CredentialList({
+    super.key,
+    required this.credentials,
+  });
+
+  final IList<Credential> credentials;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemBuilder: (context, index) => CredentialListTile(credential: credentials[index]),
+      separatorBuilder: (context, index) => const Divider(),
+      itemCount: credentials.length,
+    );
+  }
+}
+
+
+class CredentialListTile extends StatelessWidget {
+  const CredentialListTile({
+    super.key,
+    required this.credential,
+  });
+
+  final Credential credential;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(credential.name),
+      subtitle: Text(credential.username),
+      trailing: PopupMenuButton<MenuAction>(
+        onSelected: (MenuAction action) => action.call(),
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuAction>>[
+          PopupMenuItem<MenuAction>(
+            value: () => Clipboard.setData(ClipboardData(text: credential.username)),
+            child: const Text('Copy username'),
+          ),
+          PopupMenuItem<MenuAction>(
+            value: () => Clipboard.setData(ClipboardData(text: credential.password)),
+            child: const Text('Copy password'),
+          ),
+          PopupMenuItem<MenuAction>(
+            value: () {
+              // TODO remove credential
+            },
+            child: const Text('Remove'),
+          ),
+        ],
+      ),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CredentialScreen(existingCredential: credential),
+      )),
+    );
+  }
+}
+
+typedef MenuAction = void Function();
+```
+
+Here we have a
+[PopupMenuButton](https://api.flutter.dev/flutter/material/PopupMenuButton-class.html)
+that gives options to copy username or password to
+[Clipboard](https://api.flutter.dev/flutter/services/Clipboard-class.html).
+
+## Credential screen
+
+Screen allowing user to add new credentials.
+
+`lib/ui/credential_screen.dart`
+
+```dart
+class CredentialScreen extends StatefulWidget {
+  final Credential? existingCredential;
+
+  const CredentialScreen({super.key, this.existingCredential});
+
+  @override
+  State<CredentialScreen> createState() => _CredentialScreenState();
+}
+
+class _CredentialScreenState extends State<CredentialScreen> {
+  late final TextEditingController _nameCtrl;
+  late final TextEditingController _usernameCtrl;
+  late final TextEditingController _passwordCtrl;
+  var showPassword = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameCtrl = TextEditingController(text: widget.existingCredential?.name);
+    _usernameCtrl = TextEditingController(text: widget.existingCredential?.username);
+    _passwordCtrl = TextEditingController(text: widget.existingCredential?.password);
+  }
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _usernameCtrl.dispose();
+    _passwordCtrl.dispose();
+    super.dispose();
+  }
+
+  void save() {
+    final vault = context.read<VaultCubit>();
+    final credential = Credential(
+      name: _nameCtrl.text,
+      username: _usernameCtrl.text,
+      password: _passwordCtrl.text,
+    );
+    if (widget.existingCredential == null) {
+      vault.addCredential(credential);
+    } else {
+      // TODO update existing credential
+    }
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Credential")),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            NameField(controller: _nameCtrl),
+            UsernameField(controller: _usernameCtrl),
+            PasswordField(controller: _passwordCtrl),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 16)),
+            SaveButton(onSave: save),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UsernameField extends StatelessWidget {
+  const UsernameField({super.key, required this.controller});
+
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      decoration: const InputDecoration(label: Text("Username")),
+    );
+  }
+}
+
+class NameField extends StatelessWidget {
+  final TextEditingController controller;
+
+  const NameField({super.key, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      decoration: const InputDecoration(label: Text("Name/Site")),
+    );
+  }
+}
+
+class PasswordField extends StatefulWidget {
+  final TextEditingController controller;
+
+  const PasswordField({super.key, required this.controller});
+
+  @override
+  State<PasswordField> createState() => _PasswordFieldState();
+}
+
+class _PasswordFieldState extends State<PasswordField> {
+  bool showPassword = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          child: TextFormField(
+            controller: widget.controller,
+            obscureText: !showPassword,
+            decoration: const InputDecoration(label: Text("Password")),
+          ),
+        ),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 8)),
+        IconButton.outlined(
+          onPressed: () {
+            setState(() => showPassword = !showPassword);
+          },
+          icon: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+        ),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 8)),
+        IconButton.outlined(
+          onPressed: () {
+            // TODO generate a random password
+          },
+          icon: const Icon(Icons.casino),
+        ),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 8)),
+      ],
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  final Function() onSave;
+
+  const SaveButton({super.key, required this.onSave});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<VaultCubit, VaultState>(builder: (context, state) {
+      if (state.status == VaultStatus.saving) {
+        return const CircularProgressIndicator();
+      } else {
+        return ElevatedButton(
+          onPressed: onSave,
+          child: const Text("Save"),
+        );
+      }
+    });
+  }
+}
+```
+
+It is a simple form with 3 input fields.
+One for name, username and password.
+
+The password have a toggle for visibility (obscured by default).
+
+When save is pressed and the fields pass validation, it will call
+`addCredential` on the `VaultCubit` instance with the text values from input
+fields.
+The "Save" button is disabled while saving.
+
+# Closing thoughts
+
+You're close to have created a *toy* password manager.
+
+There are still some important features missing.
+See if you can implement those in the challenges below.
+
+I hope you learn something along the way.
+
+# Challenges
+
+**Searching for TODO might give you some hints**
+
+## Generate password
+
+People are bad at inventing good passwords, so you should add functionality to
+generate passwords.
+
+## Remove credential
+
+Allow the user to clean up old accounts.
+
+Maybe you should present a dialog or something to make sure they don't remove
+credentials by accident.
+
+## Update credential
+
+Add functionality for updating credential.
+
+You should be able to reuse most of `CredentialScreen`.
