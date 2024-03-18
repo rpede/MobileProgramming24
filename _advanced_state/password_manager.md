@@ -42,7 +42,7 @@ Then install the following packages.
 flutter pub add json_annotation dev:build_runner dev:json_serializable equatable logging logging_appenders shared_preferences cryptography flutter_bloc fast_immutable_collections
 ```
 
-Some of the package are only need for development that's why some are prefixed
+Some of the packages are only need for development that's why some are prefixed
 with `dev:`.
 
 Packages will be explained when we use them.
@@ -149,11 +149,11 @@ It can, however, be changed by overriding the [operator
 ==](https://api.dart.dev/stable/3.3.1/dart-core/Object/operator_equals.html).
 When overriding it, one should also override the `hashCode` method.
 It can be super annoying to do manually.
-So we will use the [equatable](https://pub.dev/packages/equatable) package to
+So, we will use the [equatable](https://pub.dev/packages/equatable) package to
 help us.
 
 Equatable also supports `toString`.
-However we don't want passwords in logs, so we override it manually.
+However, we don't want passwords in logs, so we override it manually.
 
 Change `Credential` class, so it extends `Equatable`.
 Now, you just need to implement the `prop` method to return all instance
@@ -191,7 +191,8 @@ serializable.
 
 The unencrypted `OpenVault` is only meant to exist in memory for a short-period
 of time.
-We will never store credentials unencrypted, so no need to make it serializable.
+We will never store credentials unencrypted, so there is no need to make it
+serializable.
 
 Make `Credential` and `EncryptedVault` JSON serializable by adding
 `@JsonSerializable()` to the class definition.
@@ -254,7 +255,7 @@ Try it out!
 ...
 
 Nothing interested happened.
-It printed some stuff, thats it.
+It printed some stuff, that's it.
 
 ```
 [INFO] Generating build script completed, took 318ms
@@ -357,7 +358,7 @@ We can achieve the goal by only storing encrypted credentials.
 
 The basic model is as follows:
 
-- Use [Key derivation function (KDF)](https://en.wikipedia.org/wiki/Key_derivation_function) to derive a encryption key from a master-password.
+- Use [Key derivation function (KDF)](https://en.wikipedia.org/wiki/Key_derivation_function) to derive an encryption key from a master-password.
 - The key is used to encrypt credentials before storage.
 - Credentials can be retrieved again by deriving an identical key given the same
 master-password.
@@ -417,7 +418,7 @@ domain.
 
 First, we need a class for the encryption key that can be passed around in the
 application.
-We also want to limit access to key.
+We also want to limit access to the key.
 Our entire application to depend on the
 [cryptography](https://pub.dev/packages/cryptography) package.
 Sound like a difficult problem to solve, but it can actually be done pretty
@@ -444,14 +445,14 @@ class _Key extends Key {
 }
 ```
 
-Sealed classes are abstract classes that can not be extended outside their own
+Sealed classes are abstract classes that cannot be extended outside their own
 package.
 See [sealed class modifier](https://dart.dev/language/class-modifiers#sealed).
 
 It means that the only way to instantiate `Key` is through its `_Key` sub-class
 which isn't accessible outside its own package.
-The only public available part of `Key` is its `destroy()` method.
-The application should call `destroy` when the key is no longer need.
+The only publicly available part of `Key` is its `destroy()` method.
+The application should call `destroy` when the key is no longer needed.
 In other words when we are closing the vault.
 
 The cryptography package works with `SecretBox` class.
@@ -532,7 +533,7 @@ class Protection {
 }
 ```
 
-The `Protection` class can create en encryption key from a password.
+The `Protection` class can create an encryption key from a password.
 It can then encrypt and decrypt a vault with the key.
 
 It can be instantiated with different algorithms, but also provides a
@@ -665,7 +666,7 @@ The vault can either be open, closed, absent or transitioning between.
 
 - **Open** means that the vault exists unencrypted in the memory of our app.
 - **Closed** means a vault is only stored in an encrypted form.
-- **Absent** means that a vault haven't been created yet.
+- **Absent** means that a vault hasn't been created yet.
 
 So, the status of our app can be either:
 
@@ -786,7 +787,7 @@ class VaultState extends Equatable {
 ```
 
 Notice that I've added some extra methods.
-The state is immutable, so when we want to express a new state we make a copy of
+The state is immutable, so when we want to express a new state, we make a copy of
 the old with some fields having a different value.
 The added methods are there for convenience, making it easier to copy with changes.
 
@@ -808,10 +809,10 @@ To answer, let's first look at the meaning behind the word.
 - **Immutable**: not able to mutate/change
 
 Using only immutable state prevents us from changing state all over the place
-thereby it hard to debug the app. 
+thereby making it difficult to debug the app. 
 However, having an app that doesn't react to user input because its state can't
-changed is not fun.
-So we need state changes to happen somewhere.
+be changed is not fun.
+So, we need state changes to happen somewhere.
 That somewhere is in a bloc or cubit.
 
 ## Cubit
@@ -970,9 +971,9 @@ Doing it here is a compromise, as I don't want the key anyway near UI.
 As an extra security mechanism, we want the vault to automatically close after
 it has been idle for a while.
 
-This actually really easy to do.
+This is actually really easy to do.
 There is a `onChange` method that gets called each time a new state is emitted.
-All we need is timer that gets reset each "open" state change.
+All we need is a timer that gets reset each "open" state change.
 
 Add to the top of `VaultCubit`:
 
@@ -1001,7 +1002,7 @@ But it should also be long enough that it doesn't annoy the user.
 ## Observability
 
 Another neat thing you can do with BLoC/Cubit is to register an observer which
-is an object that gets called each time state changes (or on errors).
+is an object that gets called each time the state changes (or on errors).
 
 Add this to a file somewhere:
 
@@ -1025,8 +1026,8 @@ class LoggerBlocObserver extends BlocObserver {
 }
 ```
 
-It simply logs all errors using the [logging](https://pub.dev/packages/logging)
-package.
+It simply logs all state changes and errors using the
+[logging](https://pub.dev/packages/logging) package.
 This is also why `Key` isn't part of the state object.
 
 In the top of your `main` method you do:
@@ -1036,10 +1037,11 @@ In the top of your `main` method you do:
   Bloc.observer = LoggerBlocObserver();
 ```
 
-First, we are setting the root logger to just print the logged record.
-When the project starts having beta testers, then we will reconfigure it to log
-to a server.
-That way we will automatically capture details on any errors.
+First, we are setting the root logger to just print the logged record (with
+colors).
+When we start having beta testers project (hypothetically), then we will
+reconfigure it to log to a server.
+That way we will be able to automatically capture details on any errors.
 
 Next, the `LoggerBlocObserver` is registered with the bloc library.
 
@@ -1067,7 +1069,7 @@ Next, wrap your app with a `BlocProvider` like:
   ));
 ```
 
-The provider allows widgets throughout the app to access `VaultCubit` and the
+The provider allows widgets throughout the app to access `VaultCubit` and its
 state.
 
 ## MyApp
@@ -1094,8 +1096,8 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-A `BlocLister` listener allows you to execute something that should happen only
-once for every state change.
+A `BlocLister` allows you to execute something, that should happen only once for
+every state change.
 We are going to use it to display a `SnackBar` message.
 See [BlocListener docs](https://pub.dev/documentation/flutter_bloc/latest/flutter_bloc/BlocListener-class.html).
 
@@ -1103,11 +1105,12 @@ Remove the `MyHomePage` widget.
 We don't need the demo app.
 
 **Android Studio will give some red lines while typing in the screens.
-Either fix imports at the end, or out-comment the offending lines.**
+Either live with it for a while, or out-comment the offending lines along, then
+fix imports at the end.**
 
-## PasswordScreen
+## Password screen
 
-First thing the user will be presented with is the password screen (for
+The first thing the user will be presented with is the password screen (for
 master-password).
 
 `lib/ui/password_screen.dart`
@@ -1151,18 +1154,18 @@ class PasswordScreen extends StatelessWidget {
 }
 ```
 
-Another bloc widget is being used.
+Here, we will use another bloc related widget.
 That is the `BlockConsumer`.
 It works like a `BlockLister`, but it also takes `builder` function as a
 parameter, which can build a child tree based on the `state` of a Cubit.
 In this case that will be our `VaultCubit`.
 
 There are two variations.
-Either a stored vault is **absent** in which case a new can be created with
+Either a stored vault is **absent**, in which case a new can be created with
 master password.
-Or it is **closed** in which case the user can open it by entering the same
+Or it is **closed**, in which case the user can open it by entering the same
 master password that was used to create it.
-In either case; the state will transition to "open", which makes the listener
+In either case, the state will transition to "open", which makes the listener
 navigate to another screen.
 
 We also need to define the form.
@@ -1234,7 +1237,7 @@ than 8 characters.
 
 ## Vault screen
 
-This is the screen that gets shown when the vault have been opened.
+This is the screen that gets shown when the vault has been opened.
 
 `lib/ui/vault_screen.dart`
 
@@ -1279,10 +1282,10 @@ overriding the behavior when back navigation is invoked.
 Either by gesture or the back button.
 We override it here to close the vault.
 
-We see another `BocConsumer`.
+We also see another `BlocConsumer`.
 Here the `listenerWhen` and `listener` will make sure the navigation is popped
-once the vault have been closed.
-The `builder` returns the `CredentialsList` widget we will define in a moment.
+once the vault has been closed.
+The `builder` returns a `CredentialsList` widget (which we will define in a moment).
 
 We also have a button to push a new screen for adding credentials.
 
@@ -1355,7 +1358,7 @@ that gives options to copy username or password to
 
 ## Credential screen
 
-Screen allowing user to add new credentials.
+The credentials screen allowing user to add new credentials.
 
 `lib/ui/credential_screen.dart`
 
@@ -1519,15 +1522,15 @@ class SaveButton extends StatelessWidget {
 }
 ```
 
-It is a simple form with 3 input fields.
+It is "just" a simple form with 3 input fields.
 One for name, username and password.
 
-The password have a toggle for visibility (obscured by default).
+The password has a toggle for visibility (obscured by default).
 
-When save is pressed and the fields pass validation, it will call
+When "Save" button is pressed and the fields pass validation, it will call
 `addCredential` on the `VaultCubit` instance with the text values from input
 fields.
-The "Save" button is disabled while saving.
+The "Save" button gets disabled while saving.
 
 # Closing thoughts
 
@@ -1535,8 +1538,6 @@ You're close to have created a *toy* password manager.
 
 There are still some important features missing.
 See if you can implement those in the challenges below.
-
-I hope you learn something along the way.
 
 # Challenges
 
@@ -1549,13 +1550,14 @@ generate passwords.
 
 ## Remove credential
 
-Allow the user to clean up old accounts.
+Allow the user to clean up old accounts by providing a function to remove
+credentials.
 
 Maybe you should present a dialog or something to make sure they don't remove
 credentials by accident.
 
 ## Update credential
 
-Add functionality for updating credential.
+Add functionality for updating credentials.
 
 You should be able to reuse most of `CredentialScreen`.
