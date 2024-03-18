@@ -240,11 +240,24 @@ class Person {
 BLoC makes it easy to have the widgets that rebuild on state changes.
 And we can keep the rebuild to just the parts that depend on the state.
 
-Here I'm using a simplified version of BLoC called Cubit.
+We will start by using a simplified version of BLoC called Cubit.
+It exposes a stream where each value emitted represents a change in our app.
+In fact it is very similar to a StreamController.
+The big shift is that with Cubit we add values to the sink from within the Cubit
+itself.
+Not from a widget.
+
+The values emitted are called **state**.
+Don't confuse it with `State` class of `StatefulWidget`.
+The `State` of `StatefulWidget` got a build method.
+The **state** in Cubit is just a data class.
+An immutable data class.
+
+Here is a simple example of a Cubit.
 
 ```dart
-class PersonBloc extends Cubit<Person> {
-  PersonBloc(super.initialState);
+class PersonCubit extends Cubit<Person> {
+  PersonCubit(super.initialState);
 
   void changeName({String? firstName, String? lastName}) {
     emit(Person(
@@ -255,6 +268,21 @@ class PersonBloc extends Cubit<Person> {
 }
 ```
 
+Here, `emit` is equivalent of adding a value to the sink of a StreamController.
+And `Person` is the type of values the stream emits.
+`Person` in the example above is the immutable data class used as state for the
+block.
+
+The `PersonCubit` instance is made available to widget using a `BlocProvider`.
+It works like the `Provider` we are used to, but for Blocs/Cubits.
+
+We can update a widget whenever the state held by a bloc changes.
+We do it by wrapping the widget with a `BlocBuilder`.
+It takes a `builder` function as parameter, which gets called each time a new
+state value is emitted.
+We can access the current state (last state emitted) inside the builder
+function.
+
 ```run-dartpad:mode-flutter:width-100%:height-1000px
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -263,7 +291,7 @@ void main() {
   runApp(
     BlocProvider(
       create: (context) =>
-          PersonBloc(Person(firstName: "Alice", lastName: "Smith")),
+          PersonCubit(Person(firstName: "Alice", lastName: "Smith")),
       child: MaterialApp(
         home: Scaffold(
           appBar: AppBar(
@@ -281,7 +309,7 @@ class PersonTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final person = context.watch<PersonBloc>().state;
+    final person = context.watch<PersonCubit>().state;
     return Text("$person");
   }
 }
@@ -295,12 +323,12 @@ class NameChanger extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          BlocBuilder<PersonBloc, Person>(
+          BlocBuilder<PersonCubit, Person>(
             builder: (context, person) => Text("$person")
           ),
           ElevatedButton(
             onPressed: () {
-              context.read<PersonBloc>().changeName(lastName: "Carpenter");
+              context.read<PersonCubit>().changeName(lastName: "Carpenter");
             },
             child: Text("Click me"),
           ),
@@ -310,8 +338,8 @@ class NameChanger extends StatelessWidget {
   }
 }
 
-class PersonBloc extends Cubit<Person> {
-  PersonBloc(super.initialState);
+class PersonCubit extends Cubit<Person> {
+  PersonCubit(super.initialState);
 
   void changeName({String? firstName, String? lastName}) {
     emit(Person(
@@ -328,3 +356,15 @@ class Person {
   toString() => "$firstName $lastName";
 }
 ```
+
+There are two ways we can get a reference to `PersonCubit`.
+We can use either `context.read<PersonCubit>()` or
+`context.watch<PersonCubit>()`.
+The difference is that with `watch` we will have the widget rebuild
+whenever a new state is emitted (same we get with BlocBuilder).
+Using `read` won't cause the widget to rebuild.
+
+We should be careful where we use `watch`.
+It can only be used within the `build` method.
+It will cause the entire widget to rebuild on a state update.
+I recommend using `BlocBuilder` over `watch`.
