@@ -110,15 +110,14 @@ class EncryptedVault {
 `lib/models/open_vault.dart`
 
 ```dart
-import '../infrastructure/protection.dart';
-import '../_bloc/credential.dart';
-
 class OpenVault {
   List<Credential> credentials;
   Key key;
   OpenVault({required this.credentials, required this.key});
 }
 ```
+
+**Key will be defined later**
 
 ## About the classes
 
@@ -254,26 +253,28 @@ Nothing interested happened.
 It printed some stuff, thats it.
 
 ```
-[INFO] Generating build script completed, took 310ms
-[INFO] Reading cached asset graph completed, took 114ms
-[INFO] Checking for updates since last build completed, took 1.0s
+[INFO] Generating build script completed, took 318ms
+[INFO] Precompiling build script... completed, took 7.0s
+[INFO] Building new asset graph completed, took 1.2s
+[INFO] Checking for unexpected pre-existing outputs. completed, took 1ms
+[INFO] Generating SDK summary completed, took 4.7s
 [WARNING] source_gen:combining_builder on lib/models/encrypted_vault.dart:
-encrypted_vault.g.dart must be included as a part "../_bloc"directive in the input library with:
-    part '../_bloc/encrypted_vault.g.dart';
-[WARNING] source_gen:combining_builder on lib/models/credential.dart:
-credential.g.dart must be included as a part "../_bloc"directive in the input library with:
-    part '../_bloc/credential.g.dart';
-[INFO] Running build completed, took 14.7s
-[INFO] Caching finalized dependency graph completed, took 128ms
-[INFO] Succeeded after 14.8s with 585 outputs (1181 actions)
+encrypted_vault.g.dart must be included as a part directive in the input library with:
+    part 'encrypted_vault.g.dart';
+[WARNING] source_gen:combining_builder on lib/models/credentials.dart:
+credentials.g.dart must be included as a part directive in the input library with:
+    part 'credentials.g.dart';
+[INFO] Running build completed, took 15.2s
+[INFO] Caching finalized dependency graph completed, took 104ms
+[INFO] Succeeded after 15.3s with 52 outputs (112 actions)
 ```
 
 Let's examine one of the warnings.
 
 ```
-[WARNING] source_gen:combining_builder on lib/models/credential.dart:
-credential.g.dart must be included as a part "../_bloc"directive in the input library with:
-    part '../_bloc/credential.g.dart';
+[WARNING] source_gen:combining_builder on lib/models/credentials.dart:
+credentials.g.dart must be included as a part directive in the input library with:
+    part 'credentials.g.dart';
 ```
 
 Add `part 'credential.g.dart';` right under the imports in
@@ -600,6 +601,8 @@ We got our two infrastructure classes (Protection & Storage).
 Time to build a high-level API around them that expose the core functionality of
 our app.
 
+`lib/core/vault_api.dart`
+
 ```dart
 class VaultApi {
   final Storage _storage;
@@ -622,7 +625,7 @@ class VaultApi {
   Future<OpenVault> open(String masterPassword) async {
     final vault = _storage.load();
     if (vault == null) throw VaultNotFoundFailure();
-    final key = await _protector.getKey(vault, masterPassword);
+    final key = await _protector.recreateKey(vault, masterPassword);
     final credentials = await _protector.decrypt(vault, key);
     return OpenVault(credentials: credentials, key: key);
   }
@@ -1094,6 +1097,9 @@ See [BlocListener docs](https://pub.dev/documentation/flutter_bloc/latest/flutte
 Remove the `MyHomePage` widget.
 We don't need the demo app.
 
+**Android Studio will give some red lines while typing in the screens.
+Either fix imports at the end, or out-comment the offending lines.**
+
 ## PasswordScreen
 
 First thing the user will be presented with is the password screen (for
@@ -1157,6 +1163,20 @@ navigate to another screen.
 We also need to define the form.
 
 ```dart
+class PasswordForm extends StatefulWidget {
+  final Function(String password) onSubmit;
+  final String buttonText;
+
+  const PasswordForm({
+    super.key,
+    required this.onSubmit,
+    required this.buttonText,
+  });
+
+  @override
+  State<PasswordForm> createState() => _PasswordFormState();
+}
+
 class _PasswordFormState extends State<PasswordForm> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
