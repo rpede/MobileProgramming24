@@ -633,6 +633,8 @@ class VaultApi {
 }
 ```
 
+*VaultNotFoundFailure will be defined in a bit.*
+
 | Method | Description |
 |-|-|
 | create | Creates a vault that can only be opened with the given master-password. |
@@ -654,7 +656,7 @@ how to manage state in the app.
 The vault can either be open, closed, absent or transitioning between.
 
 - **Open** means that the vault exists unencrypted in the memory of our app.
-- **Closed** means a vault is stored in an encrypted form.
+- **Closed** means a vault is only stored in an encrypted form.
 - **Absent** means that a vault haven't been created yet.
 
 So, the status of our app can be either:
@@ -670,7 +672,8 @@ enum VaultStatus {
 ```
 
 In addition, our app state can have any number of credentials.
-We better also have a way to deal with any failures.
+And, we also need a way to deal with any failures.
+So, the entire state of the app can be expressed with an instance of:
 
 ```dart
 class VaultState extends Equatable {
@@ -771,14 +774,187 @@ class VaultState extends Equatable {
 
 Notice that I've added some extra methods.
 The state is immutable, so when we want to express a new state we make a copy of
-the old with some of the fields set to something else.
-So I've added some convenience methods to make it easier to copy with changes.
+the old with some fields having a different value.
+The added methods are there for convenience, making it easier to copy with changes.
 
-It is also `Equatable` so we can compare if two states are equivalent.
-This way we can avoid rebuilding UI when the states are effectively the same.
+It is also `Equatable`.
+Meaning we can compare if two states are equivalent.
+The UI will be rebuild when `previousState != newState`.
 
 Notice the type `IList<Credential>`.
 The "I" is for immutable (not interface).
 The type comes from the
 [fast_immutable_collections](https://pub.dev/packages/fast_immutable_collections)
 package.
+
+## Why immutability is important?
+
+To answer, let's first look at the meaning behind the word.
+
+- **Mutable**: able to mutate/change
+- **Immutable**: not able to mutate/change
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<Person>(
+            create: (context) => Person(firstName: "Alice", lastName: "Smith")),
+        Provider<PersonService>(create: (context) => PersonService()),
+      ],
+      child: MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: PersonTitle(),
+          ),
+          body: NameChanger(),
+        ),
+      ),
+    ),
+  );
+}
+
+class PersonTitle extends StatelessWidget {
+  const PersonTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final person = context.read<Person>();
+    return Text("$person");
+  }
+}
+
+class NameChanger extends StatefulWidget {
+  const NameChanger({super.key});
+
+  @override
+  State<NameChanger> createState() => _NameChangerState();
+}
+
+class _NameChangerState extends State<NameChanger> {
+  late Person person;
+
+  @override
+  void initState() {
+    super.initState();
+    person = context.read<Person>();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("$person"),
+          ElevatedButton(
+            onPressed: () {
+              final changedPerson = context
+                  .read<PersonService>()
+                  .changeName(person, lastName: "Carpenter");
+              setState(() {
+                person = changedPerson;
+              });
+            },
+            child: Text("Click me"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PersonService {
+  Person changeName(Person person, {String? firstName, String? lastName}) {
+    return Person(
+      firstName: firstName ?? person.firstName,
+      lastName: lastName ?? person.lastName,
+    );
+  }
+}
+
+class Person {
+  String firstName;
+  String lastName;
+  Person({required this.firstName, required this.lastName});
+  toString() => "$firstName $lastName";
+}
+```
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+void main() {
+  runApp(
+    BlocProvider(
+      create: (context) =>
+          PersonBloc(Person(firstName: "Alice", lastName: "Smith")),
+      child: MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: PersonTitle(),
+          ),
+          body: NameChanger(),
+        ),
+      ),
+    ),
+  );
+}
+
+class PersonTitle extends StatelessWidget {
+  const PersonTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final person = context.watch<PersonBloc>().state;
+    return Text("$person");
+  }
+}
+
+class NameChanger extends StatelessWidget {
+  const NameChanger({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BlocBuilder<PersonBloc, Person>(
+            builder: (context, person) => Text("$person")
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<PersonBloc>().changeName(lastName: "Carpenter");
+            },
+            child: Text("Click me"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PersonBloc extends Cubit<Person> {
+  PersonBloc(super.initialState);
+
+  void changeName({String? firstName, String? lastName}) {
+    emit(Person(
+      firstName: firstName ?? state.firstName,
+      lastName: lastName ?? state.lastName,
+    ));
+  }
+}
+
+class Person {
+  String firstName;
+  String lastName;
+  Person({required this.firstName, required this.lastName});
+  toString() => "$firstName $lastName";
+}
+```

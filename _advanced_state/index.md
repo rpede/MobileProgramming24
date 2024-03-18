@@ -5,6 +5,6 @@ description: >-
 layout: default
 ---
 
-# BLoC
-
+- [Immutability](immutability)
+- [BLoC](bloc)
 - [Password Manager](password-manager)
