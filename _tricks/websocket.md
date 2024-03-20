@@ -1,7 +1,7 @@
 ---
 title: WebSocket
 description: >-
-    "Example of using WebSocket with BLoC pattern."
+    Example of using WebSocket with BLoC pattern.
 layout: default
 ---
 
