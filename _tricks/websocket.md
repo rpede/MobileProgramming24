@@ -5,6 +5,8 @@ description: >-
 layout: default
 ---
 
+![](../websocket_demo_screenshot.png)
+
 # Project
 
 ## [Link](https://github.com/rpede/MiniProjectSolution/)
