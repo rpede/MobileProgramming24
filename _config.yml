@@ -42,3 +42,6 @@ collections:
   advanced_state:
     output: true
     permalink: /advanced-state/:name
+  backend_as_a_service:
+    output: true
+    permalink: /backend-as-a-service/:name

@@ -14,4 +14,5 @@ description: >-
 - [Testing](testing)
 - [Working with data](working-with-data)
 - [Advanced state management](advanced-state)
+- [Backend as a service (BaaS)](backend-as-a-service)
 - [Tricks](tricks)
