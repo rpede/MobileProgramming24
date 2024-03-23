@@ -5,4 +5,5 @@ description: >-
 layout: default
 ---
 
+- [Introduction](introduction)
 - [Supabase](supabase)

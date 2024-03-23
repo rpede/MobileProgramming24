@@ -5,8 +5,6 @@ description: >-
 layout: default
 ---
 
-# Backend as a Service
-
 We are going to create a chat app using Supabase as a backend.
 
 ## Create account
