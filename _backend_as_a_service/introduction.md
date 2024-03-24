@@ -56,3 +56,60 @@ What I was looking for is:
     - Notifications
 
 I found Supabase to be the most viable.
+
+You can read how Supabase developers phrase the differences between it and
+Firebase [here](https://supabase.com/alternatives/supabase-vs-firebase).
+
+# Supabase
+
+Supabase is open source and build around PostgreSQL.
+You can access PostgreSQL directly if you so desire.
+In addition it provides the following features:
+
+- Auto-generated API for clients.
+- Realtime changes.
+- Authentication/Authorization with social media login and SSO (single sign-on).
+- Edge functions (aka cloud or serverless functions) gives you backend like
+functionality without writing a full-blown backend or managing servers.
+- Storage for hosting blobs like images, videos etc.
+
+Given that Supabase is backed by PostgreSQL, you might be tempted to want to
+write SQL directly in your Flutter app.
+Even though it is technically possible to establish a connection directly to
+PostgreSQL from Flutter, this should be avoided.
+Your frontend is not supposed to talk directly to the database.
+Flutter apps should use the auto-generated API.
+
+The auto-generated API simplifies writing queries for the database.
+Consider the schema below:
+
+![](../supabase_countries_schema.png)
+
+You can fetch countries with a list of cities just by:
+
+```dart
+final data = await supabase.from('countries').select('id, name, cities(id, name)');
+```
+
+And you get a result like this:
+
+```dart
+[
+  {
+    "id": 1,
+    "name": "United Kingdom",
+    "cities": [
+      { "id": 1, "name": "London" },
+      { "id": 2 "name": "Manchester" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "United States",
+    "cities": [
+      { "id": 3, "name": "Los Angeles" },
+      { "id": 4 "name": "New York" }
+    ]
+  }
+]
+```
