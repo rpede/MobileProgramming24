@@ -18,7 +18,6 @@ You can adjust the platforms as usual.
 flutter create chat_supabase --platforms=linux,web,android
 cd chat_supabase
 flutter pub add supabase_flutter
-flutter pub add flutter_dotenv
 ```
 
 If you want Android support you need to open `android/app/src/main/AndroidManifest.xml` and add internet permission:
@@ -62,12 +61,12 @@ Open op `lib/main.dart` and replace with the following:
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const supabaseUrl = 'https://xxxxxxxxxxxxxxxxxxxx.supabase.co';
-const supabaseKey = String.fromEnvironment('SUPABASE_KEY');
-
-void main() async {
-  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
-  runApp(const MyApp());
+Future<void> main() async {
+  await Supabase.initialize(
+    url: 'YOUR_SUPABASE_URL',
+    anonKey: 'YOUR_SUPABASE_ANON_KEY',
+  );
+  runApp(MyApp());
 }
 
 final supabase = Supabase.instance.client;
@@ -84,44 +83,19 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const Scaffold(
-        body: Center(child:  Text("It works!")),
+        body: Center(child:  Text("Hello World")),
       ),
     );
   }
 }
 ```
 
-Replace the value for `supabaseUrl` with the Project URL you copied.
-
-Create a `.env` file in your project root with the content:
-
-```sh
-SUPABASE_KEY=<API key>
-```
-
-Replace `<API key>` with the API Key you copied.
-
-Add `.env` to your `.gitignore` file.
-In bash/zsh you can do it with:
-
-```sh
-echo ".env" >> .gitignore
-```
-
-Turn the folder into a GIT repository and make a commit.
-
-```sh
-git init
-git add -A
-git status
-```
-
-Make sure `.env` isn't included in the output.
-Then make a commit.
-
-```sh
-git commit -m 'Project setup'
-```
+Normally you would store API-keys in environment variables on your backend.
+But the API Key here is what your app needs to talk to your
+backend(-as-a-service).
+You can restrict what can be done with the API Key by enabling Row Level
+Security (RLS) for your tables and configure policies.
+More on that later.
 
 You can run app now to verify that everything works so far.
 
@@ -204,13 +178,18 @@ intent-filter as shown.
 
 # Build a User Management
 
-Continue from the "Set up splash screen" section of the [Build a User Management App with Flutter](https://supabase.com/docs/guides/getting-started/tutorials/with-flutter?database-method=sql&platform=ios#set-up-splash-screen) Supabase tutorial.
+Continue from the "Set up splash screen" section of the Build a "User Management App with Flutter" tutorial on Supabase site.
+(Link below)
 
 Notice that some settings are platform specific.
 Follow the steps in the tab for the platforms your project supports.
 
 Replace the `supabase_quickstart` in all imports with `chat_supabase` or what
 you named the project.
+
+Completing the "Bonus: Profile photos" part is optional.
+
+**[Link to tutorial](https://supabase.com/docs/guides/getting-started/tutorials/with-flutter?database-method=sql&platform=ios#set-up-splash-screen)**
 
 Most of it is explained in the video below.
 
