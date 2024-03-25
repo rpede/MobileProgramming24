@@ -1,7 +1,7 @@
 ---
 title: Chat - Challenges
 description: >-
-    Expand the chat app
+    Expand the chat app with cool new features
 layout: default
 ---
 
