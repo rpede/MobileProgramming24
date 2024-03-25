@@ -168,9 +168,17 @@ the codebase?
 
 # Shortcuts
 
-- **Recent files**
-    - Windows: <kbd>Control</kbd>+<kbd>E</kbd>
-    - macOS: <kbd>Command</kbd>+<kbd>E</kbd>
-- **Navigate to Class**
-    - Windows: <kbd>Control</kbd>+<kbd>N</kbd>
-    - macOS: <kbd>Command</kbd>+<kbd>O</kbd>
+**Recent files**
+
+- Windows: <kbd>Control</kbd>+<kbd>E</kbd>
+- macOS: <kbd>Command</kbd>+<kbd>E</kbd>
+
+**Navigate to Class**
+
+- Windows: <kbd>Control</kbd>+<kbd>N</kbd>
+- macOS: <kbd>Command</kbd>+<kbd>O</kbd>
+
+**Navigate to File**
+
+- Windows: <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>N</kbd> 
+- macOS: <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>O</kbd>
