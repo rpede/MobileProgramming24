@@ -14,9 +14,11 @@ Otherwise you will get: `ERROR:  23502: column "room_id" of relation "messages" 
 Follow the [Flutter Authorization with
 RLS](https://supabase.com/blog/flutter-authorization-with-rls) tutorial.
 
-But change the dependencies for current version.
+There are a some corrections listed below.
 
 # Install additional dependencies
+
+Change the dependencies for current version.
 
 ```yml
     flutter_bloc: ^8.1.5
@@ -96,3 +98,10 @@ final session = supabase.auth.currentSession;
 
 Replace `lib/models/message.dart` with
 [this](https://github.com/supabase-community/flutter-chat/blob/with_auth/lib/models/message.dart).
+
+# Confirm email
+
+Want to try out deep link from confirmation email?
+
+Go to [Supabase dashboard](https://supabase.com/dashboard/) > Authentication >
+Providers > Auth Providers > Email and enable "Confirm email".
