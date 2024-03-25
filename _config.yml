@@ -36,12 +36,15 @@ collections:
   working_with_data:
     output: true
     permalink: /working-with-data/:name
-  tricks:
-    output: true
-    permalink: /tricks/:name
   advanced_state:
     output: true
     permalink: /advanced-state/:name
   backend_as_a_service:
     output: true
     permalink: /backend-as-a-service/:name
+  quality:
+    output: true
+    permalink: /quality/:name
+  tricks:
+    output: true
+    permalink: /tricks/:name

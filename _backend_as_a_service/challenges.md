@@ -17,16 +17,26 @@ See also [Bonus: Profile photos](https://supabase.com/docs/guides/getting-starte
 
 # Refactor
 
-Some of the page widgets (ChatPage, RegisterPage & RoomsPage) are quite long and
-and the build method got a lot of nesting.
+Some of the page widgets (RegisterPage & RoomsPage) are a bit long and contains
+lot of nesting.
 
 Use "Extract method" and "Extract Flutter Widget" to make code easier to read.
 
+Currently the code is organized by technical concern.
+All pages in one folder.
+All models in another.
+And so on.
+It doesn't really scale when the app becomes the size of SnapChat.
+
+Therefore, reorganize the project so organized by feature instead of layer.
+
+[Read more](../quality/folder-structure)
+
 # Presence
 
-Show which users are online using the
-[Presence feature](https://supabase.com/docs/guides/realtime/presence?language=dart)
-of Supabase.
+Indicate which users are currently online using the [Presence
+feature](https://supabase.com/docs/guides/realtime/presence?language=dart) of
+Supabase.
 
 # And Now for Something Completely Different
 
