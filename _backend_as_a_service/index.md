@@ -6,4 +6,5 @@ layout: default
 ---
 
 - [Introduction](introduction)
-- [Supabase](supabase)
+- [Chat - part 1](chat1)
+- [Chat - part 2](chat2)

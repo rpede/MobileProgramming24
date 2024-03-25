@@ -1,9 +1,21 @@
 ---
-title: Chat
+title: Chat - Part 1
 description: >-
     A simple chat app with Supabase as backend
 layout: default
 ---
+
+We are going to create a chat app using Supabase as a backend.
+
+# Setup a Supabase account
+
+Go to [supabase.com - sign-up](https://supabase.com/dashboard/sign-up) for an account.
+
+![](../supabase_signup.png)
+
+Create an organization with free plan.
+
+![](../supabase_create_organization.png)
 
 # Follow tutorial
 
@@ -58,6 +70,18 @@ videos on the topic by the Supabase team.
 - [Create PostgreSQL Functions with Supabase](https://www.youtube.com/watch?v=MJZCCpCYEqk)
 - [Using PostgreSQL triggers to automate processes with Supabase](https://www.youtube.com/watch?v=0N6M5BBe9AE)
 
+# Internet permission (Android)
+
+If you want Android support you need to open `android/app/src/main/AndroidManifest.xml` and add internet permission:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- Required to fetch data from the internet. -->
+  <uses-permission android:name="android.permission.INTERNET" />
+  <!-- ... -->
+</manifest>
+```
+
 # Logout
 
 Open `lib/pages/splash_page.dart` and add a route method just like on the other pages.
@@ -103,3 +127,11 @@ But when it does the user will experience a random crash.
 Therefor when using `context` after awaiting on a future, you should always
 check if the element is still part of the widget tree.
 This is done by checking the value of `mounted`.
+
+# Try it out
+
+Fire up the app to verify that everything works.
+
+You can run multiple instances to simulate two persons talking to each other.
+Or you can login with one user, write a message, then logout, register another
+user an view the message.
