@@ -8,3 +8,4 @@ layout: default
 - [Introduction](introduction)
 - [Chat - part 1](chat1)
 - [Chat - part 2](chat2)
+- [Challenges](challenges)
