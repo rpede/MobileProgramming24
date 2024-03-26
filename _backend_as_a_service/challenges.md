@@ -47,4 +47,11 @@ I'll let you.
 But there is a catch.
 You'll have to make the game first.
 
-[How to build a real-time multiplayer game with Flutter Flame](https://supabase.com/blog/flutter-real-time-multiplayer-game)
+[How to build a real-time multiplayer game with Flutter
+Flame](https://supabase.com/blog/flutter-real-time-multiplayer-game)
+
+Assets are found
+[here](https://github.com/supabase/supabase/tree/master/examples/realtime/flutter-multiplayer-shooting-game/assets/images).
+
+Remove `response == ChannelResponse.rateLimited &&` from the while loop in
+`_GamePageState`.
