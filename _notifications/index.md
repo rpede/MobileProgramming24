@@ -6,3 +6,4 @@ layout: default
 ---
 
 - [Introduction](introduction)
+- [Local notifications](local-notifications)
