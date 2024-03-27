@@ -42,6 +42,9 @@ collections:
   backend_as_a_service:
     output: true
     permalink: /backend-as-a-service/:name
+  notifications:
+    output: true
+    permalink: /notifications/:name
   quality:
     output: true
     permalink: /quality/:name
