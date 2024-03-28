@@ -597,3 +597,9 @@ Can you guess what all the fields are?
 
 That's it.
 Try it out.
+
+[Complete code](https://github.com/rpede/awesome_notifications_demo)
+
+The [Awesome Notifications](https://pub.dev/packages/awesome_notifications)
+plugin can do a lot more.
+Familiarize yourself with the documentation.
