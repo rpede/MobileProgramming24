@@ -7,7 +7,7 @@ layout: default
 
 # What is Backend as a Service
 
-BaaS provides app (or frontend) developers with a easy way to get backend
+BaaS provides app (or frontend) developers with an easy way to get backend
 functionality without having to build a full-blown backend from scratch.
 
 A BaaS consists of a bunch of tightly integrated services that each solve part
@@ -20,16 +20,16 @@ These services commonly include:
 - Notification service
 - Cloud functions
 
-Though there are similarities between services from various BasS providers they
+Although there are similarities between services from various BasS providers they
 are not interoperable.
-Each provider got their own SDK which gives you access to everything they offer
-from a single package.
+Each provider has their own SDK which gives you access to everything they offer
+bundles up a single package.
 
 # Choosing a provider
 
 Google is behind Flutter.
 They are also behind Firebase.
-So naturally they go Firebase and Flutter very well integrated.
+So naturally Firebase and Flutter very well integrated.
 The problem with Firebase is that you need to sign-up with a credit card in
 order to use cloud functions.
 
@@ -53,7 +53,6 @@ What I was looking for is:
     - Authentication
     - Realtime database
     - Cloud functions
-    - Notifications
 
 I found Supabase to be the most viable.
 
@@ -62,18 +61,18 @@ Firebase [here](https://supabase.com/alternatives/supabase-vs-firebase).
 
 # Supabase
 
-Supabase is open source and build around PostgreSQL.
-You can access PostgreSQL directly if you so desire.
-In addition it provides the following features:
+Supabase is open source and built around PostgreSQL.
+You can access PostgreSQL directly if you desire.
+In addition, it provides the following features:
 
 - Auto-generated API for clients.
 - Realtime changes.
 - Authentication/Authorization with social media login and SSO (single sign-on).
-- Edge functions (aka cloud or serverless functions) gives you backend like
+- Edge functions (aka cloud or serverless functions) give you backend like
 functionality without writing a full-blown backend or managing servers.
 - Storage for hosting blobs like images, videos etc.
 
-Given that Supabase is backed by PostgreSQL, you might be tempted to want to
+Given that Supabase is built on PostgreSQL, you might be tempted to want to
 write SQL directly in your Flutter app.
 Even though it is technically possible to establish a connection directly to
 PostgreSQL from Flutter, this should be avoided.

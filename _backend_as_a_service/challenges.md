@@ -24,7 +24,7 @@ Use "Extract method" and "Extract Flutter Widget" to make code easier to read.
 
 Currently the code is organized by technical concern.
 All pages in one folder.
-All models in another.
+All models are in another folder.
 And so on.
 It doesn't really scale when the app becomes the size of SnapChat.
 

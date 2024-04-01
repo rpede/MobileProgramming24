@@ -72,7 +72,7 @@ videos on the topic by the Supabase team.
 
 # Internet permission (Android)
 
-If you want Android support you need to open `android/app/src/main/AndroidManifest.xml` and add internet permission:
+If you want Android support, you need to open `android/app/src/main/AndroidManifest.xml` and add internet permission:
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -119,7 +119,7 @@ Try rewriting the code to not use the 'BuildContext', or guard the use with a 'm
 ```
 
 What it means is that whenever you use await on a Future within a callback,
-something elsewhere in you app could have caused the widget to be removed, in
+something elsewhere in your app could have caused the widget to be removed, in
 which case the `context` would no longer be valid.
 This scenario doesn't occur often in practice.
 But when it does the user will experience a random crash.
@@ -132,6 +132,6 @@ This is done by checking the value of `mounted`.
 
 Fire up the app to verify that everything works.
 
-You can run multiple instances to simulate two persons talking to each other.
+You can run multiple instances to simulate two people talking to each other.
 Or you can login with one user, write a message, then logout, register another
 user an view the message.

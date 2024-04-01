@@ -7,18 +7,18 @@ layout: default
 
 Supabase got another tutorial for this.
 
-Before you start you should the Table Editor in Supabase dashboard and delete any rows
-in the `messages` table.
-Otherwise you will get: `ERROR:  23502: column "room_id" of relation "messages" contains null values`.
+Before you start you should go to the Table Editor in Supabase dashboard and
+delete any rows in the `messages` table.
+Otherwise, you will get: `ERROR:  23502: column "room_id" of relation "messages" contains null values`.
 
 Follow the [Flutter Authorization with
 RLS](https://supabase.com/blog/flutter-authorization-with-rls) tutorial.
 
-There are a some corrections listed below.
+There are some corrections listed below.
 
 # Install additional dependencies
 
-Change the dependencies for current version.
+Change the dependencies to the current version.
 
 ```yml
     flutter_bloc: ^8.1.5
@@ -31,15 +31,16 @@ Here are the paths for setting up deep links.
 - **iOS** `ios/Runner/Info.plist`
 - **Android** `android/app/src/main/AndroidManifest.xml`
 
-Deep links are a way to link to app content.
+Deep links are a way to link to something within an app.
 The platform (iOS/Android) needs to know that a link resolves to our app.
-This way we configure it is inherently platform specific.
+This way we configure deeps links is inherently platform specific.
 
 # Missing code
 
 [Complete set of code of this chat app](https://github.com/supabase-community/flutter-chat/tree/with_auth)
 
 There are a couple of code snippets missing from the tutorial.
+They are listed here:
 
 `lib/components/user_avatar.dart`
 
@@ -101,7 +102,7 @@ Replace `lib/models/message.dart` with
 
 # Confirm email
 
-Want to try out deep link from confirmation email?
+Want to try out the deep link from confirmation email?
 
 Go to [Supabase dashboard](https://supabase.com/dashboard/) > Authentication >
 Providers > Auth Providers > Email and enable "Confirm email".
