@@ -5,7 +5,7 @@ description: >-
 layout: default
 ---
 
-# App we build
+# The apps we build
 
 Let's start by examining the architecture of the apps we build so far.
 
@@ -57,7 +57,7 @@ For that it needs more logic than the previous examples.
 It got a different architecture because what is does is a lot different.
 If there were one size fits all architecture we wouldn't be talking about it.
 
-## Recommendation
+# Recommendation
 
 For slightly bigger projects like your exam project.
 You will (likely) both fetch data from an API and have logic within your app.
