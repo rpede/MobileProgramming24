@@ -7,3 +7,4 @@ layout: default
 
 - [Introduction](introduction)
 - [Local notifications](local-notifications)
+- [Push notifications](push-notifications)
