@@ -1,0 +1,89 @@
+---
+title: Push notifications
+description: >-
+    Make a demo app for push notifications
+layout: default
+---
+
+{% include alert.html %}
+
+
+Here we will expand the [local notifications demo](local-notifications) app with support for push notifications.
+
+We are going to use an extension to Awesome Notifications to add push
+notification support backed by FCM (Firebase Cloud Messaging).
+
+[Awesome Notifications FCM](https://pub.dev/packages/awesome_notifications_fcm)
+
+<div class="alert warning">
+Commercial use of "Awesome Notifications FCM" requires a license key.
+<br>
+<a href="https://raw.githubusercontent.com/rafaelsetragni/awesome_notifications_fcm/main/LICENSE">Read license</a>
+<br>
+<a href="https://pub.dev/packages/awesome_notifications_fcm#-license-key---year-2">Obtain license key</a>
+</div>
+
+You will need a Apple developer account to make it work on iPhone, which is a
+yearly fee of 99 USD.
+So let's just ignore iOS and focus on Android.
+
+# Firebase Cloud Messaging
+
+Go to [Firebase Console](https://console.firebase.google.com/) and create a project.
+
+![](../fcm_create_project1.png)
+
+![](../fcm_create_project2.png)
+
+![](../fcm_add_flutter.png)
+
+![](../fcm_download_google_services_json.png)
+
+Place `google-services.json` in `android/app/src`.
+Add `android/app/google-services.json` to `.gitignore`.
+
+
+# FireFlutter
+
+To connect a Flutter project to Firebase (required to use FCM), you need a CLI
+tool called [FlutterFire](https://firebase.flutter.dev/docs/overview/).
+
+```sh
+dart pub global activate flutterfire_cli
+```
+
+When it is installed you need to configure your Flutter project for the Firebase
+project you created earlier.
+
+```sh
+flutterfire configure
+```
+
+The command will give you a menu.
+Use arrow keys to navigate and "Enter/Return" to select.
+Here is a walkthrough of the options you need.
+
+1. Select "awesome-notifications"
+2. Make sure "android" is selected
+
+# Installing plugin extension
+
+We need to add some dependencies:
+
+```sh
+flutter pub add awesome_notifications_fcm:any firebase_core firebase_analytics
+```
+
+Then update `android/settings.gradle`:
+
+```diff
+@@ -21,6 +21,8 @@ plugins {
+     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+     id "com.android.application" version "7.3.0" apply false
+     id "org.jetbrains.kotlin.android" version "1.7.10" apply false
++
++    id "com.google.gms.google-services" version "4.4.1" apply false
+ }
+ 
+ include ":app"
+```

@@ -26,6 +26,8 @@ But it is possible to link FCM to APN, such that can use FCM to send
 notifications on both platforms.
 I will therefore just use FCM.
 
+[Watch the commercial](https://www.youtube.com/watch?v=sioEY4tWmLI)
+
 1. Go to [Firebase Console](https://console.firebase.google.com/).
 2. Click "Add project"
 3. Type "push-notification-demo" as project name and click "Continue"
