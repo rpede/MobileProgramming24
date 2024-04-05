@@ -44,6 +44,12 @@ Open a terminal in your project directory.
 # Install Firebase core plugin
 flutter pub add firebase_core firebase_messaging
 
+# FlutterFire CLI depends on Firebase CLI, so install it first
+npm install -g firebase-tools
+
+# Login with the Google account you used for Firebase Console.
+firebase login
+
 # Install the CLI if not already done so
 dart pub global activate flutterfire_cli
 
