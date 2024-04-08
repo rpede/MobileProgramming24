@@ -9,6 +9,8 @@ layout: default
 ![](../local_notification_screenshot2.png)
 ![](../local_notification_screenshot_ios.png)
 
+<iframe src="https://easv.cloud.panopto.eu/Panopto/Pages/Embed.aspx?id=ff4e3c90-951b-4db9-9fc2-b14c0138d334&autoplay=false&offerviewer=true&showtitle=true&showbrand=true&captions=false&interactivity=all" height="405" width="720" style="border: 1px solid #464646;" allowfullscreen allow="autoplay" aria-label="Panopto Embedded Video Player" aria-description="Local Notifications" ></iframe>
+
 We will be using the
 [awesome_notifications](https://pub.dev/packages/awesome_notifications) plugin.
 It only supports iOS and Android (no web).
