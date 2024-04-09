@@ -14,3 +14,4 @@ layout: default
 - [Deepen your understanding](understanding)
 - [WebSocket](websocket)
 - [MQTT](mqtt)
+- [DevOps](devops)
