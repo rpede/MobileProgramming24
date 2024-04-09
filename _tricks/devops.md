@@ -75,9 +75,7 @@ In git-bash:
 
 Download [https://github.com/jgonzalezdr/lcov/releases/download/v1.15.alpha1w/lcov-1.15.alpha1w.zip](https://github.com/jgonzalezdr/lcov/releases/download/v1.15.alpha1w/lcov-1.15.alpha1w.zip)
 
-Extract to `%userprofile%\lcov`
-
-![](../win_extract_lcov.png)
+Extract to `C:\Users\<your username>\lcov`
 
 Then you can do:
 
