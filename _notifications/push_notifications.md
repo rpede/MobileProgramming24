@@ -251,6 +251,41 @@ class NotificationController {
 
 [See more](https://firebase.flutter.dev/docs/messaging/usage/)
 
+Complete the rest of the application on your own.
+You should:
+
+1. Add a provider for `NotificationService`
+2. Call `setupCallbacks()`
+3. Add a way to call `requestPermissions()`
+4. Implement `NotificationScreen`
+5. Show the FCM token from `NotificationService.tokenStream`
+
+## Send test message
+
+Open console.firebase.com.
+Find "Messaging" (might be hidden under Engage).
+Then click "Create your first campaign".
+
+![](../fcm_test1.png)
+
+Select "Firebase Notification messages".
+Then click "Create"
+
+![](../fcm_test2.png)
+
+Fill in "Notification title" and "Notification text".
+Click "Send test messages".
+
+![](../fcm_test3.png)
+
+Add the FCM token from your device.
+Then click "Test".
+
+Check your phone.
+If your app was in the foreground then you should see NavigationScreen.
+If you app was in the background then you should see a notification, tap on it
+to see NavigationScreen.
+
 # Challenges
 
 ## .NET backend
