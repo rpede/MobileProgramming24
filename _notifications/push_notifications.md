@@ -262,7 +262,7 @@ You should:
 
 ## Send test message
 
-Open console.firebase.com.
+Open [Firebase Console](https://console.firebase.google.com/).
 Find "Messaging" (might be hidden under Engage).
 Then click "Create your first campaign".
 
