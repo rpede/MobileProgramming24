@@ -73,11 +73,9 @@ How you do that, depends on the OS.
 
 In git-bash:
 
-```sh
-cd ~
-wget https://github.com/jgonzalezdr/lcov/releases/download/v1.15.alpha1w/lcov-1.15.alpha1w.zip
-unzip lcov-1.15.alpha1w.zip
-```
+Download [https://github.com/jgonzalezdr/lcov/releases/download/v1.15.alpha1w/lcov-1.15.alpha1w.zip](https://github.com/jgonzalezdr/lcov/releases/download/v1.15.alpha1w/lcov-1.15.alpha1w.zip)
+
+Extract to `C:\Users\<your username>\lcov`
 
 Then you can do:
 

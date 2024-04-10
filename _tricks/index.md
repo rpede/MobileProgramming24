@@ -10,6 +10,7 @@ layout: default
 - [Deploy to web](web)
 - [Port to TV](tv)
 - [Flutter Inspector](inspector)
+- [Theming](theming)
 - [Dark-mode changer](darkmode-changer)
 - [Deepen your understanding](understanding)
 - [WebSocket](websocket)
