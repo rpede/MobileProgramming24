@@ -93,23 +93,67 @@ A message here is just a String.
 
 {% include_relative websocket.drawio.svg %}
 
-The WebSocket protocol for the app is based on JSON events.
+Read more on how to [Communicate with WebSockets](https://docs.flutter.dev/cookbook/networking/web-sockets).
+
+The WebSocket protocol for the chat app is based on JSON events.
 Each event has an `eventType`.
 Events send from client start with `"ClientWants"`
 Events from server starts with `"Server"`.
 All events are defined in `flutter_frontend/lib/models/events.dart`.
-So, to communicate with the server we need to JSON serialize/deserialize events
-with `eventType`.
-
-Read more on how to [Communicate with WebSockets](https://docs.flutter.dev/cookbook/networking/web-sockets).
+So, to communicate with the server we need serialized events to have
+`eventType`.
+When deserializing events from server, the `eventType` is used to determine
+which which class to user.
 
 ## BLoC
 
 The protocol and state changes are implemented in
 `flutter_frontend/lib/bloc/chat_bloc.dart`.
 
-The constructor subscribes to events from server.
-It deserializes those events and feeds them into the itself.
+Bloc was chosen over Cubit.
+Because we are dealing with events.
+
+See [Cubit vs. Bloc](https://bloclibrary.dev/bloc-concepts/#cubit-vs-bloc).
+
+### Client events
+
+**ChatBloc** exposes methods to add events based on user interactions.
+Here is an example:
+
+```dart
+  /// Sends ClientWantsToSignIn event to server
+  void signIn({required String password, required String email}) {
+    add(ClientWantsToSignIn(
+      eventType: ClientWantsToSignIn.name,
+      email: email,
+      password: password,
+    ));
+  }
+```
+
+Adding events trigger event handler for the corresponding event type.
+All events of type ClientEvent is handled by the same method.
+
+```dart
+    // Handler for client events
+    on<ClientEvent>(_onClientEvent);
+```
+
+The handler method serializes events to JSON, before they are send to the
+server.
+Sending to server is done by adding messages to the channels sink.
+
+```dart
+  FutureOr<void> _onClientEvent(ClientEvent event, Emitter<ChatState> emit) {
+    _channel.sink.add(jsonEncode(event.toJson()));
+  }
+```
+
+### Server events
+
+The constructor listens to messages from server.
+It deserialize messages to the correct subclass of ServerEvent.
+Then trigger the corresponding event handler, by passing the event to `add`.
 
 ```dart
     // Feed deserialized events from server into this bloc
@@ -132,49 +176,30 @@ Each event is handled by an event handler.
     on<ServerSendsErrorMessageToClient>(_onServerSendsErrorMessageToClient);
 ```
 
-Event handlers emit a new state, which are a copy of previous state with
-information added from the event.
-Here is an example for when client has entered a room:
+Event handlers emit a new state.
+This new state is copy of previous state with new information added from the
+event.
+Here is an example for when client has authenticated:
 
 ```dart
-  FutureOr<void> _onServerAddsClientToRoom(
-      ServerAddsClientToRoom event, Emitter<ChatState> emit) {
+  FutureOr<void> _onServerAuthenticatesUser(
+      ServerAuthenticatesUser event, Emitter<ChatState> emit) {
+    _jwt = event.jwt;
     emit(state.copyWith(
-      connectedRooms: [
-        ...state.connectedRooms,
-        ConnectedRoom(
-          roomId: event.roomId,
-          messages: event.messages,
-          numberOfConnections: event.liveConnections,
-        )
-      ],
+      authenticated: true,
+      headsUp: 'Authentication successful!',
     ));
   }
 ```
 
-**ChatBloc** exposes methods that sends events to server.
-Events needs to be converted and encoded to JSON before they are added to the
-channels sink.
-Here is an example:
-
-```dart
-  /// Sends ClientWantsToEnterRoom event to server
-  void enterRoom({required int roomId}) {
-    _sendJson(ClientWantsToEnterRoom(
-      eventType: ClientWantsToEnterRoom.name,
-      roomId: roomId,
-    ).toJson());
-  }
-
-  void _sendJson(Map<String, Object?> dto) {
-    _channel.sink.add(jsonEncode(dto));
-  }
-```
+*Note: The JWT is in ChatState because it is a secret value that shouldn't be
+shown in UI.*
 
 ## Models
 
 [Freezed](https://pub.dev/packages/freezed) is used to enhance the model
 classes.
+
 Here is an example:
 
 ```dart
@@ -204,6 +229,8 @@ class Person with _$Person {
 It is important that you follow the conventions shown.
 Otherwise things will break.
 Every symbol start with `_$` is code that will be generated.
-
 Pay attention to `part` in top of the files.
 Without those, it won't generate the code.
+
+When ever you change the model with freezed, you need to re-run `dart run
+build_runner build`.
