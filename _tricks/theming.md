@@ -98,10 +98,16 @@ Then add the following to `pubspec.yaml`:
 
 ```yaml
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: true
   ios: true
-  remove_alpha_ios: true
   image_path: "icon.png"
+```
+
+Place your icon at the given path.
+Then run:
+
+```sh
+flutter pub run flutter_launcher_icons
 ```
 
 Here are a couple of free sites you can use to quickly generate a custom icon:
