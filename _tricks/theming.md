@@ -91,7 +91,7 @@ the icon for all device types.
 Just do
 
 ```sh
-flutter pub add flutter_launcher_icons
+flutter pub add dev:flutter_launcher_icons
 ```
 
 Then add the following to `pubspec.yaml`:
