@@ -11,7 +11,7 @@ layout: default
 
 ## [Link](https://github.com/rpede/MiniProjectSolution/)
 
-The project is based on an example project provided by my college Alex.
+The project is based on an example project provided by my colleague Alex.
 You can find his original [here](https://github.com/uldahlalex/MiniProjectSolution).
 
 I've reimplemented the frontend in Flutter using
