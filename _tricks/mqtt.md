@@ -19,7 +19,7 @@ Doesn't work with MQTT v5
 
 # Project
 
-## [Link](https://github.com/rpede/MiniProjectSolution/)
+## [Link](https://github.com/rpede/flutter_mqtt)
 
 There are 3 projects in the repository.
 
