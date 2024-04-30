@@ -76,6 +76,15 @@ npm install
 npm start
 ```
 
+## Emulator
+
+To connect to the websocket running on your own machine from Android
+emulator, you will need to change the address to `10.0.2.2`.
+That is because the emulator is running a full OS, therefore *localhost*
+indside the emulator is different from *localhost* on you host OS.
+
+See [Set up Android Emulator networking](https://developer.android.com/studio/run/emulator-networking).
+
 ---
 
 # How it works
